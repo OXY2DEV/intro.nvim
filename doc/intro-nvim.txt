@@ -1,0 +1,196 @@
+NOTE Documentation is deprecated. I will finish it once thw plugin
+is stable enough
+
+                                 intro.nvim ☄️                     *intro.nvim*
+==============================================================================
+                   Another `intro` or `start screen` plugin fo
+                                   `Neovim`
+Table of contents                                             *intro.nvim-toc*
+------------------------------------------------------------------------------
+  1. Introduction.....................................|intro.nvim-introduction|
+  2. Installation.....................................|intro.nvim-installation|
+  3. Usage...................................................|intro.nvim-usage|
+  4. Presets...............................................|intro.nvim-presets|
+  5. Components.........................................|intro.nvim-components|
+  6. Helpers...............................................|intro.nvim-helpers|
+  7. TODOs.....................................................|intro.nvim-wip|
+
+Introduction                                         *intro.nvim-introduction*
+------------------------------------------------------------------------------
+`intro.nvim` is a start screen plugin for Neovim. The main reason why this
+plugin exists is due to the other plugins not having all the features I want.
+
+Some of the plugins provide `components` but lack the ability to customize
+specific lines or overwriting their behavior. Others give control over the
+lines but don't have `omponents` to make the job easier.
+
+There was also no easy way to get `gradient` colored text thorugh the plugins,
+at least none I could find. There was also no `animation` support for them,
+though I did manage to get some animation to work with `wlanimation`.
+
+The key features of this plugin are as follows,
+    1. Parts of the text shown on the buffer are made up of `components`.
+
+       Components are a few lines together that have similarities(for example
+       text that use the same highlight groups or are aligned the same way 
+       or have other similarities). This makes it so that you don't have to
+       use a  config table for every single line(which was one of the reason
+       for making  this plugin).
+
+    2. Better text `highlights`.
+
+       As texts are grouped as `components` it is possible to alter the
+       highlighting of a specific part of the text.
+       Every `component` has a property called `overwrite`. This allows the
+       user to alter the the text highlights with ease.  You can enter the
+       index at which the highlight should be added and `optionally` where
+       the highlighting should end.
+
+       NOTE: The index in `overwrite` is 0-based(1st character is the 0th
+       character). It is also `byte-indexed` so make sure to add the correct
+       index(especially when using `nerd font` characters).
+
+    3. Auto `alignment` of text.
+
+       One of the issues I had when using other start screen plugins was the
+       lack of text aligning options. `intro.nvim` automatically centers the
+       lines so all the lines will stay at the middle of the screen. There
+       is also support for `horizontal` text alignment. Lines can be either
+       `center`, `left` or `right` aligned.
+
+    4. Responsive text.
+
+       `intro.nvim` automatically realigns the texts when the screen size
+       changes.
+
+    5. Animations.
+
+       `intro.nvim` supports basic highlight group based animations.
+
+And much more!
+
+Installation                                         *intro.nvim-installation*
+------------------------------------------------------------------------------
+Use your favourite plugin manager to install this plugin.
+
+The Installation table looks something like this.
+>
+  {
+    "OXY2DEV/intro.nvim",
+    -- Devicons are used for file icons  
+    dependencies = {
+	"nvim-web-devicons"
+    },
+
+    -- Configuration file
+    config = function()
+      require("plugin/intro")
+    end
+  }
+<
+To use the plugin call the *setup()* function.
+>
+  require("intro").setup({ preset = "nvimGradient" })
+<
+
+Usage                                                       *intro.nvim-usage*
+------------------------------------------------------------------------------
+                               setup({config})
+
+Description ~
+  Setup function. All your `components`, `lines`, `highlights` & `animations`
+  reside inside this
+
+Parameters ~
+  {config} `table | nil`
+  This table has the following properties,
+    {preset} `string | nil` 
+    Define the `name` of the preset to use here. All available presets are
+    part of the `presets.lua` file.
+
+    NOTE: Custom preset support is a `work in progress` feature.
+
+    {components} `table | nil`
+    Contains all the `components` used by the plugin for the intro screen.
+    Check the entire list of `components` & their setup in
+    *intro.nvim-components*
+
+    {globalHighlights} `table | nil`
+    This contains all the highlight groups used inside {components}. These
+    highlights are applied first. The structure for this property looks
+    like this
+>
+      {
+	"highlight_one" = { bg = "#1e1e2e", fg = "#BAC2DE" }
+      }
+<
+
+    Each of the keys are sent into `nvim_set_hl()` as the highlight group
+    name(a `Intro_` prefix to avoid overwriting normal highlight groups)
+    and the values corresponding to that name is sent as the option.
+
+    {animations} `table | nil`
+    This property has all the animations defined inside it. It has the 
+    following properties,
+      {highlighBased} `table | nil`
+      This takes various highlight group names and the values to animate
+      through. The structure of this table is as follows,
+>
+      {
+	"highlight_one" = {
+	  { fg = "#9399B2" }, { fg = "#A6ADC8" }, { fg = "#BAC2DE" }
+	}
+      }
+<
+      Note: Animations can sometimes cause `Neovim` to become slow.
+
+      {textBased} `??? | nil`
+      Text based animation table. `Work in progress`
+      The configuration table should look like this.
+>
+      {
+	{
+	  8, {
+	    "A", "A ", "A t", "A te", "A tex", 
+	    "A text",
+	    "A tex", "A te", "A t", "A ", "A"
+	  }
+	}
+      }
+<
+      NOTE: Text based animations support is a `work in progress` 
+      feature.
+    
+      {interval} `??? | nil`
+      Animation timing. `Work in progress`
+      Time gap between each frame being rendered(in `ms`).
+      Default setup
+>
+      { animations = { interval = 100 } }
+<
+      NOTE: Animation timing support is a `work in progress` 
+      feature.
+
+      Note: Currently different timing for different animations is not
+      possible(at least I couldn't figure something out 😬).
+      In the future this may change.
+
+
+Presets                                                   *intro.nvim-presets*
+------------------------------------------------------------------------------
+*intro.setup* Setup
+
+Components                                             *intro.nvim-components*
+------------------------------------------------------------------------------
+*intro.setup* Setup
+
+Helpers                                                   *intro.nvim-helpers*
+------------------------------------------------------------------------------
+*intro.setup* Setup
+
+TODOs                                                         *intro.nvim-wip*
+------------------------------------------------------------------------------
+*intro.setup* Setup
+
+
+ vim:tw=78:ts=8:noet:ft=help:norl:
