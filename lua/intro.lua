@@ -7,6 +7,7 @@
 
 local intro = {};
 local renderer = require("intro.renderer");
+local animations = require("intro.animation");
 local utils;
 
 local V = vim;
@@ -21,7 +22,9 @@ intro.setup = function(table)
   end
 
   local _o = V.tbl_extend("force", intro.default, table);
-  renderer.handleConfig(_o)
+  renderer.handleConfig(_o);
+
+  animations.animationWorker(table.animations)
 end;
 
 return intro;
