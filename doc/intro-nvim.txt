@@ -29,14 +29,13 @@ A `start screen` plugin for those who want next level customization in their
 start screen without the hassle of setting everything up themselves. 
 
 Key features -
-  1. Component based customization.
-  2. Easily `align` the text.
-  3. Various text coloring methods.
-  4. Gradient support.
-  5. `highlights` based animation support.
-  6. `text` based animation support.
+  1. `Component` based system.
+  2. Easily `align` the text, both vertically & horizontally.
+  3. Various text coloring methods including `gradients`.
+  4. Easy coloring of various parts of a text.
+  5. `highlights` and `text` based animation support.
 
-And muxh more!
+And much more!
 
 Installation                                         *intro.nvim-installation*
 ------------------------------------------------------------------------------
@@ -48,7 +47,8 @@ Use your favourite plugin manager to install this plugin.
     "OXY2DEV/intro.nvim",
     -- Devicons are used for file icons  
     dependencies = {
-	"nvim-web-devicons"
+      -- If you want to use icons
+      "nvim-web-devicons"
     },
 
     -- Configuration file
@@ -63,7 +63,7 @@ To use the plugin call the *setup()* function.
 
 ━━ intro.lua ────────────────────────────────────────────────────────────────╮
 >
-  require("intro").setup({ preset = "nvimGradient" })
+  require("intro").setup({ preset = "nvim_color" })
 <
 ─────────────────────────────────────────────────────────────────────────────╯
 
@@ -82,6 +82,32 @@ Description ~
   Setup function. All your *components* , *highlights* & *animations* reside
   inside this function.
 
+Structure ~
+
+━━ intro.lua ────────────────────────────────────────────────────────────────╮
+>
+  {
+    anchors = {
+      position = "",                 -- string | nil
+
+      textStyle = {},                -- table | nil
+      cornerStyle = {}               -- table | nil
+    },
+
+    components = {},                 -- table | nil
+    globalHighlights = {},           -- table | nil
+
+    animations = {
+      textBased = {},                -- table | nil
+      highlightBased = {},           -- table | nil
+
+      startDelay = 0,                -- integer | nil
+      updateDelay = 0                -- integer | nil
+    }
+  }
+<
+─────────────────────────────────────────────────────────────────────────────╯
+
 Parameters ~
   {config} `table | nil`
   Table containing all the properties of your start screen.
@@ -98,6 +124,31 @@ Parameters ~
 
     Check the entire list of `components` & their setup in
     *intro.nvim-components*
+
+    Example:
+    ╭ intro.lua ────────────────────────────────────────────────────────────╮
+>
+      components = {
+	"A normal line",
+	{
+	  lines = {
+	    "One line", "Two line",  "Three line"
+	  },
+
+	  colors = "highlight_group"
+	},
+	{
+	  line = {
+	    "A long line with gradients"
+	  },
+
+	  colors = {
+	    { "group_1", "group_2", "group_3" }
+	  }
+	}
+      }
+<
+    ╰───────────────────────────────────────────────────────────────────────╯
 
     NOTE: Has no effect if preset is set.
 
@@ -126,62 +177,418 @@ Parameters ~
       {highlighBased} `table | nil`
       This takes various highlight group names and the values to animate
       through. The structure of this table is as follows,
+    
+      ╭ intro.lua ──────────────────────────────────────────────────────────╮
 >
-      {
-	"highlight_one" = {
-	  { fg = "#9399B2" }, { fg = "#A6ADC8" }, { fg = "#BAC2DE" }
-	}
-      }
+        {
+  	  "highlight_one" = {
+	    { fg = "#9399B2" }, { fg = "#A6ADC8" }, { fg = "#BAC2DE" }
+	  }
+        }
 <
+      ╰─────────────────────────────────────────────────────────────────────╯
+
       Note: Animations can sometimes cause `Neovim` to become slow.
 
-      {textBased} `??? | nil`
+      {textBased} `table | nil`
       Text based animation table. `Work in progress`
-      The configuration table should look like this.
->
-      {
-	{
-	  8, {
-	    "A", "A ", "A t", "A te", "A tex", 
-	    "A text",
-	    "A tex", "A te", "A t", "A ", "A"
-	  }
-	}
-      }
-<
-      NOTE: Text based animations support is a `work in progress` 
-      feature.
-    
-      {interval} `??? | nil`
-      Animation timing. `Work in progress`
-      Time gap between each frame being rendered(in `ms`).
-      Default setup
->
-      { animations = { interval = 100 } }
-<
-      NOTE: Animation timing support is a `work in progress` 
-      feature.
+      The configuration table should look like this,
 
-      Note: Currently different timing for different animations is not
-      possible(at least I couldn't figure something out 😬).
-      In the future this may change.
+      ╭ intro.lua ──────────────────────────────────────────────────────────╮
+>
+        {
+	  {
+	    mode = "line",
+
+	    line = 1,
+	    values, {
+	      "A", "A ", "A t", "A te", "A tex", 
+	      "A text",
+	      "A tex", "A te", "A t", "A ", "A"
+	    }
+	  },
+	  {
+	    mode = "virt_text"
+
+	    x = 0, y = 0,
+	    values, {
+	      "A", "A ", "A t", "A te", "A tex", 
+	      "A text",
+	      "A tex", "A te", "A t", "A ", "A"
+	    }
+	  },
+        }
+<
+      ╰─────────────────────────────────────────────────────────────────────╯
+
+      {delay} `integer | nil`
+      Amount of `miliseconds` to wait before running the animation loop
+      
+      Example:
+      ╭ intro.lua ──────────────────────────────────────────────────────────╮
+>
+        { animations = { ddlay = 100 } }
+<
+      ╰─────────────────────────────────────────────────────────────────────╯
+    
+      {updateDelay} `integer | nil`
+      Time gap between each frame being rendered(in `ms`).
+      
+      Example:
+      ╭ intro.lua ──────────────────────────────────────────────────────────╮
+>
+        { animations = { updateDelay = 100 } }
+<
+      ╰─────────────────────────────────────────────────────────────────────╯
 
 
 Presets                                                   *intro.nvim-presets*
 ------------------------------------------------------------------------------
-*intro.setup* Setup
+`intto.nvim` provides various presets to use. Currently available presets,
+  1. nvim_color               
+  2. nvim_color_animated                                      ／l、 
+                                                            （ﾟ､ ｡ ７   
+  3. cat                                                      l  ~ヽ  
+  4. cat_green                                                じしf_,)ノ
+  5. cat_blue
 
 Components                                             *intro.nvim-components*
 ------------------------------------------------------------------------------
-*intro.setup* Setup
+`intro.nvim` provides components so that users can apply styles to text
+Easily. Currently we have the following components,
+  1. Banner
+  2. Recents
+  3. Time
 
-Helpers                                                   *intro.nvim-helpers*
-------------------------------------------------------------------------------
-*intro.setup* Setup
+Defining a component ~
+  {type} `string | nil`
+  Type defines what component a perticular table is. For example if you have
+  something like this,
+  
+  ╭ Component ───────────────────────────────────────────────────────────────╮
+>
+    {
+      lines = {
+	"A line",
+	"Another line"
+      },
 
-TODOs                                                         *intro.nvim-wip*
-------------------------------------------------------------------------------
-*intro.setup* Setup
+      width = 0.8,
+      useIcons = false,
+      length = 5,
+
+      theme = "Normal"
+    }
+<
+  ╰──────────────────────────────────────────────────────────────────────────╯
+
+  The plugin wouldn't know wether this is a `banner` component or a `recents`
+  component or if it's a `time` component.
+
+  By using `type = "banner"` you can tell the plugin to ignore everything 
+  other then `lines`.
+
+  The default value for this is `banner`.
+
+
+Banner ~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Banner is used to define a group of line that have a specific style to them.
+So, you don't have to write the color names, alignments etc. for every line.
+
+It's structure looks something like This
+
+━━ Banner ───────────────────────────────────────────────────────────────────╮
+>
+  {
+    type = "banner", -- default value
+
+    lines = {
+      "A single line",
+      { "A ", "few ", "words" }
+    },
+
+    align = {
+      "center",
+      "left"
+    }
+
+    colors = {
+      "highlight_group",
+      { "gradient_1", "gradient_2", "gradient_3" }
+    },
+    secondayColors = {
+      nil,
+      { nil, "Special", nil }
+    }
+  }
+<
+─────────────────────────────────────────────────────────────────────────────╯
+
+Properties ~
+  {lines} `table`
+  This is a table containing all the lines you want to add to this component.
+
+  Lines can be defined in 2 ways.
+    1. Strings
+    ╭ Lines ─────────────────────────────────────────────────────────────────╮
+>
+      {
+	"A line can be a string"
+      }
+<
+    ╰────────────────────────────────────────────────────────────────────────╯
+
+    2. Table
+    ╭ Lines ─────────────────────────────────────────────────────────────────╮
+>
+      {
+	{ "A ", "line ", "can ", "also", "be ", "a table" }
+      }
+<
+    ╰────────────────────────────────────────────────────────────────────────╯
+
+  If you want to apply a solid or a gradient fill(color) to the entire line
+  then you can just use a string. 
+
+  But let's say that `A line` is in red, `can also be ` is in white and 
+  `a table` is a gradient. In this case it would be much easier to define
+  the colors if the line was a table.
+
+  NOTE You can also use a string instead of a table in the 2nd case if you
+       prefer.
+
+  {align} `table | string | nil`
+  A list or a string defining the alignment of text. Supported values
+    • left
+    • center(default)
+    • right
+
+    Example
+    ╭ Lines ─────────────────────────────────────────────────────────────────╮
+>
+      {
+	lines = {
+	  "line 1",
+	  "line 2",
+	  "line 3"
+	},
+
+	align = {
+	  "left",
+	  "right",
+	  "center"
+	}
+      }
+<
+    ╰────────────────────────────────────────────────────────────────────────╯
+
+  NOTE If a line has no align value then the last one in the table is used.
+
+  {width} `table | integer | float | nil`
+  If you have characters that are bigger than normal characters which causes
+  texts to be incorrectly aligned or if you want padding around the text then
+  you can use this.
+
+  Example
+  ╭ Lines ───────────────────────────────────────────────────────────────────╮
+>
+    lines = {
+      "line 1",
+    },
+
+    width = 0.9
+<
+  ╰──────────────────────────────────────────────────────────────────────────╯
+
+  If the value is less than 1 then it is the percentage of the window width.
+  If it is "auto" or nil it has no effect.
+
+  When it is a table if width of a line is nil then the last width in the 
+  table is used.
+
+  {colors} `table | string | nil`
+  This can be a table or a string or nil depending on what you want. It is
+  the name of the `highlight group` to use as the color. More information
+  about coloring is available in the *intro.nvim-colors* section.
+
+  This property defines the coloring of the lines. The coloring can be done
+  in many ways such as
+    1. String
+       When the value is a string it will use this highlight group for all 
+       the lines.
+
+    2. List(a lua table with highlight group names)
+       When the value is a list the component will will apply the color
+       based off of the index of the line.
+
+       Example
+       ╭ Lines ──────────────────────────────────────────────────────────────╮
+>
+        {
+	  lines = {
+	    "A line",
+	    { "Another", "line" },
+	    "Another one"
+	  },
+
+	  colors = {
+	    "grouo_1",
+	    "Special"
+	  }
+        }
+<
+       ╰─────────────────────────────────────────────────────────────────────╯
+
+       In this case the first line will use `group_1` for highligjts,
+       the second line will use `Special`.
+
+       However, there is no highlight group for the last line. In this case,
+       it will use the last highlight group for it's color.
+
+       NOTE If you want to bypass this behavior just leave an empty string
+
+    3. List within a list
+       When the value is a list within a list then the line will have a
+       gradient applied to it.
+
+       Example
+       ╭ Gradients ──────────────────────────────────────────────────────────╮
+>
+         {
+	   { "group_1", "group_2", "group_3" }
+	 }
+<
+       ╰─────────────────────────────────────────────────────────────────────╯
+
+       NOTE More information about gradients are in *intro.nvim-colors* section
+
+  You can also use all 3 of them together if you want.
+
+  {secondaryColors} `table | nil`                              `list inside list`
+  This is a table containing various highlight groups that will be applied
+  to a line after the main color(ddfined in {colors}) is applied.
+  
+  This is useful when you have different colors in the same line.
+
+  {secondaryColors} are `line index` based so if you want to skip a line just
+  set it to `nil`.
+
+  You can currently define `secondaryColors` in 2 ways.
+  1. Set position
+     In this case you specify a `from` and a `to` value and a `highlight`
+     which can be a string or a table.
+
+     Example
+     ╭ SecondaryColors ──────────────────────────────────────────────────────╮
+>
+       secondaryColors = {
+	 {
+	   {
+	     from = 0, to = 5, highlight = "second_1"
+	   },
+	   {
+	     from = 6, to = 9, highlight = "second_2"
+	   },
+	 }
+       }
+<
+     ╰───────────────────────────────────────────────────────────────────────╯
+  2. Without a set position
+     If you use a `table` in `lines` you can use this method which is much
+     simpler
+
+     Example
+     ╭ SecondaryColors ──────────────────────────────────────────────────────╮
+>
+       lines = {
+	 { "A", "Few", "Lines" }
+       },
+       secondaryColors = {
+	 {
+	   "grouo_1", "group_2", "group_3"
+	 }
+       }
+<
+     ╰───────────────────────────────────────────────────────────────────────╯
+
+  You can combine them too if you want.
+
+  {gradientRepeat} `boolean | table | nil`
+  Determines wether gradients should repeat or not.
+
+  When the value is a boolean it will apply to both `colors` and 
+  `secondaryColors`.
+  When the value is a table it will use the lines index and fallback to the
+  last entry in the table if the value is `bil`.
+
+  Example
+  ╭ gradientRepeat ──────────────────────────────────────────────────────────╮
+>
+    -- It can be a boolean
+    gradientRepeat = true,
+
+    -- It can be a list of boolean
+    gradientRepeat = { true, false, true },
+
+    -- It can also be a single table
+    gradientRepeat = {
+      colors = true,
+      secondaryColors = false
+    },
+
+    -- It can also be a list of tables too
+    gradientRepeat = {
+      {
+	colors = false,
+      },
+      {
+	secondaryColors = true
+      }
+    }
+<
+  ╰──────────────────────────────────────────────────────────────────────────╯
+
+Recents ~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`type = "recents"`
+
+Recents is a component that shows the recently accessed files from `oldfiles`.
+It also sets up a keymap to easily open them.
+
+Properties ~
+  {style} `string | nil`
+  Changes the style of the list. Can either be `list` or `centered`.
+
+  {width} `integer | float | nil`
+  Defines the width of the list. Has no effect if style is `centered`.
+
+  {useIcons} `boolean | nil`
+  When `true` File icons will be visible. Requires `nvim-web-devicons`.
+
+  Default is `false`
+
+  {length} `integer | nil`
+  Number of entries to show. Default is 5.
+
+  {colors} `table | nil`
+    {name} `table | string | nil`
+    Highlight group for the names.
+
+    {number} `table | string | nil`
+    Highlight group for the numbers.
+
+    {whiteSpace} `table | string | nil`
+    Highlight group for the spaces.
+
+Time ~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`type = "time"`
+
+A simple clock.
+
+Properties ~
+  Currently has no properties.
 
 
  vim:tw=77:ts=8:noet:ft=help:norl:

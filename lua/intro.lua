@@ -8,23 +8,37 @@
 local intro = {};
 local renderer = require("intro.renderer");
 local animations = require("intro.animation");
-local utils;
+local data = require("intro.data");
+
+local presets = require("intro.presets");
 
 local V = vim;
 
 intro.default = {
-  --preset = "nvimN"
+  preset = "nvim_color_animated",
 }
 
 intro.setup = function(table)
+  local tbl;
+
   if V.fn.argc() ~= 0 then
     return
   end
 
-  local _o = V.tbl_extend("force", intro.default, table);
-  renderer.handleConfig(_o);
+  if type(table) ~= "table" then
+    tbl = intro.default;
+  else
+    tbl = table;
+  end
 
-  animations.animationWorker(table.animations)
+  if type(tbl.preset) == "string" and presets[tbl.preset] ~= nil then
+    tbl = presets[tbl.preset];
+  end
+
+  renderer.handleConfig(tbl);
+  data.movements(tbl.anchors);
+
+  animations.animationWorker(tbl.animations)
 end;
 
 return intro;

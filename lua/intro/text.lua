@@ -1,4 +1,7 @@
 -- INFO text processor for `intro.nvim`
+local data = require("intro.data");
+local arts = require("intro.arts");
+
 local T = {};
 local V = vim;
 
@@ -16,7 +19,17 @@ T.bannerHandler = function(component)
   local _l = {};
 
   for l, line in ipairs(component.lines) do
-    local align, color, overwrite, gradientRepeat;
+    local align, color, secondaryColors, gradientRepeat, width;
+
+    if type(component.width) == "number" then
+      width = component.width;
+    elseif type(component.width) == "table" then
+      if component.width[l] ~= nil then
+        width = component.width[l];
+      else
+        width = component.width[#component.width];
+      end
+    end
 
     if component.align == nil then
       align = "center";
@@ -36,30 +49,38 @@ T.bannerHandler = function(component)
       else
         color = component.colors[#component.colors]
       end
-    else
-      color = component.colors;
     end
 
-    if component.overwrite ~= nil then
-      if component.overwrite.from ~= nil then
-        overwrite = component.overwrite;
+    if component.secondaryColors ~= nil then
+      if component.secondaryColors.from ~= nil then
+        secondaryColors = component.secondaryColors;
       else
-        overwrite = component.overwrite[l];
+        secondaryColors = component.secondaryColors[l];
       end
     end
 
-    if component.gradientRepeat == true then
-      gradientRepeat = true;
-    else
-      gradientRepeat = false;
+    if type(component.gradientRepeat) == "boolean" then
+      gradientRepeat = component.gradientRepeat;
+    elseif type(component.gradientRepeat) == "table" then
+      if V.tbl_islist(component.gradientRepeat) == true then
+        if component.gradientRepeat[l] ~= nil then
+          gradientRepeat = component.gradientRepeat[l];
+        else
+          gradientRepeat = component.gradientRepeat[#component.gradientRepeat];
+        end
+      else
+        gradientRepeat = component.gradientRepeat;
+      end
     end
+
 
     table.insert(_l, {
       align = align,
       text = line,
+      width = width,
 
       color = color,
-      overwrite = overwrite,
+      secondaryColors = secondaryColors,
       gradientRepeat = gradientRepeat
     })
   end
@@ -69,77 +90,143 @@ end
 
 T.recentsHandler = function(component)
   local length = component.length or 5;
-  local _r, _p = {}, {};
+  local _r= {};
 
-  vim.cmd("rshada");
-  local OFS = vim.v.oldfiles;
+  V.cmd("rshada");
+  V.cmd("wshada")
+  local OFS = data.recents(component.dir);
 
   for r = 1, length do
     local line = {
-      anchor = r,
+      anchor = nil,
       align = "center",
-      width = 0.6 * vim.api.nvim_win_get_width(0),
+      width = 0.6 * V.api.nvim_win_get_width(0),
 
       gradientRepeat = true,
       functions = {}
     };
 
     if type(component.gradientRepeat) == "boolean" then
-      if component.gradientRepeat == true then
-        line.gradientRepeat = true;
-      else
-        line.gradientRepeat = false;
-      end
+      line.gradientRepeat = component.gradientRepeat;
     elseif type(component.gradientRepeat) == "table" then
-      if component.gradientRepeat[l] ~= nil then
-        line.gradientRepeat = component.gradientRepeat[l];
+      if V.tbl_islist(component.gradientRepeat) == true then
+        if component.gradientRepeat[r] ~= nil then
+          line.gradientRepeat = component.gradientRepeat[r];
+        else
+          line.gradientRepeat = component.gradientRepeat[#component.gradientRepeat];
+        end
       else
-        line.gradientRepeat = component.gradientRepeat[1];
+        line.gradientRepeat = component.gradientRepeat;
       end
     end
 
     if component.width ~= nil then
       if component.width < 1 then
-        line.width = math.floor(component.width * vim.api.nvim_win_get_width(0));
+        line.width = math.floor(component.width * V.api.nvim_win_get_width(0));
       else
         line.width = component.width;
       end
     end
 
-    local entry = OFS[r];
-    local path, filename, extension = string.gsub(vim.fs.dirname(entry), "/data/data/com.termux/files/home", "~"), vim.fs.basename(entry), vim.filetype.match({ filename = entry });
-    table.insert(_p, { r, path });
+    local entry = OFS[r] or "Empty";
+    local path, filename, extension = string.gsub(V.fs.dirname(entry), "/data/data/com.termux/files/home", "~"), vim.fs.basename(entry), V.filetype.match({ filename = entry });
+    if entry ~= "Empty" then
+      line.anchor = path .. "/" .. filename;
+    end
 
-    local devIcons = require("nvim-web-devicons");
-    local icon, hl = devIcons.get_icon(filename, extension, { default = true });
+    local icon, hl = "", nil;
 
-    local fHl;
-    local nHl;
+    if component.useIcons == true then
+      local devIcons = require("nvim-web-devicons");
+      icon, hl = devIcons.get_icon(filename, extension, { default = true });
+    end
+
+    local fHl = "";
+    local nHl = "";
+
+    local sHl = "";
 
     if type(component.colors.name) == "table" and component.colors.name[r] ~= nil then
       fHl = component.colors.name[r];
-    else
+    elseif type(component.colors.name) == "table" and component.colors.name[r] == nil then
       fHl = component.colors.name[1];
     end
 
     if type(component.colors.number) == "table" and component.colors.number[r] ~= nil then
       nHl = component.colors.number[r];
-    else
+    elseif type(component.colors.number) == "table" and component.colors.number[r] == nil then
       nHl = component.colors.number[1];
     end
 
-    line.text = { icon, " ", filename, "SP", tostring(r)};
-    line.overwrite = { hl, "Normal", fHl, "Normal", nHl }
+    if type(component.colors.whiteSpace) == "table" and component.colors.whiteSpace[r] ~= nil then
+      sHl = component.colors.whiteSpace[r];
+    elseif type(component.colors.whitespaces) == "table" and component.colors.whitespaces[r] == nil then
+      sHl = component.colors.whitespaces[1]
+    end
 
-    line.functions.SP = function()
-      local amount = line.width - vim.fn.strchars(icon .. " " .. filename .. r);
-      return string.rep(" ", amount);
+    if component.style == nil or component.style == "list" then
+      if component.useIcons == true then
+        line.text = { icon, " ", filename, "SP", tostring(r) };
+        line.secondaryColors = { hl, sHl, fHl, sHl, nHl };
+      else
+        line.text = { filename, "SP", tostring(r) };
+        line.secondaryColors = { fHl, sHl, nHl };
+      end
+
+    elseif component.style == "centered" then
+      if component.useIcons == true then
+        line.text = { icon, " ", filename };
+        line.secondaryColors = { hl, sHl, fHl };
+      else
+        line.text = { filename };
+        line.secondaryColors = { fHl };
+      end
+    end
+
+    if component.style == nil or component.style == "list" then
+      local amount = 0;
+
+      line.functions.SP = function()
+        if component.useIcons == true then
+          amount = line.width - V.fn.strchars(icon .. " " .. filename .. r);
+        else
+          amount = line.width - V.fn.strchars(filename .. r);
+        end
+
+        return string.rep(" ", amount);
+      end
+    elseif component.style == "centered" then
+      line.width = nil;
     end
 
     table.insert(_r, line);
   end
 
-  return _r, _p;
+  return _r;
+end
+
+T.timeHandler = function(component)
+  local _t = {};
+  local theme = component.theme ~= nil and component.theme or "clock";
+
+  local apply = function(i)
+    table.insert(_t, {
+      align = "center",
+      color = "Special",
+      text = { "tm" },
+      functions = {
+        tm = function()
+          return arts.returnTime(nil,true)[i];
+        end
+      }
+    })
+  end
+
+    for i = 1, 3 do
+      apply(i);
+    end
+
+  return _t;
 end
 
 T.simplifyComponents = function(component)
@@ -154,6 +241,8 @@ T.simplifyComponents = function(component)
     _c = T.bannerHandler(component);
   elseif component.type == "recents" then
     _c = T.recentsHandler(component)
+  elseif component.type == "time" then
+    _c = T.timeHandler(component);
   end
 
   ::finish::
@@ -165,16 +254,33 @@ T.textRenderer = function(line, lineIndex, whitespaces)
 
   local txt = line.text;
 
+  if type(line.width) == "number" and line.width < 1 then
+    line.width = line.width * width;
+  elseif line.width == "auto" then
+    line.width = nil;
+  end
+
   if type(txt) == "string" then
     local _s = "";
+    local _s2 = "";
 
     if line.align == "center" then
-      _s = string.rep(" ", math.floor((width - vim.fn.strchars(txt)) / 2));
+      if line.width ~= nil then
+        _s = string.rep(" ", line.width <= width and math.floor((width - line.width) / 2) or 0)
+        _s2 = _s;
+      else
+        _s = string.rep(" ", V.fn.strchars(txt) <= width and math.floor((width - vim.fn.strchars(txt)) / 2) or 0);
+        _s2 = _s;
+      end
     elseif line.align == "right" then
-      _s = string.rep(" ", width - vim.fn.strchars(txt))
+      if line.width ~= nil then
+        _s = string.rep(" ", width - line.width);
+      else
+        _s = string.rep(" ", width - V.fn.strchars(txt));
+      end
     end
 
-    V.api.nvim_buf_set_lines(0, whitespaces + lineIndex, whitespaces + lineIndex + 1, false, { _s .. line.text })
+    V.api.nvim_buf_set_lines(0, whitespaces + lineIndex, whitespaces + lineIndex + 1, false, { _s .. line.text .. _s2 })
   else
     local _s = "";
 
@@ -186,10 +292,24 @@ T.textRenderer = function(line, lineIndex, whitespaces)
       end
     end
 
+    local sp;
+
     if line.align == "center" then
-      _s = string.rep(" ", math.floor((width - vim.fn.strchars(_s)) / 2)) .. _s;
+      sp = V.fn.strchars(_s) <= width and math.floor((width - V.fn.strchars(_s)) / 2) or 0;
+
+      if line.width ~= nil then
+        _s = line.width <= width and string.rep(" ", math.floor((width - line.width) / 2)) .. _s .. string.rep(" ", math.floor((width - line.width) / 2) or _s)
+      else
+        _s = string.rep(" ", sp) .. _s .. string.rep(" ", sp);
+      end
     elseif line.align == "right" then
-      _s = string.rep(" ", width - vim.fn.strchars(_s)) .. _s;
+      sp = V.fn.strchars(_s) <= width and width - V.fn.strchars(_s) or 0;
+
+      if line.width ~= nil and line.width <= width then
+        _s = line.width <= width and string.rep(" ", width - line.width) .. _s .. string.rep(" ", width - line.width) or _s;
+      else
+        _s = string.rep(" ", sp) .. _s .. string.rep(" ", sp);
+      end
     end
 
     V.api.nvim_buf_set_lines(0, whitespaces + lineIndex, whitespaces + lineIndex + 1, false, { _s });

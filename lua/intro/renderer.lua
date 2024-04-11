@@ -1,5 +1,7 @@
 -- INFO renderer for `intro.nvim`
 local R = {};
+
+local data = require("intro.data");
 local txt = require("intro.text");
 local hls = require("intro.highlights");
 local V = vim;
@@ -14,9 +16,9 @@ R.setBuffer = function()
   R.width = V.api.nvim_win_get_width(0);
   R.height = V.api.nvim_win_get_height(0);
 
-  R.introBuffer = V.api.nvim_create_buf(false, true);
+  data.introBuffer = V.api.nvim_create_buf(false, true);
 
-  V.cmd("buf " .. R.introBuffer);
+  V.cmd("buf " .. data.introBuffer);
   V.bo.filetype = "intro";
 
   -- Disabling various columns
@@ -28,11 +30,13 @@ R.handleConfig = function(tbl)
     R.width = V.api.nvim_win_get_width(0);
     R.height = V.api.nvim_win_get_height(0);
 
+    V.bo.modifiable = true;
     V.api.nvim_buf_set_lines(0, R.height, R.height * 2, false, { "" });
 
     for cl = 3, R.height do
       V.api.nvim_buf_set_lines(0, cl, cl + 1, false, { "" });
     end
+    V.bo.modifiable = false;
 
     goto skipSetup;
   else
@@ -44,28 +48,35 @@ R.handleConfig = function(tbl)
   end
 
   for _, component in ipairs(tbl.components) do
-    local _c;
-    _c = txt.simplifyComponents(component);
+    local _c = txt.simplifyComponents(component);
     V.list_extend(R.preparedLines, _c)
   end
 
   ::skipSetup::
-  local whiteSpaces = math.floor((R.height - #R.preparedLines) / 2)
+  local whiteSpaces = math.floor((R.height - #R.preparedLines) / 2);
+  data.whiteSpaces = whiteSpaces;
 
-  for w = 1, whiteSpaces do
-    V.api.nvim_buf_set_lines(0, w, w + 1, false, { "" })
+  V.bo.modifiable = true;
+  for w = 0, whiteSpaces do
+    V.api.nvim_buf_set_lines(0, w, w + 1, false, { string.rep(" ", R.width) })
   end
 
   for l, line in ipairs(R.preparedLines) do
+    -- Here to add the anchors
+    if line.anchor ~= nil then
+      table.insert(data.anchors, { l, line.anchor });
+    end
+
     txt.textRenderer(line, l, whiteSpaces);
     hls.applyHighlight(line, l, whiteSpaces);
   end
 
   local afterWhiteStart = whiteSpaces + #R.preparedLines;
 
-  for a = 1, whiteSpaces - 1 do
-    V.api.nvim_buf_set_lines(0, afterWhiteStart + a, afterWhiteStart + a + 1, false, { "" })
+  for a = 1, whiteSpaces do
+    V.api.nvim_buf_set_lines(0, afterWhiteStart + a, afterWhiteStart + a + 1, false, { string.rep(" ", R.width) })
   end
+  V.bo.modifiable = false;
 
   V.api.nvim_create_autocmd("VimResized", {
     pattern = { "<buffer>" },
