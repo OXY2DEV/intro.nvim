@@ -3,7 +3,7 @@ is stable enough
 
                                  intro.nvim ☄️                     *intro.nvim*
 ==============================================================================
-                   Another `intro` or `start screen` plugin fo
+                  Another `intro` or `start screen` plugin for
                                    `Neovim`
 Table of contents                                             *intro.nvim-toc*
 ------------------------------------------------------------------------------
@@ -17,63 +17,32 @@ Table of contents                                             *intro.nvim-toc*
 
 Introduction                                         *intro.nvim-introduction*
 ------------------------------------------------------------------------------
-`intro.nvim` is a start screen plugin for Neovim. The main reason why this
-plugin exists is due to the other plugins not having all the features I want.
 
-Some of the plugins provide `components` but lack the ability to customize
-specific lines or overwriting their behavior. Others give control over the
-lines but don't have `omponents` to make the job easier.
+               ██████▒▒░░      ⠛⣿⠛ ⣿⣄  ⣿ ⠛⠛⣿⠛⠛ ⣾⠛⠛⣷ ⣾⠛⠛⣷
+               ██░░▒▒██▒▒░░     ⣿  ⣿ ⣿ ⣿   ⣿   ⣿⠶⠶⠟ ⣿  ⣿
+               ██░░▒▒████▒▒░░   ⣿  ⣿ ⣿ ⣿   ⣿   ⣿⠷   ⣿  ⣿
+               ██▒▒▒▒░░▒▒▒▒░░  ⣤⣿⣤ ⣿  ⠙⣿   ⣿   ⣿ ⢷  ⢿⣤⣤⡿ .nvim
+               ██████▒▒▒▒░░    
+               ▒▒▒▒▒▒▒▒░░      `Yet another start screen plugin`
 
-There was also no easy way to get `gradient` colored text thorugh the plugins,
-at least none I could find. There was also no `animation` support for them,
-though I did manage to get some animation to work with `wlanimation`.
+A `start screen` plugin for those who want next level customization in their
+start screen without the hassle of setting everything up themselves. 
 
-The key features of this plugin are as follows,
-    1. Parts of the text shown on the buffer are made up of `components`.
+Key features -
+  1. Component based customization.
+  2. Easily `align` the text.
+  3. Various text coloring methods.
+  4. Gradient support.
+  5. `highlights` based animation support.
+  6. `text` based animation support.
 
-       Components are a few lines together that have similarities(for example
-       text that use the same highlight groups or are aligned the same way 
-       or have other similarities). This makes it so that you don't have to
-       use a  config table for every single line(which was one of the reason
-       for making  this plugin).
-
-    2. Better text `highlights`.
-
-       As texts are grouped as `components` it is possible to alter the
-       highlighting of a specific part of the text.
-       Every `component` has a property called `overwrite`. This allows the
-       user to alter the the text highlights with ease.  You can enter the
-       index at which the highlight should be added and `optionally` where
-       the highlighting should end.
-
-       NOTE: The index in `overwrite` is 0-based(1st character is the 0th
-       character). It is also `byte-indexed` so make sure to add the correct
-       index(especially when using `nerd font` characters).
-
-    3. Auto `alignment` of text.
-
-       One of the issues I had when using other start screen plugins was the
-       lack of text aligning options. `intro.nvim` automatically centers the
-       lines so all the lines will stay at the middle of the screen. There
-       is also support for `horizontal` text alignment. Lines can be either
-       `center`, `left` or `right` aligned.
-
-    4. Responsive text.
-
-       `intro.nvim` automatically realigns the texts when the screen size
-       changes.
-
-    5. Animations.
-
-       `intro.nvim` supports basic highlight group based animations.
-
-And much more!
+And muxh more!
 
 Installation                                         *intro.nvim-installation*
 ------------------------------------------------------------------------------
 Use your favourite plugin manager to install this plugin.
 
-The Installation table looks something like this.
+━━ Lazy ─────────────────────────────────────────────────────────────────────╮
 >
   {
     "OXY2DEV/intro.nvim",
@@ -88,46 +57,68 @@ The Installation table looks something like this.
     end
   }
 <
+─────────────────────────────────────────────────────────────────────────────╯
+
 To use the plugin call the *setup()* function.
+
+━━ intro.lua ────────────────────────────────────────────────────────────────╮
 >
   require("intro").setup({ preset = "nvimGradient" })
 <
+─────────────────────────────────────────────────────────────────────────────╯
 
 Usage                                                       *intro.nvim-usage*
 ------------------------------------------------------------------------------
                                setup({config})
 
+Usage ~
+━━ intro.lua ────────────────────────────────────────────────────────────────╮
+>
+  require("intro").setup({config});
+<
+─────────────────────────────────────────────────────────────────────────────╯
+
 Description ~
-  Setup function. All your `components`, `lines`, `highlights` & `animations`
-  reside inside this
+  Setup function. All your *components* , *highlights* & *animations* reside
+  inside this function.
 
 Parameters ~
   {config} `table | nil`
-  This table has the following properties,
+  Table containing all the properties of your start screen.
+
+  It contains the following properties,
     {preset} `string | nil` 
-    Define the `name` of the preset to use here. All available presets are
-    part of the `presets.lua` file.
+    Name of the preset to be used. Presets are searched in the `presets.lua`
+    file.
 
     NOTE: Custom preset support is a `work in progress` feature.
 
     {components} `table | nil`
-    Contains all the `components` used by the plugin for the intro screen.
+    Table containing all the components used in the start screen.
+
     Check the entire list of `components` & their setup in
     *intro.nvim-components*
 
+    NOTE: Has no effect if preset is set.
+
     {globalHighlights} `table | nil`
-    This contains all the highlight groups used inside {components}. These
-    highlights are applied first. The structure for this property looks
-    like this
->
-      {
-	"highlight_one" = { bg = "#1e1e2e", fg = "#BAC2DE" }
-      }
-<
+    Table containing all the custom highlight groups you use.
+
+    `globalHighlights` table has key value pairs for the highlight groups.
 
     Each of the keys are sent into `nvim_set_hl()` as the highlight group
     name(a `Intro_` prefix to avoid overwriting normal highlight groups)
     and the values corresponding to that name is sent as the option.
+
+    Example:
+    ╭ intro.lua ────────────────────────────────────────────────────────────╮
+>
+      globalHighlights = {
+        "highlight_one" = { bg = "#1e1e2e", fg = "#BAC2DE" },
+        "highlight_two" = { bg = "#BAC2DE", fg = "#1e1e2e" },
+      }
+<
+    ╰───────────────────────────────────────────────────────────────────────╯
 
     {animations} `table | nil`
     This property has all the animations defined inside it. It has the 
@@ -193,4 +184,4 @@ TODOs                                                         *intro.nvim-wip*
 *intro.setup* Setup
 
 
- vim:tw=78:ts=8:noet:ft=help:norl:
+ vim:tw=77:ts=8:noet:ft=help:norl:
