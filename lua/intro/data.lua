@@ -5,15 +5,16 @@ data.introBuffer = 0;
 data.whiteSpaces = 0;
 
 data.anchors = {};
+data.anchorStatus = {};
 
 data.recents = function (isDir)
-  if isDir == false then
+  if isDir == false or isDir == nil then
     return V.v.oldfiles;
-  elseif isDir == nil then
+  elseif isDir == true then
     local _t = {};
 
     for _, entry in ipairs(V.v.oldfiles) do
-      if string.match(entry, vim.loop.cwd()) ~= nil then
+      if string.match(entry, V.loop.cwd()) ~= nil then
         table.insert(_t, entry);
       end
     end
@@ -85,12 +86,12 @@ data.movements = function(config)
       local y = V.api.nvim_win_get_cursor(0)[1] - 1;
       data.height = V.api.nvim_win_get_height(0);
 
-      for _, v in ipairs(data.anchors) do
+      for aI, v in ipairs(data.anchors) do
         local position = v[1];
         local link = v[2];
 
 
-        if (y - data.whiteSpaces) == position then
+        if (y - data.whiteSpaces) == position and data.anchorStatus[aI] ~= false then
           if config.position == nil or config.position == "bottom" then
             V.api.nvim_buf_set_extmark(data.introBuffer, 1, data.height - 1, 0, {
               id = 10,

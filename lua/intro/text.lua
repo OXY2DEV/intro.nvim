@@ -89,14 +89,14 @@ T.bannerHandler = function(component)
 end
 
 T.recentsHandler = function(component)
-  local length = component.length or 5;
+  local entryCount = component.entryCount or 5;
   local _r= {};
 
   V.cmd("rshada");
   V.cmd("wshada")
   local OFS = data.recents(component.dir);
 
-  for r = 1, length do
+  for r = 1, entryCount do
     local line = {
       anchor = nil,
       align = "center",
@@ -129,9 +129,13 @@ T.recentsHandler = function(component)
     end
 
     local entry = OFS[r] or "Empty";
-    local path, filename, extension = string.gsub(V.fs.dirname(entry), "/data/data/com.termux/files/home", "~"), vim.fs.basename(entry), V.filetype.match({ filename = entry });
+    local path, filename, extension = string.gsub(V.fs.dirname(entry), "/data/data/com.termux/files/home", "~"), V.fs.basename(entry), V.filetype.match({ filename = entry });
     if entry ~= "Empty" then
       line.anchor = path .. "/" .. filename;
+    end
+
+    if component.useAnchors == false then
+      line.useAnchors = false;
     end
 
     local icon, hl = "", nil;

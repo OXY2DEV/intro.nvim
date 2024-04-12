@@ -119,6 +119,36 @@ Parameters ~
 
     NOTE: Custom preset support is a `work in progress` feature.
 
+
+    {anchors} `table | nil`
+    Define setting for the anchor popups. It is meant to show the `full path`
+    of the file the `Cursor` is on.
+
+    Only has effect when a component with the type `recents` is used.
+
+    It has the following properties
+      {position} `string | nil`
+      Defines where to put the popup. Values can be either `top` or `bottom`
+
+      {textStyle} `table | nil`
+      Sets the style for the text of the Anchor
+
+      {cornerStyle} `table | nil`
+      Sets the style for the edge of the Anchor
+
+    Usage
+    ╭ intro.lua ────────────────────────────────────────────────────────────╮
+>
+      anchors = {
+	position = "bottom",
+
+	textStyle = { fg = "#11ffee", bg = "#ffffff" },
+	cornerStyle = { fg = "#ffffff", bg = "#11ffee" }
+      }
+<
+    ╰───────────────────────────────────────────────────────────────────────╯
+
+
     {components} `table | nil`
     Table containing all the components used in the start screen.
 
@@ -152,6 +182,7 @@ Parameters ~
 
     NOTE: Has no effect if preset is set.
 
+
     {globalHighlights} `table | nil`
     Table containing all the custom highlight groups you use.
 
@@ -170,6 +201,7 @@ Parameters ~
       }
 <
     ╰───────────────────────────────────────────────────────────────────────╯
+
 
     {animations} `table | nil`
     This property has all the animations defined inside it. It has the 
@@ -293,6 +325,7 @@ Defining a component ~
 
 Banner ~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                                              `type = "banner"`
 Banner is used to define a group of line that have a specific style to them.
 So, you don't have to write the color names, alignments etc. for every line.
 
@@ -358,6 +391,7 @@ Properties ~
   NOTE You can also use a string instead of a table in the 2nd case if you
        prefer.
 
+
   {align} `table | string | nil`
   A list or a string defining the alignment of text. Supported values
     • left
@@ -385,6 +419,7 @@ Properties ~
 
   NOTE If a line has no align value then the last one in the table is used.
 
+
   {width} `table | integer | float | nil`
   If you have characters that are bigger than normal characters which causes
   texts to be incorrectly aligned or if you want padding around the text then
@@ -406,6 +441,7 @@ Properties ~
 
   When it is a table if width of a line is nil then the last width in the 
   table is used.
+
 
   {colors} `table | string | nil`
   This can be a table or a string or nil depending on what you want. It is
@@ -465,6 +501,7 @@ Properties ~
 
   You can also use all 3 of them together if you want.
 
+
   {secondaryColors} `table | nil`                              `list inside list`
   This is a table containing various highlight groups that will be applied
   to a line after the main color(ddfined in {colors}) is applied.
@@ -514,6 +551,7 @@ Properties ~
 
   You can combine them too if you want.
 
+
   {gradientRepeat} `boolean | table | nil`
   Determines wether gradients should repeat or not.
 
@@ -551,7 +589,7 @@ Properties ~
 
 Recents ~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-`type = "recents"`
+                                                             `type = "recents"`
 
 Recents is a component that shows the recently accessed files from `oldfiles`.
 It also sets up a keymap to easily open them.
@@ -560,35 +598,259 @@ Properties ~
   {style} `string | nil`
   Changes the style of the list. Can either be `list` or `centered`.
 
+  Example
+  ╭ Recents ─────────────────────────────────────────────────────────────────╮
+>
+    {
+      style = "list" -- or "centered"
+    }
+<
+  ╰──────────────────────────────────────────────────────────────────────────╯
+
+
   {width} `integer | float | nil`
   Defines the width of the list. Has no effect if style is `centered`.
 
+  The default width is `50%` of the window width.
+
+  Example
+  ╭ Recents ─────────────────────────────────────────────────────────────────╮
+>
+    {
+      width = 0.5,
+      
+      -- Also supports integer values
+      width = 39
+    }
+<
+  ╰──────────────────────────────────────────────────────────────────────────╯
+
+
   {useIcons} `boolean | nil`
-  When `true` File icons will be visible. Requires `nvim-web-devicons`.
+  When `true` File icons with color will be visible. 
+  NOTE Requires `nvim-web-devicons`
 
   Default is `false`
 
-  {length} `integer | nil`
-  Number of entries to show. Default is 5.
+  Usage
+
+  For `lazy.nvim` add the following lines to the plugin configuration table.
+  The process should be similar for the other plugin managers too.
+
+  ╭ plugins.lua ─────────────────────────────────────────────────────────────╮
+>
+    dependencies = {
+      "nvim-web-devicons"
+    }
+<
+  ╰──────────────────────────────────────────────────────────────────────────╯
+  
+  In the component table you should set {useIcons} to `true`.
+
+  ╭ Recents ─────────────────────────────────────────────────────────────────╮
+>
+    {
+      useIcons = true
+    }
+<
+  ╰──────────────────────────────────────────────────────────────────────────╯
+
+
+  {entryCount} `integer | nil`
+  Number of entries to show.
+
+  If for some reason(e.g. fresh linux install) the number of entries in 
+  `oldfiles` is less than this number you will see entries with `Empty` 
+  as the file name.
+
+  Default number of entries is 5.
+
+  Usage
+  ╭ Recents ─────────────────────────────────────────────────────────────────╮
+>
+    {
+      entryCount = 5
+    }
+<
+  ╰──────────────────────────────────────────────────────────────────────────╯
+
+
+  {keymap} `string | nil`
+  The key combination to use for opening the file.
+
+  When the `Cursor` is placed on top of one of the entries if you use the key
+  combination it would open the file and close `intro.nvim`.
+
+  Default is `<leader><leader>`
+
+  Usage
+  ╭ Recents ─────────────────────────────────────────────────────────────────╮
+>
+    {
+      keymap = "<Space><Space>"
+    }
+<
+  ╰──────────────────────────────────────────────────────────────────────────╯
+
+  Check the keycodes with `:h keycodes` for the full list of available keys.
+
+
+  {useAnchors} `boolean | nil`
+  Wether to show the anchor popup on hover. Default is `true`.
+
+  NOTE This is component specific. So, if you use this component multiple
+       time you can choose which one of them will show the popup.
+  
+  Usage
+  ╭ Recents ─────────────────────────────────────────────────────────────────╮
+>
+    {
+      useAnchors = false
+    }
+<
+  ╰──────────────────────────────────────────────────────────────────────────╯
+
+  {dir} `string | boolean | nil`
+  Use this to only show the recents files of a specific directory.
+
+  When set to `false` loads `oldfiles`(`default` behavior).
+  When set to `true` loads files of the current directory.
+  When set to a `string` only shows entries that have that path.
+  
+  NOTE It currently doesn't support `relative` paths. So, you will need to use
+       the `absolute` path.
+  
+  Usage
+  ╭ Recents ─────────────────────────────────────────────────────────────────╮
+>
+    {
+      -- Boolean value
+      dir = false,
+
+      -- String value
+      dir = ".config/nvim/"
+    }
+<
+  ╰──────────────────────────────────────────────────────────────────────────╯
 
   {colors} `table | nil`
     {name} `table | string | nil`
     Highlight group for the names.
 
+    When set to a `string` it applies that `highlight group` to all the
+    entries.
+
+    When the value is a table it will use the index of the entry to set the
+    `highlight group`, if a value is nil then the last entry in the table is
+    used.
+
+    NOTE To bypass this behavior set an entry to "".
+
+
+    They also support gradients.
+
+    Example usage of gradients
+    ╭ Recents ───────────────────────────────────────────────────────────────╮
+>
+      colors = {
+	name = {
+	  { "grad_1", "grad_2", "grad_3" }
+	}
+      }
+<
+    ╰────────────────────────────────────────────────────────────────────────╯
+
+    Gradients repeat behavior is determined by the `secondaryColors` of the
+    `gradientRepeat` property.
+
+    It will also work if you just set `gradientRepeat` to `true` or `false`.
+
     {number} `table | string | nil`
-    Highlight group for the numbers.
+    Highlight group for the entry numbers.
+
+    The behavior is the same as {name}.
 
     {whiteSpace} `table | string | nil`
-    Highlight group for the spaces.
+    Highlight group for the spaces between the name and entry number.
+
+    The behavior is the same as {name}.
+
+  Usage
+  ╭ Recents ─────────────────────────────────────────────────────────────────╮
+>
+    {
+      colors = {
+	name = {},
+	number = {},
+
+	whiteSpace = {}
+      }
+    }
+<
+  ╰──────────────────────────────────────────────────────────────────────────╯
 
 Time ~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-`type = "time"`
+                                                                `type = "time"`
 
 A simple clock.
 
 Properties ~
   Currently has no properties.
+
+
+Custom ~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                                              `type = "custom"`
+A planned component. I plan to allow users to define their own components
+in their config.
+
+Currently the planned structure is like this
+━━ intro.lua ────────────────────────────────────────────────────────────────╮
+>
+  {
+    type = "custom",
+    callback = function ()
+    end
+  }
+<
+─────────────────────────────────────────────────────────────────────────────╯
+
+It should return an output like this
+━━ intro.lua ────────────────────────────────────────────────────────────────╮
+>
+  {
+    {
+      text = "A line",
+      color = nil,
+      secondaryColors = { "hl_2", "hl_3" }
+    },
+    {
+      text = "Another line",
+      color = n"hl_1",
+      secondaryColors = { "hl_4", "hl_5" }
+    }
+  }
+<
+─────────────────────────────────────────────────────────────────────────────╯
+
+Which can be directly rendered on the screen.
+
+Colors                                                       *intro.nvim-colors*
+------------------------------------------------------------------------------
+
+                                    Setup
+                                      ┃
+                                      ┃
+                                  Intro.nvim
+                                      ┃
+	     Default setup ━━━━┥Config Handler┝━━━━ Presets
+                                      ┃
+                                      ┃
+                                      ┠─ Buffer Setup ┄┄┄┄┄┄┄┄┄┄ Data.lua
+                                      ┃                            ┆
+             Highlight Group applier ─╀─ Line renderer ┄┄┄┄┄┄┄┄┄┄┄┄┘
+
 
 
  vim:tw=77:ts=8:noet:ft=help:norl:
