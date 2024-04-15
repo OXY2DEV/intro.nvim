@@ -6,4 +6,5 @@ intro.nvim-usage	intro-nvim.txt	/*intro.nvim-usage*
 intro.nvim-presets	intro-nvim.txt	/*intro.nvim-presets*
 intro.nvim-components	intro-nvim.txt	/*intro.nvim-components*
 intro.nvim-helpers	intro-nvim.txt	/*intro.nvim-helpers*
-intro.nvim-todos	intro-nvim.txt	/*intro.nvim-wip*
+intro.nvim-animations	intro-nvim.txt	/*intro.nvim-animations*
+intro.nvim-colors	intro-nvim.txt	/*intro.nvim-colors*

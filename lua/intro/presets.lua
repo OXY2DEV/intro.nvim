@@ -1,6 +1,6 @@
 local P = {};
 local A = require("intro.arts");
-local U = require("intro.utils");
+local H = require("intro.helpers");
 
 A.nvim_color_names = {
   "c_1",  "c_2",  "c_3",  "c_4",  "c_5",
@@ -93,16 +93,16 @@ P.nvim_color_animated = {
   animations = {
     updateDelay = 15,
     highlightBased = {
-      U.transition("c_1", { "1E", "1E", "1E" }, { "89", "b5", "fa" }, 10),
-      U.transition("c_2", { "1E", "1E", "1E" }, { "73", "be", "fb" }, 10),
-      U.transition("c_3", { "1E", "1E", "1E" }, { "5f", "c6", "f7" }, 10),
-      U.transition("c_4", { "1E", "1E", "1E" }, { "50", "cd", "ef" }, 10),
-      U.transition("c_5", { "1E", "1E", "1E" }, { "4c", "d3", "e5" }, 10),
-      U.transition("c_6", { "1E", "1E", "1E" }, { "53", "d9", "d8" }, 10),
-      U.transition("c_7", { "1E", "1E", "1E" }, { "63", "dd", "c9" }, 10),
-      U.transition("c_8", { "1E", "1E", "1E" }, { "78", "e0", "ba" }, 10),
-      U.transition("c_9", { "1E", "1E", "1E" }, { "8e", "e2", "ad" }, 10),
-      U.transition("c_0", { "1E", "1E", "1E" }, { "a6", "e3", "a1" }, 10)
+      H.transition("c_1", { "1E", "1E", "1E" }, { "89", "b5", "fa" }, 10),
+      H.transition("c_2", { "1E", "1E", "1E" }, { "73", "be", "fb" }, 10),
+      H.transition("c_3", { "1E", "1E", "1E" }, { "5f", "c6", "f7" }, 10),
+      H.transition("c_4", { "1E", "1E", "1E" }, { "50", "cd", "ef" }, 10),
+      H.transition("c_5", { "1E", "1E", "1E" }, { "4c", "d3", "e5" }, 10),
+      H.transition("c_6", { "1E", "1E", "1E" }, { "53", "d9", "d8" }, 10),
+      H.transition("c_7", { "1E", "1E", "1E" }, { "63", "dd", "c9" }, 10),
+      H.transition("c_8", { "1E", "1E", "1E" }, { "78", "e0", "ba" }, 10),
+      H.transition("c_9", { "1E", "1E", "1E" }, { "8e", "e2", "ad" }, 10),
+      H.transition("c_0", { "1E", "1E", "1E" }, { "a6", "e3", "a1" }, 10)
     }
   }
 };
@@ -111,7 +111,7 @@ P.nvim_color_animated = {
 P.cat = {
   components = {
     {
-      width = { 8, 11, 8, 11 },
+      width = 14,
       lines = A.cat,
     }
   }
@@ -120,7 +120,7 @@ P.cat = {
 P.cat_green = {
   components = {
     {
-      width = { 8, 11, 8, 11 },
+      width = 14,
       lines = A.cat,
       colors = "cat_1"
     }
@@ -134,7 +134,7 @@ P.cat_green = {
 P.cat_blue = {
   components = {
     {
-      width = { 8, 11, 8, 11 },
+      width = 14,
       lines = A.cat,
       colors = "cat_1"
     }
@@ -142,6 +142,53 @@ P.cat_blue = {
 
   globalHighlights = {
     cat_1 = { fg = "#89b5fa" },
+  }
+}
+
+P.blue_green_cats = {
+  components = {
+    {
+      width = 24,
+      lines = A.cat_2,
+      secondaryColors = {
+        { "cat_1", "cat_2" },
+        { "cat_1", "cat_2" },
+        { "cat_1", "cat_2" },
+        { "cat_1", "cat_2" },
+      }
+    }
+  },
+
+  globalHighlights = {
+    cat_1 = { fg = "#89b5fa" },
+    cat_2 = { fg = "#a6e3a1" },
+  }
+}
+
+P.four_cats = {
+  components = {
+    {
+      width = 24,
+      lines = A.cat_4,
+      secondaryColors = {
+        { "cat_1", "cat_2" },
+        { "cat_1", "cat_2" },
+        { "cat_1", "cat_2" },
+        { "cat_1", "cat_2" },
+        nil,
+        { "cat_3", "cat_4" },
+        { "cat_3", "cat_4" },
+        { "cat_3", "cat_4" },
+        { "cat_3", "cat_4" },
+      }
+    }
+  },
+
+  globalHighlights = {
+    cat_1 = { fg = "#89b5fa" },
+    cat_2 = { fg = "#a6e3a1" },
+    cat_3 = { fg = "#f5c2e7" },
+    cat_4 = { fg = "#cba6f7" },
   }
 }
 

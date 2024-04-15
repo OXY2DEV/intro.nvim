@@ -1,6 +1,6 @@
-local UT = {};
+local HP = {};
 
-UT.transition = function (groupName, color1, color2, animationSteps, animationOptions)
+HP.transition = function (groupName, color1, color2, animationSteps, animationOptions)
   local opts = {
     groupName = "nogroup",
     values = {}
@@ -22,7 +22,7 @@ UT.transition = function (groupName, color1, color2, animationSteps, animationOp
     vim.tbl_extend("force", opts, animationOptions);
   end
 
-  local colors = UT.gradientSteps(
+  local colors = HP.gradientSteps(
     { r = R1, g = G1, b = B1 },
     { r = R2, g = G2, b = B2 },
     animationSteps
@@ -35,10 +35,10 @@ UT.transition = function (groupName, color1, color2, animationSteps, animationOp
   return opts;
 end
 
-UT.gradientSteps = function(from, to, steps)
+HP.gradientSteps = function(from, to, steps)
   local gradient = {};
 
-  for g = 0, steps do
+  for g = 1, steps do
     local alpha = g / steps;
 
     local R = (from.r > to.r) and (from.r * ( 1 - alpha)) + (to.r * alpha) or (to.r * alpha) + (from.r * (1 - alpha));
@@ -51,4 +51,4 @@ UT.gradientSteps = function(from, to, steps)
   return gradient;
 end
 
-return UT;
+return HP;
