@@ -2,9 +2,11 @@
 local H = {};
 local V = vim;
 
+local data = require("intro.data");
+
 H.setHL = function (hls)
   for hlN, hlV in pairs(hls) do
-    if vim.fn.hlexists(hl) == 0 then
+    if V.fn.hlexists(hl) == 0 then
       V.api.nvim_set_hl(0, "Intro_" .. hlN, hlV);
     end
   end
@@ -18,162 +20,164 @@ H.checkHl = function(hl, line, clStart, clEnd)
   end
 end
 
-H.applyHighlight = function(line, lineIndex, whitespaces)
+H.applier = function (lineConfig, lineIndex)
   local width = V.api.nvim_win_get_width(0);
 
-  local clr = line.color;
-  local sCl = line.secondaryColors;
+  local align = lineConfig.align;
 
-  local grd = line.gradientRepeat;
+  local color = lineConfig.color;
+  local secondary = lineConfig.secondaryColors;
 
-  local txt = line.text;
-  local func = line.functions or {};
+  local text = lineConfig.text;
+  local functions = lineConfig.functions;
 
+  local gradientRepeat = lineConfig.gradientRepeat;
+
+  local partSizes = {};
+  local characterLength = 0;
+  local byteLength = 0;
+
+  local cachedText = "";
+
+  local whiteSpaces = data.whiteSpaces;
   local spaces = 0;
-  local size, byteSize = {}, 0;
-  local charCount = 0;
 
-  if type(txt) == "string" then
-    byteSize = #txt;
-    charCount = V.fn.strchars(txt);
-  elseif type(txt) == "table" then
-    local pS = 0;
+  -- Get the width of the text
+  if type(text) == "string" then
+    byteLength = #text;
+    characterLength = V.fn.strchars(text);
+  elseif type(text) == "table" then
+    local sizeStart = 0;
 
-    for _, part in ipairs(txt) do
-      if func[part] ~= nil then
-        byteSize = byteSize + #func[part]();
-        charCount = charCount + V.fn.strchars(func[part]());
-        table.insert(size, { pS, pS + #func[part]() });
+    for _, part in ipairs(text) do
+      if functions ~= nil and functions[part] ~= nil then
+        local str = functions[part]();
 
-        pS = pS + #func[part]();
+        byteLength = byteLength + #str;
+        characterLength = characterLength + V.fn.strchars(str);
+
+        table.insert(partSizes, { sizeStart, sizeStart + #str });
+        cachedText = cachedText .. str;
+
+        sizeStart = sizeStart + #str;
       else
-        byteSize = byteSize + #part;
-        charCount = charCount + V.fn.strchars(part);
-        table.insert(size, { pS, pS + #part });
+        byteLength = byteLength + #part;
+        characterLength = characterLength + V.fn.strchars(part);
 
-        pS = pS + #part;
+        table.insert(partSizes, { sizeStart, sizeStart + #part });
+        cachedText = cachedText .. part;
+
+        sizeStart = sizeStart + #part;
       end
     end
   end
 
-  if line.align == "center" then
-    if line.width ~= nil then
-      spaces = line.width <= width and math.floor((width - line.width) / 2) or 0;
+  -- Calculate the number of spaces before the text
+  if align == "center" or align == nil then
+    if characterLength < width then
+      spaces = math.floor((width - characterLength) / 2);
     else
-      spaces = charCount <= width and math.floor((width - charCount) / 2) or 0;
+      spaces = 0;
     end
-  elseif line.align == "right" then
-    if line.width ~= nil then
-      spaces = line.width <= width and (width - line.width) or 0;
+  elseif align == "right" then
+    if characterLength < width then
+      spaces = width - characterLength;
     else
-      spaces = charCount <= width and (width - charCount) or 0;
+      spaces = 0;
     end
+  else
+    spaces = 0;
   end
 
-  if type(clr) == "string" then
-    H.checkHl(clr, whitespaces + lineIndex, spaces, spaces + byteSize)
-  elseif type(clr) == "table" then
-    local c = 1;
+  -- Apply the main color
+  if type(color) == "string" then
+    H.checkHl(color, whiteSpaces + lineIndex, spaces, spaces + byteLength)
+  elseif type(color) == "table" then
+    local colorIndex = 1;
 
-    for s = 1, byteSize do
-      H.checkHl(clr[c], whitespaces + lineIndex, spaces + s - 1, spaces + s);
+    for c = 1, characterLength do
+      local characterStart = spaces + #string.sub(cachedText, 0, c);
+      local characterEnd = spaces + #string.sub(cachedText, 0, c + 1);
 
-      if (c + 1) <= #clr then
-        c = c + 1;
-      else
-        if type(grd) == "boolean" then
-          if grd == true then
-            c = 1;
-          else
-            c = #clr;
-          end
-        elseif type(grd) == "table" then
-          if grd.colors == true then
-            c = 1;
-          else
-            c = #clr;
-          end
+      H.checkHl(color[colorIndex], whiteSpaces + lineIndex, characterStart, characterEnd);
+
+      if (colorIndex + 1) > #color then
+        if type(gradientRepeat) == "boolean" and gradientRepeat == true then
+          colorIndex = 1;
+        elseif type(gradientRepeat) == "table" and gradientRepeat.colors == true then
+          colorIndex = 1;
         end
+      else
+        colorIndex = colorIndex + 1;
       end
     end
   end
 
-
-  if sCl == nil then
+  -- Up until here everything works
+  if secondary == nil then
     return;
   end
 
-  for oI,o in ipairs(sCl) do
-    local coords = size[oI];
+  for index, seClr in ipairs(secondary) do
+    if type(seClr) == "string" and seClr ~= "" then
+      local Y1 = partSizes[index][1];
+      local Y2 = partSizes[index][2];
 
-    if o == "" then
-      goto notAColor;
-    end
+      H.checkHl(seClr, whiteSpaces + lineIndex, spaces + Y1, spaces + Y2)
+    elseif type(seClr) == "table" and V.tbl_islist(seClr) == true then
+      local Y1 = partSizes[index][1];
+      local Y2 = partSizes[index][2] - #string.sub(cachedText, -1);
 
-    if type(o) == "string" and o.from == nil then
-      H.checkHl(o, whitespaces + lineIndex, spaces + coords[1], spaces + coords[2]);
-    elseif type(o) == "table" and o.from == nil then
-      local oc = 1;
+      local colorIndex = 1;
 
-      for s = coords[1], coords[2] - 2 do
-        H.checkHl(o[oc], whitespaces + lineIndex, spaces + s, spaces + s + 1);
+      for y = Y1, Y2 do
+        H.checkHl(seClr[colorIndex], whiteSpaces + lineIndex, spaces + y, spaces + y + 1);
 
-        if (oc + 1) <= #o then
-          oc = oc + 1;
+        if (colorIndex + 1) > #seClr then
+          if type(gradientRepeat) == "boolean" and gradientRepeat == true then
+            colorIndex = 1;
+          elseif type(gradientRepeat) == "table" and gradientRepeat.secondaryColors == true then
+            colorIndex = 1;
+          end
         else
-          if type(grd) == "boolean" then
-            if grd == true then
-              oc = 1;
-            else
-              oc = #o;
-            end
-          elseif type(grd) == "table" then
-            if grd.secondaryColors == true then
-              oc = 1;
-            else
-              oc = #o;
-            end
-          end
+          colorIndex = colorIndex + 1;
         end
       end
-    elseif type(o) == "table" and o.from ~= nil then
-      local from, to, hl = o.from, o.to, o.highlight;
-      local oc = 1;
-
-      if o.to == nil then
-        to = from + 1;
+    elseif type(seClr) == "table" and V.tbl_islist(seClr) == false then
+      if seClr.from == nil then
+        seClr.from = 0;
       end
 
-      -- BUG highlight priorities becoming incorrect
-      for l = from, to do
+      if seClr.to == nil then
+        seClr.to = 1;
+      end
 
-        if type(hl) == "string" then
-          H.checkHl(hl, whitespaces + lineIndex, spaces + l, spaces + l + 1);
-        elseif type(hl) == "table" then
-          H.checkHl(hl[oc], whitespaces + lineIndex, spaces + l, spaces + l + 1)
+      if type(seClr.highlight) == "string" then
+        local from = #string.sub(cachedText, 0, seClr.from);
+        local to = #string.sub(cachedText, 0, seClr.to + 1);
 
-          if (oc + 1) <= #hl then
-            oc = oc + 1;
-          else
-            if type(grd) == "boolean" then
-              if grd == true then
-                oc = 1;
-              else
-                oc = #hl;
-              end
-            elseif type(grd) == "table" then
-              if grd.secondaryColors == true then
-                oc = 1;
-              else
-                oc = #hl;
-              end
+        H.checkHl(seClr.highlight, whiteSpaces + lineIndex, spaces + from, spaces + to);
+      elseif type(seClr.highlight) == "table" then
+        local colorIndex = 1;
+
+        for y = seClr.from, seClr.to - 1 do
+          local from = #string.sub(cachedText, 0, y);
+          local to = from + #string.sub(cachedText, y, y + 1);
+
+          H.checkHl(seClr.highlight[colorIndex], whiteSpaces + lineIndex, spaces + from, spaces + to);
+
+          if (colorIndex + 1) > #seClr.highlight then
+            if type(gradientRepeat) == "boolean" and gradientRepeat == true then
+              colorIndex = 1;
+            elseif type(gradientRepeat) == "table" and gradientRepeat.secondaryColors == true then
+              colorIndex = 1;
             end
+          else
+            colorIndex = colorIndex + 1;
           end
         end
       end
     end
-
-    ::notAColor::
   end
 end
 
