@@ -1,5 +1,15 @@
 local HP = {};
 
+HP.toFg = function(colorList)
+  local Fg = {};
+
+  for _, v in ipairs(colorList) do
+    table.insert(Fg, { fg = v })
+  end
+
+  return Fg;
+end
+
 HP.transition = function (groupName, color1, color2, animationSteps, animationOptions)
   local opts = {
     groupName = "nogroup",

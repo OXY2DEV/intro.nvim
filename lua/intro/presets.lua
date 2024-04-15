@@ -1,4 +1,6 @@
 local P = {};
+
+local V = vim;
 local A = require("intro.arts");
 local H = require("intro.helpers");
 
@@ -82,9 +84,7 @@ P.nvim_color_animated = {
   components = {
     {
       lines = A.N,
-      colors = {
-        A.nvim_color_names_simple
-      }
+      colors = { A.nvim_color_names_simple }
     }
   },
 
@@ -93,16 +93,86 @@ P.nvim_color_animated = {
   animations = {
     updateDelay = 15,
     highlightBased = {
-      H.transition("c_1", { "1E", "1E", "1E" }, { "89", "b5", "fa" }, 10),
-      H.transition("c_2", { "1E", "1E", "1E" }, { "73", "be", "fb" }, 10),
-      H.transition("c_3", { "1E", "1E", "1E" }, { "5f", "c6", "f7" }, 10),
-      H.transition("c_4", { "1E", "1E", "1E" }, { "50", "cd", "ef" }, 10),
-      H.transition("c_5", { "1E", "1E", "1E" }, { "4c", "d3", "e5" }, 10),
-      H.transition("c_6", { "1E", "1E", "1E" }, { "53", "d9", "d8" }, 10),
-      H.transition("c_7", { "1E", "1E", "1E" }, { "63", "dd", "c9" }, 10),
-      H.transition("c_8", { "1E", "1E", "1E" }, { "78", "e0", "ba" }, 10),
-      H.transition("c_9", { "1E", "1E", "1E" }, { "8e", "e2", "ad" }, 10),
-      H.transition("c_0", { "1E", "1E", "1E" }, { "a6", "e3", "a1" }, 10)
+      {
+        groupName = "c_1",
+        values = {
+          { fg = "#282d42" }, { fg = "#333c56" }, { fg = "#3e4b6b" }, { fg = "#485a7f" }, { fg = "#536994" }, { fg = "#5e78a8" }, { fg = "#6887bc" }, { fg = "#7396d1" }, { fg = "#7ea5e5" }, { fg = "#89b5fa" }
+        },
+
+        startDelay = 0
+      },
+      {
+        groupName = "c_2",
+        values = {
+          { fg = "#262e42" }, { fg = "#2f3e57" }, { fg = "#374e6b" }, { fg = "#405e80" }, { fg = "#486e94" }, { fg = "#517ea9" }, { fg = "#598ebd" }, { fg = "#629ed2" }, { fg = "#6aaee6" }, { fg = "#73befb" }
+        },
+
+        startDelay = 1
+      },
+      {
+        groupName = "c_3",
+        values = {
+          { fg = "#242e42" }, { fg = "#2b3f56" }, { fg = "#31506a" }, { fg = "#38617e" }, { fg = "#3e7292" }, { fg = "#4582a6" }, { fg = "#4b93ba" }, { fg = "#52a4ce" }, { fg = "#58b5e2" }, { fg = "#5fc6f7" }
+        },
+
+        startDelay = 2
+      },
+      {
+        groupName = "c_4",
+        values = {
+          { fg = "#232f41" }, { fg = "#284154" }, { fg = "#2d5267" }, { fg = "#32647b" }, { fg = "#37758e" }, { fg = "#3c87a1" }, { fg = "#4198b5" }, { fg = "#46aac8" }, { fg = "#4bbbdb" }, { fg = "#50cdef" }
+        },
+
+        startDelay = 3
+      },
+      {
+        groupName = "c_5",
+        values = {
+          { fg = "#223040" }, { fg = "#274252" }, { fg = "#2b5464" }, { fg = "#306677" }, { fg = "#357889" }, { fg = "#398a9b" }, { fg = "#3e9cae" }, { fg = "#42aec0" }, { fg = "#47c0d2" }, { fg = "#4cd3e5" }
+        },
+
+        startDelay = 4
+      },
+      {
+        groupName = "c_6",
+        values = {
+          { fg = "#23303f" }, { fg = "#284350" }, { fg = "#2d5661" }, { fg = "#336872" }, { fg = "#387b83" }, { fg = "#3d8e94" }, { fg = "#43a0a5" }, { fg = "#48b3b6" }, { fg = "#4dc6c7" }, { fg = "#53d9d8" }
+        },
+
+        startDelay = 5
+      },
+      {
+        groupName = "c_7",
+        values = {
+          { fg = "#24313d" }, { fg = "#2b444d" }, { fg = "#32575c" }, { fg = "#396a6c" }, { fg = "#407d7b" }, { fg = "#47908b" }, { fg = "#4ea39a" }, { fg = "#55b6aa" }, { fg = "#5cc9b9" }, { fg = "#63ddc9" }
+        },
+
+        startDelay = 6
+      },
+      {
+        groupName = "c_8",
+        values = {
+          { fg = "#27313c" }, { fg = "#30444a" }, { fg = "#395858" }, { fg = "#426b66" }, { fg = "#4b7f74" }, { fg = "#549282" }, { fg = "#5da590" }, { fg = "#66b99e" }, { fg = "#6fccac" }, { fg = "#78e0ba" }
+        },
+
+        startDelay = 7
+      },
+      {
+        groupName = "c_9",
+        values = {
+          { fg = "#29313a" }, { fg = "#344547" }, { fg = "#3f5854" }, { fg = "#4a6c60" }, { fg = "#56806d" }, { fg = "#61937a" }, { fg = "#6ca786" }, { fg = "#77ba93" }, { fg = "#82cea0" }, { fg = "#8ee2ad" }
+        },
+
+        startDelay = 8
+      },
+      {
+        groupName = "c_0",
+        values = {
+          { fg = "#2b3139" }, { fg = "#394545" }, { fg = "#465950" }, { fg = "#546c5c" }, { fg = "#628067" }, { fg = "#6f9473" }, { fg = "#7da77e" }, { fg = "#8abb8a" }, { fg = "#98cf95" }, { fg = "#a6e3a1" }
+        },
+
+        startDelay = 9
+      },
     }
   }
 };
@@ -189,6 +259,104 @@ P.four_cats = {
     cat_2 = { fg = "#a6e3a1" },
     cat_3 = { fg = "#f5c2e7" },
     cat_4 = { fg = "#cba6f7" },
+  }
+}
+
+local bgToBlue = V.list_extend(
+  H.gradientSteps(
+    { r = 30, g = 30, b = 46 }, { r = 137, g = 181, b = 250 }, 10
+  ),
+
+  H.gradientSteps(
+    { r = 137, g = 181, b = 250 }, { r = 30, g = 30 , b = 46 }, 10
+  )
+);
+
+local bgToGreen = V.list_extend(
+  H.gradientSteps(
+    { r = 30, g = 30, b = 46 }, { r = 166, g = 227, b = 161 }, 10
+  ),
+
+  H.gradientSteps(
+    { r = 166, g = 227, b = 161 }, { r = 30, g = 30 , b = 46 }, 10
+  )
+);
+
+local bgToPink = V.list_extend(
+  H.gradientSteps(
+    { r = 30, g = 30, b = 46 }, { r = 245, g = 194, b = 231 }, 10
+  ),
+
+  H.gradientSteps(
+    { r = 245, g = 194, b = 231 }, { r = 30, g = 30 , b = 46 }, 10
+  )
+);
+
+local bgToViolet = V.list_extend(
+  H.gradientSteps(
+    { r = 30, g = 30, b = 46 }, { r = 203, g = 166, b = 247 }, 10
+  ),
+
+  H.gradientSteps(
+    { r = 203, g = 166, b = 247 }, { r = 30, g = 30 , b = 46 }, 10
+  )
+);
+
+P.four_cats_animated = {
+  components = {
+    {
+      width = 24,
+      lines = A.cat_4,
+      secondaryColors = {
+        { "cat_1", "cat_2" },
+        { "cat_1", "cat_2" },
+        { "cat_1", "cat_2" },
+        { "cat_1", "cat_2" },
+        nil,
+        { "cat_3", "cat_4" },
+        { "cat_3", "cat_4" },
+        { "cat_3", "cat_4" },
+        { "cat_3", "cat_4" },
+      }
+    }
+  },
+
+  globalHighlights = {
+    cat_1 = { fg = "#1e1e2e" },
+    cat_2 = { fg = "#1e1e2e" },
+    cat_3 = { fg = "#1e1e2e" },
+    cat_4 = { fg = "#1e1e2e" },
+  },
+
+  animations = {
+    updateDelay = 50,
+    highlightBased = {
+      {
+        groupName = "cat_1",
+        loop = true,
+        values = H.toFg(bgToBlue)
+      },
+      {
+        groupName = "cat_2",
+        loop = true,
+
+        loopDelay = 10,
+        values = H.toFg(bgToGreen)
+      },
+      {
+        groupName = "cat_3",
+        loop = true,
+
+        loopDelay = 40,
+        values = H.toFg(bgToPink)
+      },
+      {
+        groupName = "cat_4",
+        loop = true,
+        loopDelay = 20,
+        values = H.toFg(bgToViolet)
+      },
+    }
   }
 }
 

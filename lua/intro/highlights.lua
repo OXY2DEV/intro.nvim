@@ -46,6 +46,8 @@ H.applier = function (lineConfig, lineIndex)
   if type(text) == "string" then
     byteLength = #text;
     characterLength = V.fn.strchars(text);
+     
+    cachedText = text;
   elseif type(text) == "table" then
     local sizeStart = 0;
 
@@ -95,7 +97,7 @@ H.applier = function (lineConfig, lineIndex)
   elseif type(color) == "table" then
     local colorIndex = 1;
 
-    for c = 1, characterLength do
+    for c = 0, characterLength do
       local characterStart = spaces + #string.sub(cachedText, 0, c);
       local characterEnd = spaces + #string.sub(cachedText, 0, c + 1);
 
