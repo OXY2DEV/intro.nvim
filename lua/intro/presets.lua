@@ -1,5 +1,6 @@
 local P = {};
 local A = require("intro.arts");
+local D = require("intro.data");
 local V = vim;
 
 P.presetToConfig = function(presetConfig)
@@ -420,7 +421,7 @@ P.nvim_alt_1 = {
   }
 }
 
-P.files = {
+P.startify = {
   default = {
     components = {
       {
@@ -460,7 +461,7 @@ P.files = {
       action = "overwrite",
       value = {
         col_1 = { fg = "#89b4fa" }, col_2 = { fg = "#89b4fa" }, col_3 = { fg = "#89b4fa" }, col_4 = { fg = "#89b4fa" }, col_5 = { fg = "#89b4fa" }, col_6 = { fg = "#89b4fa" }, col_7 = { fg = "#89b4fa" }, col_8 = { fg = "#89b4fa" }, col_9 = { fg = "#89b4fa" }, col_10 = { fg = "#89b4fa" }, col_11 = { fg = "#89b4fa" }, col_12 = { fg = "#89b4fa" }, col_13 = { fg = "#89b4fa" },
-        history_bg = { fg = "#89b4fa" }
+        label_1 = { fg = "#89b4fa" }
       }
     }
   },
@@ -469,7 +470,7 @@ P.files = {
       action = "overwrite",
       value = {
         col_1 = { fg = "#a6e3a1" }, col_2 = { fg = "#a6e3a1" }, col_3 = { fg = "#a6e3a1" }, col_4 = { fg = "#a6e3a1" }, col_5 = { fg = "#a6e3a1" }, col_6 = { fg = "#a6e3a1" }, col_7 = { fg = "#a6e3a1" }, col_8 = { fg = "#a6e3a1" }, col_9 = { fg = "#a6e3a1" }, col_10 = { fg = "#a6e3a1" }, col_11 = { fg = "#a6e3a1" }, col_12 = { fg = "#a6e3a1" }, col_13 = { fg = "#a6e3a1" },
-        history_bg = { fg = "#a6e3a1" }
+        label_1 = { fg = "#a6e3a1" }
       }
     }
   },
@@ -478,7 +479,7 @@ P.files = {
       action = "overwrite",
       value = {
         col_1 = { fg = "#f38ba8" }, col_2 = { fg = "#f38ba8" }, col_3 = { fg = "#f38ba8" }, col_4 = { fg = "#f38ba8" }, col_5 = { fg = "#f38ba8" }, col_6 = { fg = "#f38ba8" }, col_7 = { fg = "#f38ba8" }, col_8 = { fg = "#f38ba8" }, col_9 = { fg = "#f38ba8" }, col_10 = { fg = "#f38ba8" }, col_11 = { fg = "#f38ba8" }, col_12 = { fg = "#f38ba8" }, col_13 = { fg = "#f38ba8" },
-        history_bg = { fg = "#f38ba8" }
+        label_1 = { fg = "#f38ba8" }
       }
     }
   },
@@ -487,7 +488,7 @@ P.files = {
       action = "overwrite",
       value = {
         col_1 = { fg = "#f5c2e7" }, col_2 = { fg = "#f5c2e7" }, col_3 = { fg = "#f5c2e7" }, col_4 = { fg = "#f5c2e7" }, col_5 = { fg = "#f5c2e7" }, col_6 = { fg = "#f5c2e7" }, col_7 = { fg = "#f5c2e7" }, col_8 = { fg = "#f5c2e7" }, col_9 = { fg = "#f5c2e7" }, col_10 = { fg = "#f5c2e7" }, col_11 = { fg = "#f5c2e7" }, col_12 = { fg = "#f5c2e7" }, col_13 = { fg = "#f5c2e7" },
-        history_bg = { fg = "#f5c2e7" }
+        label_1 = { fg = "#f5c2e7" }
       }
     }
   },
@@ -496,37 +497,58 @@ P.files = {
       action = "overwrite",
       value = {
         col_1 = { fg = "#f2cdcd" }, col_2 = { fg = "#f2cdcd" }, col_3 = { fg = "#f2cdcd" }, col_4 = { fg = "#f2cdcd" }, col_5 = { fg = "#f2cdcd" }, col_6 = { fg = "#f2cdcd" }, col_7 = { fg = "#f2cdcd" }, col_8 = { fg = "#f2cdcd" }, col_9 = { fg = "#f2cdcd" }, col_10 = { fg = "#f2cdcd" }, col_11 = { fg = "#f2cdcd" }, col_12 = { fg = "#f2cdcd" }, col_13 = { fg = "#f2cdcd" },
-        history_bg = { fg = "#f2cdcd" }
+        label_1 = { fg = "#f2cdcd" }
       }
     }
   },
 
   gradient_blue_green = {
+    anchors = {
+      action = "overwrite",
+      value = {
+        textStyle = { bg = "#89b5fa", fg = "#1E1E2E" },
+        cornerStyle = { bg = "#89b5fa", fg = "#1E1E2E" }
+      }
+    },
     globalHighlights = {
       action = "overwrite",
       value = {
         col_1 = { fg = "#89b4fa" }, col_2 = { fg = "#8bb7f2" }, col_3 = { fg = "#8dbbeb" }, col_4 = { fg = "#90bfe3" }, col_5 = { fg = "#92c3dc" }, col_6 = { fg = "#95c7d4" }, col_7 = { fg = "#97cbcd" }, col_8 = { fg = "#99cfc6" }, col_9 = { fg = "#9cd3be" }, col_10 = { fg = "#9ed7b7" }, col_11 = { fg = "#a1dbaf" }, col_12 = { fg = "#a3dfa8" }, col_13 = { fg = "#a6e3a1" },
-        history_bg = { fg = "#89b4fa" }
+        label_1 = { fg = "#89b4fa" }
       }
     }
   },
   -- Taken from uiGrafients.com
   gradient_endless_river = {
+    anchors = {
+      action = "overwrite",
+      value = {
+        textStyle = { bg = "#43cea2", fg = "#1E1E2E" },
+        cornerStyle = { bg = "#43cea2", fg = "#1E1E2E" }
+      }
+    },
     globalHighlights = {
       action = "overwrite",
       value = {
         col_1 = { fg = "#43cea2" }, col_2 = { fg = "#3fc4a1" }, col_3 = { fg = "#3bbaa1" }, col_4 = { fg = "#38b1a0" }, col_5 = { fg = "#34a7a0" }, col_6 = { fg = "#319d9f" }, col_7 = { fg = "#2d949f" }, col_8 = { fg = "#298a9f" }, col_9 = { fg = "#26809e" }, col_10 = { fg = "#22779e" }, col_11 = { fg = "#1f6d9d" }, col_12 = { fg = "#1b639d" }, col_13 = { fg = "#185a9d" },
-        history_bg = { fg = "#f38ba8" }
+        label_1 = { fg = "#43cea2" }
       }
     }
   },
   -- Taken from uiGrafients.com
   gradient_friday = {
+    anchors = {
+      action = "overwrite",
+      value = {
+        textStyle = { bg = "#83a4d4", fg = "#1E1E2E" },
+        cornerStyle = { bg = "#83a4d4", fg = "#1E1E2E" }
+      }
+    },
     globalHighlights = {
       action = "overwrite",
       value = {
         col_1 = { fg = "#83a4d4" }, col_2 = { fg = "#87abd7" }, col_3 = { fg = "#8bb2db" }, col_4 = { fg = "#8fb9de" }, col_5 = { fg = "#94c1e2" }, col_6 = { fg = "#98c8e5" }, col_7 = { fg = "#9ccfe9" }, col_8 = { fg = "#a0d6ed" }, col_9 = { fg = "#a5def0" }, col_10 = { fg = "#a9e5f4" }, col_11 = { fg = "#adecf7" }, col_12 = { fg = "#b1f3fb" }, col_13 = { fg = "#b6fbff" },
-        history_bg = { fg = "#83a4d4" }
+        label_1 = { fg = "#83a4d4" }
       }
     }
   },
@@ -541,7 +563,7 @@ P.files = {
           type = "banner",
           width = 0.8,
           lines = { { " ▒▒ ", "Recently opened files:" } },
-          secondaryColors = { { "history_bg", "" } }
+          secondaryColors = { { "label_1", "" } }
         },
         "",
         {
@@ -552,178 +574,60 @@ P.files = {
           entryCount = 5,
 
           colors = {
-            name = { "name" },
-            number = { "number" }
+            name = { "name_1", "name_2", "name_3", "name_4", "name_5" },
+            number = { "name_1", "name_2", "name_3", "name_4", "name_5" }
           },
         },
       }
     },
+  },
 
+  recents_in_current_dir = {
+    components = {
+      action = "append",
+      value = {
+        "",
+        "",
+        {
+          type = "banner",
+          width = 0.8,
+          lines = { { " ▒▒ ", "Recently opened files in ", "current", " directory:" } },
+          secondaryColors = { { "label_1", "", "Special", "" } }
+        },
+        {
+          type = "banner",
+          width = 0.8,
+          lines = {
+            { "      ", D.toRelative() }
+          },
+          secondaryColors = {
+            { "", "Comment" }
+          }
+        },
+        "",
+        {
+          type = "recents",
+          width = 0.8,
+          dir = true,
+          useIcons = true,
+          useAnchors = true,
+          entryCount = 5,
+
+          colors = {
+            name = { "name_1", "name_2", "name_3", "name_4", "name_5" },
+            number = { "name_1", "name_2", "name_3", "name_4", "name_5" }
+          },
+        },
+      }
+    },
+  },
+
+  list_shade = {
     globalHighlights = {
       action = "append",
       value = {
-        icon_bg = { fg = "#74C7EC" }
+        name_1 = { fg = "#cdd6f4" }, name_2 = { fg = "#afb7d3" }, name_3 = { fg = "#9298b2" }, name_4 = { fg = "#757a91" }, name_5 = { fg = "#585b70" }
       }
-    }
-  }
-}
-
--- col_1 = { fg = "" }, col_2 = { fg = "" }, col_3 = { fg = "" }, col_4 = { fg = "" }, col_5 = { fg = "" }, col_6 = { fg = "" }, col_7 = { fg = "" }, col_8 = { fg = "" }, col_9 = { fg = "" }, col_10 = { fg = "" }, col_11 = { fg = "" }, col_12 = { fg = "" }, col_13 = { fg = "" }, 
-
-
-
-
-
-
-
-P.cat_green = {
-  components = {
-    {
-      width = 14,
-      lines = A.cat,
-      colors = "cat_1"
-    }
-  },
-
-  globalHighlights = {
-    cat_1 = { fg = "#a6e3a1" },
-  }
-}
-
-P.cat_blue = {
-  components = {
-    {
-      width = 14,
-      lines = A.cat,
-      colors = "cat_1"
-    }
-  },
-
-  globalHighlights = {
-    cat_1 = { fg = "#89b5fa" },
-  }
-}
-
-P.cats_1x2 = {
-  components = {
-    {
-      width = 24,
-      lines = A.cat_2,
-      secondaryColors = {
-        { "cat_1", "cat_2" },
-        { "cat_1", "cat_2" },
-        { "cat_1", "cat_2" },
-        { "cat_1", "cat_2" },
-      }
-    }
-  },
-
-  globalHighlights = {
-    cat_1 = { fg = "#89b5fa" },
-    cat_2 = { fg = "#a6e3a1" },
-  }
-}
-
-P.cats_2x2 = {
-  components = {
-    {
-      width = 24,
-      lines = A.cat_4,
-      secondaryColors = {
-        { "cat_1", "cat_2" },
-        { "cat_1", "cat_2" },
-        { "cat_1", "cat_2" },
-        { "cat_1", "cat_2" },
-        nil,
-        { "cat_3", "cat_4" },
-        { "cat_3", "cat_4" },
-        { "cat_3", "cat_4" },
-        { "cat_3", "cat_4" },
-      }
-    }
-  },
-
-  globalHighlights = {
-    cat_1 = { fg = "#89b5fa" },
-    cat_2 = { fg = "#a6e3a1" },
-    cat_3 = { fg = "#f5c2e7" },
-    cat_4 = { fg = "#cba6f7" },
-  }
-}
-
--- This definately wasn't from a bug
-P.cats_animated = {
-  components = {
-    {
-      width = 24,
-      lines = A.cat_4,
-      secondaryColors = {
-        { "cat_1", "cat_2" },
-        { "cat_1", "cat_2" },
-        { "cat_1", "cat_2" },
-        { "cat_1", "cat_2" },
-        nil,
-        { "cat_3", "cat_4" },
-        { "cat_3", "cat_4" },
-        { "cat_3", "cat_4" },
-        { "cat_3", "cat_4" },
-      }
-    }
-  },
-
-  globalHighlights = {
-    cat_1 = { fg = "#1e1e2e" },
-    cat_2 = { fg = "#1e1e2e" },
-    cat_3 = { fg = "#1e1e2e" },
-    cat_4 = { fg = "#1e1e2e" },
-  },
-
-  animations = {
-    updateDelay = 50,
-    highlightBased = {
-      {
-        groupName = "cat_1",
-        loop = true,
-
-        loopDelay = 40,
-        values = {
-          { fg = "#1e1e2e" }, { fg = "#232538" }, { fg = "#292d43" }, { fg = "#2e354e" }, { fg = "#343d58" }, { fg = "#3a4563" }, { fg = "#3f4d6e" }, { fg = "#455579" }, { fg = "#4b5d83" }, { fg = "#50658e" }, { fg = "#566d99" }, { fg = "#5b75a4" }, { fg = "#617dae" }, { fg = "#6785b9" }, { fg = "#6c8dc4" }, { fg = "#7295cf" }, { fg = "#789dd9" }, { fg = "#7da5e4" }, { fg = "#83adef" },
-          { fg = "#89b5fa" },
-          { fg = "#83adef" }, { fg = "#7da5e4" }, { fg = "#789dd9" }, { fg = "#7295cf" }, { fg = "#6c8dc4" }, { fg = "#6785b9" }, { fg = "#617dae" }, { fg = "#5b75a4" }, { fg = "#566d99" }, { fg = "#50658e" }, { fg = "#4b5d83" }, { fg = "#455579" }, { fg = "#3f4d6e" }, { fg = "#3a4563" }, { fg = "#343d58" }, { fg = "#2e354e" }, { fg = "#292d43" }, { fg = "#232538" }, { fg = "#1e1e2e" }
-        }
-      },
-      {
-        groupName = "cat_2",
-        loop = true,
-
-        loopDelay = 20,
-        values = {
-          { fg = "#1e1e2e" }, { fg = "#252834" }, { fg = "#2c323a" }, { fg = "#333d40" }, { fg = "#3a4746" }, { fg = "#41514c" }, { fg = "#485c52" }, { fg = "#506658" }, { fg = "#57705e" }, { fg = "#5e7b64" }, { fg = "#65856a" }, { fg = "#6c9070" }, { fg = "#739a76" }, { fg = "#7ba47c" }, { fg = "#82af82" }, { fg = "#89b988" }, { fg = "#90c38e" }, { fg = "#97ce94" }, { fg = "#9ed89a" },
-          { fg = "#a6e3a1" },
-          { fg = "#9ed89a" }, { fg = "#97ce94" }, { fg = "#90c38e" }, { fg = "#89b988" }, { fg = "#82af82" }, { fg = "#7ba47c" }, { fg = "#739a76" }, { fg = "#6c9070" }, { fg = "#65856a" }, { fg = "#5e7b64" }, { fg = "#57705e" }, { fg = "#506658" }, { fg = "#485c52" }, { fg = "#41514c" }, { fg = "#3a4746" }, { fg = "#333d40" }, { fg = "#2c323a" }, { fg = "#252834" }, { fg = "#1e1e2e" }
-        }
-      },
-      {
-        groupName = "cat_3",
-        loop = true,
-
-        loopDelay = 20,
-        values = {
-          { fg = "#1e1e2e" }, { fg = "#292637" }, { fg = "#342f41" }, { fg = "#3f374b" }, { fg = "#4b4054" }, { fg = "#56495e" }, { fg = "#615168" }, { fg = "#6d5a72" }, { fg = "#78637b" }, { fg = "#836b85" }, { fg = "#8f748f" }, { fg = "#9a7c99" }, { fg = "#a585a2" }, { fg = "#b18eac" }, { fg = "#bc96b6" }, { fg = "#c79fc0" }, { fg = "#d3a8c9" }, { fg = "#deb0d3" }, { fg = "#e9b9dd" },
-          { fg = "#f5c2e7" },
-          { fg = "#e9b9dd" }, { fg = "#deb0d3" }, { fg = "#d3a8c9" }, { fg = "#c79fc0" }, { fg = "#bc96b6" }, { fg = "#b18eac" }, { fg = "#a585a2" }, { fg = "#9a7c99" }, { fg = "#8f748f" }, { fg = "#836b85" }, { fg = "#78637b" }, { fg = "#6d5a72" }, { fg = "#615168" }, { fg = "#56495e" }, { fg = "#4b4054" }, { fg = "#3f374b" }, { fg = "#342f41" }, { fg = "#292637" }, { fg = "#1e1e2e" }
-        }
-      },
-      {
-        groupName = "cat_4",
-        loop = true,
-        loopDelay = 40,
-        values = {
-          { fg = "#1e1e2e" }, { fg = "#262538" }, { fg = "#2f2c43" }, { fg = "#38334d" }, { fg = "#413a58" }, { fg = "#4a4162" }, { fg = "#53486d" }, { fg = "#5b5078" }, { fg = "#645782" }, { fg = "#6d5e8d" }, { fg = "#766597" }, { fg = "#7f6ca2" }, { fg = "#8873ac" }, { fg = "#907bb7" }, { fg = "#9982c2" }, { fg = "#a289cc" }, { fg = "#ab90d7" }, { fg = "#b497e1" }, { fg = "#bd9eec" },
-          { fg = "#c6a6f7" },
-          { fg = "#bd9eec" }, { fg = "#b497e1" }, { fg = "#ab90d7" }, { fg = "#a289cc" }, { fg = "#9982c2" }, { fg = "#907bb7" }, { fg = "#8873ac" }, { fg = "#7f6ca2" }, { fg = "#766597" }, { fg = "#6d5e8d" }, { fg = "#645782" }, { fg = "#5b5078" }, { fg = "#53486d" }, { fg = "#4a4162" }, { fg = "#413a58" }, { fg = "#38334d" }, { fg = "#2f2c43" }, { fg = "#262538" }, { fg = "#1e1e2e" }, 
-        }
-      },
     }
   }
 }

@@ -24,8 +24,14 @@ data.paths = {
   { "~/", " ~/" }
 };
 
+data.toRelative = function(path)
+  local p = path ~= nil and path or V.loop.cwd();
+
+  return V.fn.fnamemodify(p, ":~");
+end
+
 data.pathForamtter = function (path)
-  local formattedPath = vim.fn.fnamemodify(path, ":~");
+  local formattedPath = V.fn.fnamemodify(path, ":~");
 
   for _, tuple in ipairs(data.paths) do
     formattedPath = string.gsub(formattedPath, tuple[1], tuple[2]);
