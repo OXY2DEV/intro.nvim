@@ -9,9 +9,15 @@
 
 My attempt at making a startscreen plugin for **Neovim**.
 
->Warning!!!
+>[!WARNING]
+>
 >This plugin is going through **breaking changes**. So there will be a lot of bugs.
 >And I mean a LOT of them.
+
+>[!NOTE]
+>
+>If you are here to test the plugin then check the **pinned issue**.
+>Updates are posted there, at least until the plugin becomes stable enough.
 
 
 ## Installation
