@@ -1,19 +1,46 @@
 local data = {};
 local V = vim;
+data.oldfiles = {};
 
 data.introBuffer = 0;
 data.whiteSpaces = 0;
 
 data.anchors = {};
+data.anchorTexts = {};
 data.anchorStatus = {};
+
+data.paths = {
+  { "~/.config/nvim/lua/plugins/", " plugins/" },
+  { "~/.config/nvim/lua/", " nvim/lua/" },
+  { "~/.config/nvim/", " nvim/" },
+
+  { "~/.config/gh/", "  gh/" },
+
+  { "~/.config/lazygit/", "  lazygit/" },
+
+  { "~/.config/tmux/", " tmux/" },
+
+  { "~/.config/", " config/" },
+  { "~/", " ~/" }
+};
+
+data.pathForamtter = function (path)
+  local formattedPath = vim.fn.fnamemodify(path, ":~");
+
+  for _, tuple in ipairs(data.paths) do
+    formattedPath = string.gsub(formattedPath, tuple[1], tuple[2]);
+  end
+
+  return formattedPath;
+end
 
 data.recents = function (isDir)
   if isDir == false or isDir == nil then
-    return V.v.oldfiles;
+    return data.oldfiles;
   elseif isDir == true then
     local _t = {};
 
-    for _, entry in ipairs(V.v.oldfiles) do
+    for _, entry in ipairs(data.oldfiles) do
       if string.match(entry, V.loop.cwd()) ~= nil then
         table.insert(_t, entry);
       end
@@ -23,7 +50,7 @@ data.recents = function (isDir)
   elseif type(isDir) == "string" then
     local _t = {};
 
-    for _, entry in ipairs(V.v.oldfiles) do
+    for _, entry in ipairs(data.oldfiles) do
       if string.match(entry, isDir) ~= nil then
         table.insert(_t, entry);
       end
@@ -55,7 +82,7 @@ data.movements = function(config)
     return;
   end
 
-  local keymap = config.keymap or "<leader><leader>"
+  local keymap = config ~= nil and config.keymap or "<leader><leader>"
 
   V.api.nvim_buf_set_keymap(data.introBuffer, "n",
     keymap,
@@ -86,17 +113,16 @@ data.movements = function(config)
       local y = V.api.nvim_win_get_cursor(0)[1] - 1;
       data.height = V.api.nvim_win_get_height(0);
 
-      for aI, v in ipairs(data.anchors) do
+      for aI, v in ipairs(data.anchorTexts) do
         local position = v[1];
         local link = v[2];
-
 
         if (y - data.whiteSpaces) == position and data.anchorStatus[aI] ~= false then
           if config.position == nil or config.position == "bottom" then
             V.api.nvim_buf_set_extmark(data.introBuffer, 1, data.height - 1, 0, {
               id = 10,
               strict = false,
-              virt_text = { { link, "Intro_anchor_body" } },
+              virt_text = { { " " .. link, "Intro_anchor_body" } },
              virt_text_pos = "overlay"
             })
 
@@ -106,14 +132,14 @@ data.movements = function(config)
               virt_text = {
                 { corner, "Intro_anchor_corner" }
               },
-              virt_text_win_col = V.fn.strchars(link),
+              virt_text_win_col = V.fn.strchars(link) + 1,
               virt_text_pos = "overlay"
             })
           elseif config.position == "top" then
             V.api.nvim_buf_set_extmark(data.introBuffer, 1, 0, 0, {
               id = 10,
               strict = false,
-              virt_text = { { link, "Intro_anchor_body" } },
+              virt_text = { { ' ' .. link, "Intro_anchor_body" } },
              virt_text_pos = "overlay"
             })
 
@@ -121,7 +147,7 @@ data.movements = function(config)
               id = 11,
               strict = false,
               virt_text = { { corner, "Intro_anchor_corner" } },
-              virt_text_win_col = V.fn.strchars(link),
+              virt_text_win_col = V.fn.strchars(link) + 1,
               virt_text_pos = "overlay"
             })
           end

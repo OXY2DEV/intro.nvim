@@ -233,6 +233,7 @@ A.animationWorker = function (animations)
   local updateDelay = 200;
 
   local totalAnimationLength = 0;
+  local maxFrames = 100;
 
   if animations.delay ~= nil then
     delay = animations.delay;
@@ -248,6 +249,11 @@ A.animationWorker = function (animations)
 
   for _, v in ipairs(animations.highlightBased) do
     A.setDefaults(v);
+
+    if type(v.startDelay) == "number" and v.startDelay > maxFrames then
+      maxFrames = v.startDelay;
+    end
+
     totalAnimationLength = totalAnimationLength + 1;
   end
 
@@ -259,6 +265,11 @@ A.animationWorker = function (animations)
 
   for _, v in ipairs(animations.textBased) do
     A.setDefaults(v);
+
+    if type(v.startDelay) == "number" and v.startDelay > maxFrames then
+      maxFrames = v.startDelay;
+    end
+
     totalAnimationLength = totalAnimationLength + 1;
   end
 
@@ -290,7 +301,9 @@ A.animationWorker = function (animations)
       end
 
       ::noTextAnim::
-      A.frameCount = A.frameCount + 1;
+      if A.frameCount < maxFrames then
+        A.frameCount = A.frameCount + 1;
+      end
     end
   ))
 

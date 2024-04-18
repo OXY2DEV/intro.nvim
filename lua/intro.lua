@@ -9,24 +9,43 @@ local helpers = require("intro.helpers");
 local V = vim;
 
 intro.default = {
-  preset = "nvim_color_animated",
+  preset = { name = "nvim", opts = { "animated" } },
 }
 
-intro.setup = function(table)
+intro.setup = function(setupTable)
   local tbl;
 
   if V.fn.argc() ~= 0 then
     return
   end
 
-  if type(table) ~= "table" then
+  V.cmd("rshada");
+  local oldfiles = V.v.oldfiles;
+
+  if type(setupTable) ~= "table" then
     tbl = intro.default;
   else
-    tbl = table;
+    tbl = setupTable;
   end
 
-  if type(tbl.preset) == "string" and presets[tbl.preset] ~= nil then
-    tbl = presets[tbl.preset];
+  if type(tbl.preset) == "table" then
+    tbl = presets.presetToConfig(tbl.preset);
+  elseif type(tbl.preset) == "string" then
+    tbl = presets.presetToConfig({ name = tbl.preset });
+  end
+
+  if tbl.shadaRefresh == true then
+    for _, v in ipairs(oldfiles) do
+      if V.fn.filereadable(v) == 1 then
+        table.insert(data.oldfiles, v)
+      end
+    end
+  else
+    data.oldfiles = oldfiles;
+  end
+
+  if tbl.anchors == nil then
+    tbl.anchors = {}
   end
 
   renderer.handleConfig(tbl);
@@ -48,7 +67,7 @@ V.api.nvim_create_user_command("Gradient", function(options)
     local b2 = tonumber(string.sub(c2, 6, 7), 16);
 
     local steps = options.fargs[3] ~= nil and options.fargs[3] or 10;
-    local isBg = options.fargs[4] ~= nil and options.fargs or false;
+    local mode = options.fargs[4] ~= nil and options.fargs[4] or "string"
 
     local colors = helpers.gradientSteps(
       {  r = r1, g = g1, b = b1 },
@@ -56,17 +75,22 @@ V.api.nvim_create_user_command("Gradient", function(options)
       steps
     );
 
-    local output = {};
+    local output, text = {}, "";
     for _, v in ipairs(colors) do
-      if isBg == false then
-        table.insert(output, { fg = v })
-      else
-        table.insert(output, { bg = v })
+      if mode == "fg" then
+        table.insert(output, { fg = v });
+      elseif mode == "bg" then
+        table.insert(output, { bg = v });
+      elseif mode == "string" then
+        text = text .. '{ fg = "' .. tostring(v) .. '" }, ';
       end
     end
 
-    --V.fn.setreg("+", output)
-    V.print(output);
+    if #output == 0 then
+      V.print(text);
+    else
+      V.print(output);
+    end
   end,
   {}
 );

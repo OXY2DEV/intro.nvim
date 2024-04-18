@@ -108,9 +108,10 @@ R.handleConfig = function (config, isResizing)
     for l, line in ipairs(R.preparedLines) do
       if line.anchor ~= nil then
         table.insert(data.anchors, { l, line.anchor });
+        table.insert(data.anchorTexts, { l, data.pathForamtter(line.anchor) });
 
         -- Should I use anchors?
-        if line.useAnchors ~= nil then
+        if line.useAnchors ~= false then
           table.insert(data.anchorStatus,  line.useAnchors)
         end
       end
@@ -124,7 +125,7 @@ R.handleConfig = function (config, isResizing)
     local afterWhStart = whSpaces + #R.preparedLines;
 
     -- Add spaces after the components
-    for w = 2, whSpaces do
+    for w = 1, whSpaces do
       V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w + 1, false, { string.rep(" ", R.width) })
     end
 

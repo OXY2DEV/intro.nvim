@@ -48,8 +48,10 @@ end
 HP.gradientSteps = function(from, to, steps)
   local gradient = {};
 
-  for g = 1, steps do
-    local alpha = g / steps;
+  table.insert(gradient, "#" .. string.format("%x", from.r) .. string.format("%x", from.g) .. string.format("%x", from.b))
+
+  for g = 1, steps - 1 do
+    local alpha = g / (steps - 1);
 
     local R = (from.r > to.r) and (from.r * ( 1 - alpha)) + (to.r * alpha) or (to.r * alpha) + (from.r * (1 - alpha));
     local G = (from.g > to.g) and (from.g * ( 1 - alpha)) + (to.g * alpha) or (to.g * alpha) + (from.g * (1 - alpha));

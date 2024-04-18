@@ -10,7 +10,7 @@ Table of contents                                             *intro.nvim-toc*
   4. Presets...............................................|intro.nvim-presets|
   5. Components.........................................|intro.nvim-components|
   6. Colors.................................................|intro.nvim-colors|
-  7  Animations........................................|intro.nvim-animations|
+  7  Animations.........................................|intro.nvim-animations|
   8. Helper functions......................................|intro.nvim-helpers|
 
 Introduction                                         *intro.nvim-introduction*
@@ -158,7 +158,7 @@ Parameters ~
     Table containing all the components used in the start screen.
 
     Check the entire list of `components` & their setup in
-    *intro.nvim-components*
+    `intro.nvim-components`
 
     Example:
     ╭ intro.lua ────────────────────────────────────────────────────────────╮
@@ -403,7 +403,7 @@ Properties ~
 
   {colors} `table | string | nil`
   The name of the `highlight group` to use as the color. More information
-  about coloring is available in the *intro.nvim-colors* section.
+  about coloring is available in the `intro.nvim-colors` section.
 
   This property defines the coloring of the lines. The coloring can be done
   in many ways such as
@@ -454,7 +454,7 @@ Properties ~
 <
        ╰─────────────────────────────────────────────────────────────────────╯
 
-       NOTE More information about gradients are in *intro.nvim-colors* section
+       NOTE More information about gradients are in `intro.nvim-colors` section
 
   You can also use all 3 of them together if you want.
 

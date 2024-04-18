@@ -46,7 +46,7 @@ H.applier = function (lineConfig, lineIndex)
   if type(text) == "string" then
     byteLength = #text;
     characterLength = V.fn.strchars(text);
-     
+
     cachedText = text;
   elseif type(text) == "table" then
     local sizeStart = 0;
@@ -74,16 +74,18 @@ H.applier = function (lineConfig, lineIndex)
     end
   end
 
+  local useStringSize = lineConfig.width ~= nil and lineConfig.width or characterLength;
+
   -- Calculate the number of spaces before the text
   if align == "center" or align == nil then
-    if characterLength < width then
-      spaces = math.floor((width - characterLength) / 2);
+    if useStringSize < width then
+      spaces = math.floor((width - useStringSize) / 2);
     else
       spaces = 0;
     end
   elseif align == "right" then
-    if characterLength < width then
-      spaces = width - characterLength;
+    if useStringSize < width then
+      spaces = width - useStringSize;
     else
       spaces = 0;
     end
