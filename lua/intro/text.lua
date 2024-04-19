@@ -238,6 +238,85 @@ T.timeHandler = function(component)
   return _t;
 end
 
+T.keymapsHandler = function(component)
+  local _t = {};
+
+  if component.style == nil or component.style == "compact" then
+    local itemLimit = component.itemLimit ~= nil and component.itemLimit or 3;
+
+    local textStack = {};
+    local hlStack = {};
+    local funcStack = {};
+    local itemAdded = 0;
+
+    for itemIndex = 1, #component.keys do
+      if itemAdded >= itemLimit then
+        table.insert(_t, {
+          align = "center",
+          text = textStack, secondaryColors = hlStack, functions = funcStack
+        });
+
+        textStack = {};
+        hlStack = {};
+        funcStack = {}
+        itemAdded = 0;
+      end
+
+      itemAdded = itemAdded + 1;
+      local thisItem = component.keys[itemIndex];
+      local modes = thisItem.modes or "n";
+      local options = thisItem.keyOptions or { silent = true };
+      local gaps = thisItem.gaps ~= nil and thisItem.gaps or component.gaps ~= nil and component.gaps or "   ";
+
+      V.api.nvim_buf_set_keymap(data.introBuffer, modes, thisItem.keyCombination, thisItem.keyAction, options);
+
+      if type(thisItem.text) == "string" then
+        table.insert(textStack, thisItem.text);
+
+        table.insert(hlStack, thisItem.color)
+      elseif V.tbl_islist(thisItem.text) then
+        V.list_extend(textStack, thisItem.text)
+
+        if V.tbl_islist(thisItem.color) == true then
+          V.list_extend(hlStack, thisItem.color)
+        end
+      end
+
+      if thisItem.functions ~= nil then
+        if #funcStack < 1 then
+          funcStack = thisItem.functions
+        else
+          V.tbl_extend("force", funcStack, thisItem.functions);
+        end
+
+      end
+
+      if itemAdded ~= itemLimit and itemIndex ~= #component.keys then
+        table.insert(textStack, gaps);
+        table.insert(hlStack, "");
+      end
+    end
+
+    table.insert(_t, {
+      align = "center",
+      text = textStack, secondaryColors = hlStack, functions = funcStack
+    });
+  elseif component.style == "list" then
+    for _, keys in ipairs(component.keys) do
+      local width = component.width;
+      V.api.nvim_buf_set_keymap(data.introBuffer, "n", keys.keyCombination, keys.keyAction, keys.keyOptions);
+
+      if type(keys.text) == "string" then
+        table.insert(_t, { align = "center", width = width, text = keys.text, color = keys.color });
+      elseif type(keys.text) == "table" then
+        table.insert(_t, { align = "center", width = width, text = keys.text, secondaryColors = keys.color, functions = keys.functions })
+      end
+    end
+  end
+
+  return _t;
+end
+
 T.simplifyComponents = function(component)
   local _c;
 
@@ -252,6 +331,8 @@ T.simplifyComponents = function(component)
     _c = T.recentsHandler(component)
   elseif component.type == "time" then
     _c = T.timeHandler(component);
+  elseif component.type == "keymaps" then
+    _c = T.keymapsHandler(component);
   end
 
   ::finish::

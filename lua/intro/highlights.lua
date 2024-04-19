@@ -77,7 +77,7 @@ H.applier = function (lineConfig, lineIndex)
   local useStringSize = lineConfig.width ~= nil and lineConfig.width or characterLength;
 
   -- Calculate the number of spaces before the text
-  if align == "center" or align == nil then
+  if align == "center" then
     if useStringSize < width then
       spaces = math.floor((width - useStringSize) / 2);
     else

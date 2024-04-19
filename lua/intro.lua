@@ -32,6 +32,8 @@ intro.setup = function(setupTable)
     tbl = presets.presetToConfig(tbl.preset);
   elseif type(tbl.preset) == "string" then
     tbl = presets.presetToConfig({ name = tbl.preset });
+  else
+    tbl = setupTable;
   end
 
   if tbl.shadaRefresh == true then
