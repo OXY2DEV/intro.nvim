@@ -10,8 +10,8 @@ data.anchorTexts = {};
 data.anchorStatus = {};
 
 data.paths = {
-  { "~/.config/nvim/lua/plugins/", " plugins/" },
-  { "~/.config/nvim/lua/", " nvim/lua/" },
+  { "~/.config/nvim/lua/plugins/", " plugins/" },
+  { "~/.config/nvim/lua/", "󰢱 nvim/lua/" },
   { "~/.config/nvim/", " nvim/" },
 
   { "~/.config/gh/", "  gh/" },
@@ -80,7 +80,9 @@ data.highlights = function(anchors)
   end
 end
 
-data.movements = function(config)
+data.movements = function(configMain)
+  local config = configMain.anchors or {};
+
   data.highlights(config);
   data.height = V.api.nvim_win_get_height(0);
 
@@ -125,7 +127,7 @@ data.movements = function(config)
 
         if (y - data.whiteSpaces) == position and data.anchorStatus[aI] ~= false then
           if config.position == nil or config.position == "bottom" then
-            V.api.nvim_buf_set_extmark(data.introBuffer, 1, data.height - 1, 0, {
+            V.api.nvim_buf_set_extmark(data.introBuffer, 1, (configMain.hasStatusline == nil or configMain.hasStatusline) == true and data.height - 1 or data.height, 0, {
               id = 10,
               strict = false,
               virt_text = { { " " .. link, "Intro_anchor_body" } },

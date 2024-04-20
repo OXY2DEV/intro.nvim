@@ -452,8 +452,8 @@ P.startify = {
       action = "overwrite",
       value = {
         position = "bottom",
-        textStyle = { bg = "#a6e3a1", fg = "#384361" },
-        cornerStyle = { bg = "#a6e3a1", fg = "#1E1E2E" },
+        textStyle = { bg = "#89b4fa", fg = "#384361" },
+        cornerStyle = { bg = "#89b4fa", fg = "#1E1E2E" },
         corner = " "
       },
     },
@@ -466,6 +466,15 @@ P.startify = {
     }
   },
   green = {
+    anchors = {
+      action = "overwrite",
+      value = {
+        position = "bottom",
+        textStyle = { bg = "#a6e3a1", fg = "#384361" },
+        cornerStyle = { bg = "#a6e3a1", fg = "#1E1E2E" },
+        corner = " "
+      },
+    },
     globalHighlights = {
       action = "overwrite",
       value = {
@@ -475,6 +484,15 @@ P.startify = {
     }
   },
   red = {
+    anchors = {
+      action = "overwrite",
+      value = {
+        position = "bottom",
+        textStyle = { bg = "#f38ba8", fg = "#384361" },
+        cornerStyle = { bg = "#f38ba8", fg = "#1E1E2E" },
+        corner = " "
+      },
+    },
     globalHighlights = {
       action = "overwrite",
       value = {
@@ -484,6 +502,15 @@ P.startify = {
     }
   },
   pink = {
+    anchors = {
+      action = "overwrite",
+      value = {
+        position = "bottom",
+        textStyle = { bg = "#f5c2e7", fg = "#384361" },
+        cornerStyle = { bg = "#f5c2e7", fg = "#1E1E2E" },
+        corner = " "
+      },
+    },
     globalHighlights = {
       action = "overwrite",
       value = {
@@ -493,6 +520,15 @@ P.startify = {
     }
   },
   flamingo = {
+    anchors = {
+      action = "overwrite",
+      value = {
+        position = "bottom",
+        textStyle = { bg = "#f2cdcd", fg = "#384361" },
+        cornerStyle = { bg = "#f2cdcd", fg = "#1E1E2E" },
+        corner = " "
+      },
+    },
     globalHighlights = {
       action = "overwrite",
       value = {
@@ -630,6 +666,355 @@ P.startify = {
       }
     }
   }
+};
+
+P.cats = {
+  default = {
+    components = {
+      {
+        width = 12,
+        lines = A.cat,
+        colors = "cat_1"
+      }
+    }
+  },
+
+  c1x2 = {
+    components = {
+      action = "overwrite",
+      value = {
+        {
+          width = 24,
+          lines = A.cat_1x2,
+          secondaryColors = {
+            { "cat_1", "cat_2" },
+            { "cat_1", "cat_2" },
+            { "cat_1", "cat_2" },
+            { "cat_1", "cat_2" },
+          }
+        }
+      }
+    }
+  },
+
+  c2x2 = {
+    components = {
+      action = "overwrite",
+      value = {
+        {
+          width = 24,
+          lines = A.cat_2x2,
+          secondaryColors = {
+            { "cat_1", "cat_2" },
+            { "cat_1", "cat_2" },
+            { "cat_1", "cat_2" },
+            { "cat_1", "cat_2" },
+            nil,
+            { "cat_4", "cat_5" },
+            { "cat_4", "cat_5" },
+            { "cat_4", "cat_5" },
+            { "cat_4", "cat_5" },
+          }
+        }
+      }
+    }
+  },
+
+  c1x3 = {
+    components = {
+      action = "overwrite",
+      value = {
+        {
+          width = 36,
+          lines = A.cat_1x3,
+          secondaryColors = {
+            { "cat_1", "cat_2", "cat_3" },
+            { "cat_1", "cat_2", "cat_3" },
+            { "cat_1", "cat_2", "cat_3" },
+            { "cat_1", "cat_2", "cat_3" },
+          }
+        }
+      }
+    }
+  },
+
+  c1x4 = {
+    components = {
+      action = "overwrite",
+      value = {
+        {
+          width = 48,
+          lines = A.cat_1x4,
+          secondaryColors = {
+            { "cat_1", "cat_2", "cat_3", "cat_4" },
+            { "cat_1", "cat_2", "cat_3", "cat_4" },
+            { "cat_1", "cat_2", "cat_3", "cat_4" },
+            { "cat_1", "cat_2", "cat_3", "cat_4" }
+          }
+        }
+      }
+    }
+  },
+
+  c3x3 = {
+    components = {
+      action = "overwrite",
+      value = {
+        {
+          width = 36,
+          lines = A.cat_3x3,
+          secondaryColors = {
+            { "cat_1", "cat_2", "cat_3" },
+            { "cat_1", "cat_2", "cat_3" },
+            { "cat_1", "cat_2", "cat_3" },
+            { "cat_1", "cat_2", "cat_3" },
+            nil,
+            { "cat_4", "cat_5", "cat_6" },
+            { "cat_4", "cat_5", "cat_6" },
+            { "cat_4", "cat_5", "cat_6" },
+            { "cat_4", "cat_5", "cat_6" },
+            nil,
+            { "cat_7", "cat_8", "cat_9" },
+            { "cat_7", "cat_8", "cat_9" },
+            { "cat_7", "cat_8", "cat_9" },
+            { "cat_7", "cat_8", "cat_9" },
+          }
+        }
+      }
+    }
+  },
+
+  c3x1 = {
+    components = {
+      action = "overwrite",
+      value = {
+        {
+          width = 12,
+          lines = A.cat_3x1,
+          colors = {
+            "cat_1",
+            "cat_1",
+            "cat_1",
+            "cat_1",
+            "",
+            "cat_4",
+            "cat_4",
+            "cat_4",
+            "cat_4",
+            "",
+            "cat_7",
+            "cat_7",
+            "cat_7",
+            "cat_7",
+          }
+        }
+      }
+    }
+  },
+
+  rosewater = {
+    globalHighlights = {
+      action = "overwrite",
+      value = {
+        cat_1 = { fg = "#F5E0DC" },
+        cat_2 = { fg = "#F5E0DC" },
+        cat_3 = { fg = "#F5E0DC" },
+        cat_4 = { fg = "#F5E0DC" },
+        cat_5 = { fg = "#F5E0DC" },
+        cat_6 = { fg = "#F5E0DC" },
+        cat_7 = { fg = "#F5E0DC" },
+        cat_8 = { fg = "#F5E0DC" },
+        cat_9 = { fg = "#F5E0DC" },
+      }
+    }
+  },
+
+  rosewater_alt = {
+    globalHighlights = {
+      action = "overwrite",
+      value = {
+        cat_1 = { fg = "#DC8A78" },
+        cat_2 = { fg = "#DC8A78" },
+        cat_3 = { fg = "#DC8A78" },
+        cat_4 = { fg = "#DC8A78" },
+        cat_5 = { fg = "#DC8A78" },
+        cat_6 = { fg = "#DC8A78" },
+        cat_7 = { fg = "#DC8A78" },
+        cat_8 = { fg = "#DC8A78" },
+        cat_9 = { fg = "#DC8A78" },
+      }
+    }
+  },
+
+  mauve = {
+    globalHighlights = {
+      action = "overwrite",
+      value = {
+        cat_1 = { fg = "#CBA6F7" },
+        cat_2 = { fg = "#CBA6F7" },
+        cat_3 = { fg = "#CBA6F7" },
+        cat_4 = { fg = "#CBA6F7" },
+        cat_5 = { fg = "#CBA6F7" },
+        cat_6 = { fg = "#CBA6F7" },
+        cat_7 = { fg = "#CBA6F7" },
+        cat_8 = { fg = "#CBA6F7" },
+        cat_9 = { fg = "#CBA6F7" },
+      }
+    }
+  },
+
+  mauve_alt = {
+    globalHighlights = {
+      action = "overwrite",
+      value = {
+        cat_1 = { fg = "#8839EF" },
+        cat_2 = { fg = "#8839EF" },
+        cat_3 = { fg = "#8839EF" },
+        cat_4 = { fg = "#8839EF" },
+        cat_5 = { fg = "#8839EF" },
+        cat_6 = { fg = "#8839EF" },
+        cat_7 = { fg = "#8839EF" },
+        cat_8 = { fg = "#8839EF" },
+        cat_9 = { fg = "#8839EF" },
+      }
+    }
+  },
+
+  yellow = {
+    globalHighlights = {
+      action = "overwrite",
+      value = {
+        cat_1 = { fg = "#F9E2AF" },
+        cat_2 = { fg = "#F9E2AF" },
+        cat_3 = { fg = "#F9E2AF" },
+        cat_4 = { fg = "#F9E2AF" },
+        cat_5 = { fg = "#F9E2AF" },
+        cat_6 = { fg = "#F9E2AF" },
+        cat_7 = { fg = "#F9E2AF" },
+        cat_8 = { fg = "#F9E2AF" },
+        cat_9 = { fg = "#F9E2AF" },
+      }
+    }
+  },
+
+  yellow_alt = {
+    globalHighlights = {
+      action = "overwrite",
+      value = {
+        cat_1 = { fg = "#DF8E1D" },
+        cat_2 = { fg = "#DF8E1D" },
+        cat_3 = { fg = "#DF8E1D" },
+        cat_4 = { fg = "#DF8E1D" },
+        cat_5 = { fg = "#DF8E1D" },
+        cat_6 = { fg = "#DF8E1D" },
+        cat_7 = { fg = "#DF8E1D" },
+        cat_8 = { fg = "#DF8E1D" },
+        cat_9 = { fg = "#DF8E1D" },
+      }
+    }
+  },
+
+  green = {
+    globalHighlights = {
+      action = "overwrite",
+      value = {
+        cat_1 = { fg = "#A6E3A1" },
+        cat_2 = { fg = "#A6E3A1" },
+        cat_3 = { fg = "#A6E3A1" },
+        cat_4 = { fg = "#A6E3A1" },
+        cat_5 = { fg = "#A6E3A1" },
+        cat_6 = { fg = "#A6E3A1" },
+        cat_7 = { fg = "#A6E3A1" },
+        cat_8 = { fg = "#A6E3A1" },
+        cat_9 = { fg = "#A6E3A1" },
+      }
+    }
+  },
+
+  green_alt = {
+    globalHighlights = {
+      action = "overwrite",
+      value = {
+        cat_1 = { fg = "#40A02B" },
+        cat_2 = { fg = "#40A02B" },
+        cat_3 = { fg = "#40A02B" },
+        cat_4 = { fg = "#40A02B" },
+        cat_5 = { fg = "#40A02B" },
+        cat_6 = { fg = "#40A02B" },
+        cat_7 = { fg = "#40A02B" },
+        cat_8 = { fg = "#40A02B" },
+        cat_9 = { fg = "#40A02B" },
+      }
+    }
+  },
+
+  blue = {
+    globalHighlights = {
+      action = "overwrite",
+      value = {
+        cat_1 = { fg = "#89B4FA" },
+        cat_2 = { fg = "#89B4FA" },
+        cat_3 = { fg = "#89B4FA" },
+        cat_4 = { fg = "#89B4FA" },
+        cat_5 = { fg = "#89B4FA" },
+        cat_6 = { fg = "#89B4FA" },
+        cat_7 = { fg = "#89B4FA" },
+        cat_8 = { fg = "#89B4FA" },
+        cat_9 = { fg = "#89B4FA" },
+      }
+    }
+  },
+
+  blue_alt = {
+    globalHighlights = {
+      action = "overwrite",
+      value = {
+        cat_1 = { fg = "#1E66F5" },
+        cat_2 = { fg = "#1E66F5" },
+        cat_3 = { fg = "#1E66F5" },
+        cat_4 = { fg = "#1E66F5" },
+        cat_5 = { fg = "#1E66F5" },
+        cat_6 = { fg = "#1E66F5" },
+        cat_7 = { fg = "#1E66F5" },
+        cat_8 = { fg = "#1E66F5" },
+        cat_9 = { fg = "#1E66F5" },
+      }
+    }
+  },
+
+  all_the_colors = {
+    globalHighlights = {
+      action = "overwrite",
+      value = {
+        cat_1 = { fg = "#F5E0DC" },
+        cat_2 = { fg = "#F5C2E7" },
+        cat_3 = { fg = "#CBA6F7" },
+        cat_4 = { fg = "#EBA0AC" },
+        cat_5 = { fg = "#FAB387" },
+        cat_6 = { fg = "#F9E2AF" },
+        cat_7 = { fg = "#A6E3A1" },
+        cat_8 = { fg = "#89DCEB" },
+        cat_9 = { fg = "#B4BEFE" },
+      }
+    }
+  },
+
+  all_the_colors_alt = {
+    globalHighlights = {
+      action = "overwrite",
+      value = {
+        cat_1 = { fg = "#DC8A78" },
+        cat_2 = { fg = "#EA76CB" },
+        cat_3 = { fg = "#8839EF" },
+        cat_4 = { fg = "#E64553" },
+        cat_5 = { fg = "#FE640B" },
+        cat_6 = { fg = "#DF8E1D" },
+        cat_7 = { fg = "#40A02B" },
+        cat_8 = { fg = "#04A5E5" },
+        cat_9 = { fg = "#7287FD" },
+      }
+    }
+  },
 }
 
 return P;

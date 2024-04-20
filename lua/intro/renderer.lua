@@ -14,7 +14,7 @@ R.rendering = false;
 R.width = V.api.nvim_win_get_width(0);
 R.height = V.api.nvim_win_get_height(0)
 
-R.setBuffer = function()
+R.setBuffer = function(showStatusline)
   R.width = V.api.nvim_win_get_width(0);
   R.height = V.api.nvim_win_get_height(0);
 
@@ -25,6 +25,10 @@ R.setBuffer = function()
 
   -- Disabling various columns
   V.cmd("setlocal nonumber norelativenumber signcolumn=no foldcolumn=0 nospell");
+  print(showStatusline)
+  if showStatusline ~= true then
+    V.cmd("set laststatus=0");
+  end
 end
 
 R.handleConfig = function (config, isResizing)
@@ -37,9 +41,7 @@ R.handleConfig = function (config, isResizing)
     V.bo.modifiable = true;
     V.api.nvim_buf_set_lines(data.introBuffer, R.height, R.height * 2, false, { "" });
 
-    for cl = 3, R.height do
-      V.api.nvim_buf_set_lines(0, cl, cl + 1, false, { "" });
-    end
+    V.api.nvim_buf_set_lines(0, 0, -1, false, {});
     V.bo.modifiable = false;
 
     -- Re render the lines
@@ -73,15 +75,21 @@ R.handleConfig = function (config, isResizing)
     local afterWhStart = whSpaces + #R.preparedLines;
 
     -- Add spaces after the components
-    for w = 2, whSpaces do
-      V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w + 1, false, { string.rep(" ", R.width) })
+    if config.showStatusline == true then
+      for w = 2, whSpaces + 1 do
+        V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w, false, { string.rep(" ", R.width) })
+      end
+    else
+      for w = 2, whSpaces do
+        V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w, false, { string.rep(" ", R.width) })
+      end
     end
 
     -- Don't let the user modify the buffer
     V.bo.modifiable = false;
   else
     -- Set the buffer and store it's information
-    R.setBuffer();
+    R.setBuffer(config.showStatusline);
 
     -- Set all the highlight groups defined by the user
     if config.globalHighlights ~= nil then
@@ -125,8 +133,14 @@ R.handleConfig = function (config, isResizing)
     local afterWhStart = whSpaces + #R.preparedLines;
 
     -- Add spaces after the components
-    for w = 1, whSpaces do
-      V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w + 1, false, { string.rep(" ", R.width) })
+    if config.showStatusline == true then
+      for w = 2, whSpaces + 1 do
+        V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w, false, { string.rep(" ", R.width) })
+      end
+    else
+      for w = 1, whSpaces + 1 do
+        V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w, false, { string.rep(" ", R.width) })
+      end
     end
 
     -- Don't let the user modify the buffer
@@ -136,7 +150,7 @@ R.handleConfig = function (config, isResizing)
     V.api.nvim_create_autocmd("VimResized", {
       pattern = { "<buffer>" },
       callback = function()
-        R.handleConfig(tbl, true)
+        R.handleConfig(config, true)
       end
     })
   end
