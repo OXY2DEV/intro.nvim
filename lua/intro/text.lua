@@ -18,7 +18,7 @@ T.bannerHandler = function(component)
   local _l = {};
 
   for l, line in ipairs(component.lines) do
-    local align, color, secondaryColors, gradientRepeat, width;
+    local align, color, secondaryColors, gradientRepeat, width, func;
 
     if type(component.width) == "number" then
       width = component.width;
@@ -72,11 +72,15 @@ T.bannerHandler = function(component)
       end
     end
 
+    if component.functions ~= nil then
+      func = component.functions;
+    end
 
     table.insert(_l, {
       align = align,
       text = line,
       width = width,
+      functions = func,
 
       color = color,
       secondaryColors = secondaryColors,
@@ -89,7 +93,7 @@ end
 
 T.recentsHandler = function(component)
   local entryCount = component.entryCount or 5;
-  local _r= {};
+  local _r = {};
 
   local OFS = data.recents(component.dir);
 
@@ -97,7 +101,7 @@ T.recentsHandler = function(component)
     local line = {
       anchor = nil,
       align = "center",
-      width = 0.6 * V.api.nvim_win_get_width(0),
+      width = 0.6,
 
       gradientRepeat = true,
       functions = {}
@@ -156,19 +160,19 @@ T.recentsHandler = function(component)
     if type(component.colors.name) == "table" and component.colors.name[r] ~= nil then
       fHl = component.colors.name[r];
     elseif type(component.colors.name) == "table" and component.colors.name[r] == nil then
-      fHl = component.colors.name[1];
+      fHl = component.colors.name[#component.colors.name];
     end
 
     if type(component.colors.number) == "table" and component.colors.number[r] ~= nil then
       nHl = component.colors.number[r];
     elseif type(component.colors.number) == "table" and component.colors.number[r] == nil then
-      nHl = component.colors.number[1];
+      nHl = component.colors.number[#component.colors.number];
     end
 
     if type(component.colors.whiteSpace) == "table" and component.colors.whiteSpace[r] ~= nil then
       sHl = component.colors.whiteSpace[r];
     elseif type(component.colors.whitespaces) == "table" and component.colors.whitespaces[r] == nil then
-      sHl = component.colors.whitespaces[1]
+      sHl = component.colors.whitespaces[#component.colors.whitespaces]
     end
 
     ::noColors::
@@ -267,18 +271,28 @@ T.keymapsHandler = function(component)
       local modes = thisItem.modes or "n";
       local options = thisItem.keyOptions or { silent = true };
       local gaps = thisItem.gaps ~= nil and thisItem.gaps or component.gaps ~= nil and component.gaps or "   ";
+      local gapsHl = thisItem.gapsHl ~= nil and thisItem.gapsHl or component.gapsHl ~= nil and component.gapsHl or ""
 
       V.api.nvim_buf_set_keymap(data.introBuffer, modes, thisItem.keyCombination, thisItem.keyAction, options);
 
       if type(thisItem.text) == "string" then
         table.insert(textStack, thisItem.text);
 
-        table.insert(hlStack, thisItem.color)
+        if thisItem.color ~= nil then
+          table.insert(hlStack, thisItem.color)
+        else
+          table.insert(hlStack, "");
+        end
       elseif V.tbl_islist(thisItem.text) then
-        V.list_extend(textStack, thisItem.text)
+        V.list_extend(textStack, thisItem.text);
 
         if V.tbl_islist(thisItem.color) == true then
           V.list_extend(hlStack, thisItem.color)
+        else
+          -- This looks so weird
+          for _ = 1, #thisItem.text do
+            table.insert(hlStack, "");
+          end
         end
       end
 
@@ -293,23 +307,37 @@ T.keymapsHandler = function(component)
 
       if itemAdded ~= itemLimit and itemIndex ~= #component.keys then
         table.insert(textStack, gaps);
-        table.insert(hlStack, "");
+        table.insert(hlStack, gapsHl);
+        V.print(hlStack)
       end
     end
 
+    local gradientRepeat = false;
+
+    if type(component.gradientRepeat) == "boolean" then
+      gradientRepeat = component.gradientRepeat
+    end
+
     table.insert(_t, {
-      align = "center",
+      align = "center", gradientRepeat = gradientRepeat,
       text = textStack, secondaryColors = hlStack, functions = funcStack
     });
   elseif component.style == "list" then
     for _, keys in ipairs(component.keys) do
       local width = component.width;
-      V.api.nvim_buf_set_keymap(data.introBuffer, "n", keys.keyCombination, keys.keyAction, keys.keyOptions);
+      local options = keys.keyOptions ~= nil and keys.keyOptions or { silent = true }
+      V.api.nvim_buf_set_keymap(data.introBuffer, "n", keys.keyCombination, keys.keyAction, options);
+
+      local gradientRepeat = false;
+
+      if type(component.gradientRepeat) == "boolean" then
+        gradientRepeat = component.gradientRepeat
+      end
 
       if type(keys.text) == "string" then
-        table.insert(_t, { align = "center", width = width, text = keys.text, color = keys.color });
+        table.insert(_t, { align = "center", width = width, text = keys.text, color = keys.color, gradientRepeat = gradientRepeat });
       elseif type(keys.text) == "table" then
-        table.insert(_t, { align = "center", width = width, text = keys.text, secondaryColors = keys.color, functions = keys.functions })
+        table.insert(_t, { align = "center", width = width, text = keys.text, secondaryColors = keys.color, gradientRepeat = gradientRepeat, functions = keys.functions })
       end
     end
   end
@@ -340,7 +368,7 @@ T.simplifyComponents = function(component)
 end
 
 T.textRenderer = function(line, lineIndex, whitespaces)
-  local width = vim.api.nvim_win_get_width(0);
+  local width = V.api.nvim_win_get_width(0);
 
   local txt = line.text;
 
@@ -359,7 +387,7 @@ T.textRenderer = function(line, lineIndex, whitespaces)
         _s = string.rep(" ", line.width <= width and math.floor((width - line.width) / 2) or 0)
         _s2 = _s;
       else
-        _s = string.rep(" ", V.fn.strchars(txt) <= width and math.floor((width - vim.fn.strchars(txt)) / 2) or 0);
+        _s = string.rep(" ", V.fn.strchars(txt) <= width and math.floor((width - V.fn.strchars(txt)) / 2) or 0);
         _s2 = _s;
       end
     elseif line.align == "right" then

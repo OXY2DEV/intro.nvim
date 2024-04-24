@@ -36,11 +36,11 @@ intro.setup = function(setupTable)
     tbl = setupTable;
   end
 
-  if setupTable.showStatusline ~= nil then
+  if setupTable ~= nil and setupTable.showStatusline ~= nil then
     tbl.showStatusline = setupTable.showStatusline;
   end
 
-  if tbl.shadaRefresh == true then
+  if tbl.shadaValidate == true then
     for _, v in ipairs(oldfiles) do
       if V.fn.filereadable(v) == 1 then
         table.insert(data.oldfiles, v)

@@ -156,21 +156,21 @@ H.applier = function (lineConfig, lineIndex)
         seClr.to = 1;
       end
 
-      if type(seClr.highlight) == "string" then
+      if type(seClr.groupName) == "string" then
         local from = #string.sub(cachedText, 0, seClr.from);
         local to = #string.sub(cachedText, 0, seClr.to + 1);
 
-        H.checkHl(seClr.highlight, whiteSpaces + lineIndex, spaces + from, spaces + to);
-      elseif type(seClr.highlight) == "table" then
+        H.checkHl(seClr.groupName, whiteSpaces + lineIndex, spaces + from, spaces + to);
+      elseif type(seClr.groupName) == "table" then
         local colorIndex = 1;
 
-        for y = seClr.from, seClr.to - 1 do
+        for y = seClr.from, seClr.to do
           local from = #string.sub(cachedText, 0, y);
-          local to = from + #string.sub(cachedText, y, y + 1);
+          local to = from + #string.sub(cachedText, y + 1, y + 1);
 
-          H.checkHl(seClr.highlight[colorIndex], whiteSpaces + lineIndex, spaces + from, spaces + to);
+          H.checkHl(seClr.groupName[colorIndex], whiteSpaces + lineIndex, spaces + from, spaces + to);
 
-          if (colorIndex + 1) > #seClr.highlight then
+          if (colorIndex + 1) > #seClr.groupName then
             if type(gradientRepeat) == "boolean" and gradientRepeat == true then
               colorIndex = 1;
             elseif type(gradientRepeat) == "table" and gradientRepeat.secondaryColors == true then
