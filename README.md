@@ -1,4 +1,4 @@
-<video src="https://github.com/OXY2DEV/intro.nvim/blob/main/previews/plugin_showcase.mp4"></video>
+<img src="/previews/plugin_showcase.gif"/>
 Highly customisable `start screen` plugin for **Neovim**.
 
 Key features,
