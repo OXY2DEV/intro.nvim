@@ -9,6 +9,9 @@ data.anchors = {};
 data.anchorTexts = {};
 data.anchorStatus = {};
 
+data.height = V.api.nvim_win_get_height(0);
+data.width = V.api.nvim_win_get_width(0);
+
 data.paths = {
   { "~/.config/nvim/lua/plugins/", " plugins/" },
   { "~/.config/nvim/lua/", "󰢱 nvim/lua/" },

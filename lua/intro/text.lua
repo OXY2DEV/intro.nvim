@@ -5,6 +5,57 @@ local arts = require("intro.arts");
 local T = {};
 local V = vim;
 
+T.setDefs = function (component)
+  if component.type == nil or component.type == "banner" then
+    component = V.tbl_deep_extend("keep", component, {
+      align = "center",
+      width = "auto",
+
+      lines = { "Placeholder" },
+      functions = {},
+
+      colors = {},
+      secondaryColors = {},
+      gradientRepeat = false
+    })
+  elseif component.type == "recents" then
+    component = V.tbl_deep_extend("keep", component, {
+      style = "list",
+
+      entryCount = 5,
+      width = 0.8,
+
+      useIcons = false,
+      useAnchors = true,
+      dir = false,
+
+      colors = {
+        name = "",
+        number = "",
+        spaces = ""
+      },
+      anchorStyle = {
+        textGroup = "Special",
+        cornerGroup = nil,
+        corner = "//"
+      },
+
+      gap = " ",
+    })
+  end
+
+  return component;
+end
+
+T.listBehaviour = function (list, index)
+  if list[index] ~= nil then
+    return list[index];
+  else
+    return list[#list];
+  end
+end
+
+
 T.rawTextHandler = function(txt)
   return {
     {
@@ -14,208 +65,145 @@ T.rawTextHandler = function(txt)
   }
 end
 
-T.bannerHandler = function(component)
-  local _l = {};
+T.newBannerHandler = function (component)
+  local _t = {};
 
-  for l, line in ipairs(component.lines) do
-    local align, color, secondaryColors, gradientRepeat, width, func;
+  component = T.setDefs(component);
 
-    if type(component.width) == "number" then
-      width = component.width;
-    elseif type(component.width) == "table" then
-      if component.width[l] ~= nil then
-        width = component.width[l];
-      else
-        width = component.width[#component.width];
-      end
-    end
-
-    if component.align == nil then
-      align = "center";
-    elseif type(component.align) == "string" then
-      align = component.align;
-    elseif type(component.align) == "table" and component.align[l] ~= nil then
-      align = component.align[l]
-    elseif type(component.align) == "table" and component.align[l] == nil then
-      align = component.align[#component.align]
-    end
-
-    if type(component.colors) == "string" then
-      color = component.colors;
-    elseif type(component.colors) == "table" then
-      if component.colors[l] ~= nil then
-        color = component.colors[l];
-      else
-        color = component.colors[#component.colors]
-      end
-    end
-
-    if component.secondaryColors ~= nil then
-      if component.secondaryColors.from ~= nil then
-        secondaryColors = component.secondaryColors;
-      else
-        secondaryColors = component.secondaryColors[l];
-      end
-    end
-
-    if type(component.gradientRepeat) == "boolean" then
-      gradientRepeat = component.gradientRepeat;
-    elseif type(component.gradientRepeat) == "table" then
-      if V.tbl_islist(component.gradientRepeat) == true then
-        if component.gradientRepeat[l] ~= nil then
-          gradientRepeat = component.gradientRepeat[l];
-        else
-          gradientRepeat = component.gradientRepeat[#component.gradientRepeat];
-        end
-      else
-        gradientRepeat = component.gradientRepeat;
-      end
-    end
-
-    if component.functions ~= nil then
-      func = component.functions;
-    end
-
-    table.insert(_l, {
-      align = align,
-      text = line,
-      width = width,
-      functions = func,
-
-      color = color,
-      secondaryColors = secondaryColors,
-      gradientRepeat = gradientRepeat
-    })
-  end
-
-  return _l;
-end
-
-T.recentsHandler = function(component)
-  local entryCount = component.entryCount or 5;
-  local _r = {};
-
-  local OFS = data.recents(component.dir);
-
-  for r = 1, entryCount do
-    local line = {
-      anchor = nil,
+  for line = 1, #component.lines do
+    local text = {
       align = "center",
-      width = 0.6,
+      width = "auto",
 
-      gradientRepeat = true,
-      functions = {}
+      text = component.lines[line],
+      functions = component.functions,
+
+      color = {},
+      secondaryColors = {},
+      gradientRepeat = {}
     };
 
-    if type(component.gradientRepeat) == "boolean" then
-      line.gradientRepeat = component.gradientRepeat;
-    elseif type(component.gradientRepeat) == "table" then
-      if V.tbl_islist(component.gradientRepeat) == true then
-        if component.gradientRepeat[r] ~= nil then
-          line.gradientRepeat = component.gradientRepeat[r];
-        else
-          line.gradientRepeat = component.gradientRepeat[#component.gradientRepeat];
-        end
-      else
-        line.gradientRepeat = component.gradientRepeat;
-      end
-    end
-
-    if component.width ~= nil then
-      if component.width < 1 then
-        line.width = math.floor(component.width * data.width);
-      else
-        line.width = component.width;
-      end
-    end
-
-    local entry = OFS[r] or "Empty";
-    local path, filename, extension = string.gsub(V.fs.dirname(entry), V.fn.expand("$HOME"), "~"), V.fs.basename(entry), V.filetype.match({ filename = entry });
-    if entry ~= "Empty" then
-      line.anchor = path .. "/" .. filename;
-    end
-
-    if component.useAnchors == false then
-      line.useAnchors = false;
+    -- Text alignment
+    if V.tbl_islist(component.align) == true then
+      text.align = T.listBehaviour(component.align, line);
     else
-      line.useAnchors = true;
+      text.align = component.align;
     end
 
-    local icon, hl = "", nil;
-
-    if component.useIcons == true then
-      local devIcons = require("nvim-web-devicons");
-      icon, hl = devIcons.get_icon(filename, extension, { default = true });
+    -- Line width
+    if V.tbl_islist(component.width) == true then
+      text.width = T.listBehaviour(component.width, line);
+    else
+      text.width = component.width;
     end
 
-    local fHl = "";
-    local nHl = "";
-
-    local sHl = "";
-
-    if component.colors == nil then
-      goto noColors;
+    -- Main color
+    if V.tbl_islist(component.colors) == true then
+      text.color = T.listBehaviour(component.colors, line);
+    else
+      text.color = component.color;
     end
 
-    if type(component.colors.name) == "table" and component.colors.name[r] ~= nil then
-      fHl = component.colors.name[r];
-    elseif type(component.colors.name) == "table" and component.colors.name[r] == nil then
-      fHl = component.colors.name[#component.colors.name];
+    -- Changes color
+    if V.tbl_islist(component.secondaryColors) == true and component.secondaryColors[line] ~= nil then
+      text.secondaryColors = T.listBehaviour(component.secondaryColors, line);
+    else
+      text.secondaryColors = component.secondaryColors;
     end
 
-    if type(component.colors.number) == "table" and component.colors.number[r] ~= nil then
-      nHl = component.colors.number[r];
-    elseif type(component.colors.number) == "table" and component.colors.number[r] == nil then
-      nHl = component.colors.number[#component.colors.number];
+    -- Gradient behaviour
+    if V.tbl_islist(component.gradientRepeat) == true then
+      text.gradientRepeat = T.listBehaviour(component.gradientRepeat, line);
+    else
+      text.gradientRepeat = component.gradientRepeat;
     end
 
-    if type(component.colors.whiteSpace) == "table" and component.colors.whiteSpace[r] ~= nil then
-      sHl = component.colors.whiteSpace[r];
-    elseif type(component.colors.whitespaces) == "table" and component.colors.whitespaces[r] == nil then
-      sHl = component.colors.whitespaces[#component.colors.whitespaces]
-    end
-
-    ::noColors::
-
-    if component.style == nil or component.style == "list" then
-      if component.useIcons == true then
-        line.text = { icon, " ", filename, "SP", tostring(r) };
-        line.secondaryColors = { hl, sHl, fHl, sHl, nHl };
-      else
-        line.text = { filename, "SP", tostring(r) };
-        line.secondaryColors = { fHl, sHl, nHl };
-      end
-
-    elseif component.style == "centered" then
-      if component.useIcons == true then
-        line.text = { icon, " ", filename };
-        line.secondaryColors = { hl, sHl, fHl };
-      else
-        line.text = { filename };
-        line.secondaryColors = { fHl };
-      end
-    end
-
-    if component.style == nil or component.style == "list" then
-      local amount = 0;
-
-      line.functions.SP = function()
-        if component.useIcons == true then
-          amount = line.width - V.fn.strchars(icon .. " " .. filename .. r);
-        else
-          amount = line.width - V.fn.strchars(filename .. r);
-        end
-
-        return string.rep(" ", amount);
-      end
-    elseif component.style == "centered" then
-      line.width = nil;
-    end
-
-    table.insert(_r, line);
+    table.insert(_t, text);
   end
 
-  return _r;
+  return _t;
+end
+
+T.newRecentsHandler = function (component)
+  local _t = {};
+  local devIcons = nil;
+
+  -- Set all the default values
+  component = T.setDefs(component);
+
+  -- Import dependency
+  if component.useIcons == true then
+    devIcons = require("nvim-web-devicons");
+  end
+
+  -- List of files to show
+  local file_list = data.recents(component.dir);
+
+  for entry = 1, component.entryCount do
+    local thisFile = file_list[entry] or "Empty";
+    local fileName = V.fn.fnamemodify(thisFile, ":t");
+    local fileExtension = V.filetype.match({ filename = fileName });
+
+    local text = {
+      anchor = nil,
+      anchorStyle = nil,
+
+      gradientRepeat = nil,
+      text = nil,
+      --colors = component.colors,
+      secondaryColors = {},
+      functions = {},
+
+      align = "center",
+      --width = component.width,
+    };
+
+    -- Gradient repeat handler
+    if type(component.gradientRepeat) == "boolean" or (type(component.gradientRepeat) == "table" and V.tbl_islist(component.gradientRepeat) == false) then
+      text.gradientRepeat = component.gradientRepeat;
+    elseif type(component.gradientRepeat) == "table" and V.tbl_islist(component.gradientRepeat) == true then
+      text.gradientRepeat = T.listBehaviour(component.gradientRepeat, entry);
+    end
+
+    -- No file found
+    if thisFile ~= "Empty" then
+      text.anchor = thisFile;
+      text.anchorStyle = component.anchorStyle;
+    end
+
+    -- File Icons
+    local fileIcon = "";
+    local fileIconColor = "";
+
+    if component.useIcons == true then
+      fileIcon, fileIconColor = devIcons.get_icon(fileName, fileExtension, { default = true });
+    end
+
+    -- Renders
+    if component.style == "list" then
+      local fileNameHl = T.listBehaviour(component.colors.name, entry) or "";
+      local fileNumberHl = T.listBehaviour(component.colors.number, entry) or "";
+      local fileSpcaesHl = T.listBehaviour(component.colors.spaces, entry) or "";
+
+      text.text = { fileIcon, fileIcon ~= "" and " " or "", fileName, "fileSpaces", tostring(entry) };
+      text.secondaryColors = {
+        fileIconColor, fileSpcaesHl, fileNameHl, fileSpcaesHl, fileNumberHl
+      };
+      text.functions = {
+        fileSpaces = function ()
+          local totalSize = component.width < 1 and math.floor(data.width * component.width) or math.floor(component.width);
+
+          local str =  string.rep(component.gap, fileIcon ~= "" and totalSize - V.fn.strchars(fileIcon .. fileName .. tostring(entry)) or  totalSize - V.fn.strchars(fileIcon .. fileName .. tostring(entry)) + 1);
+          return str;
+        end
+      }
+    end
+
+    V.print(text.secondaryColors)
+    table.insert(_t, text)
+  end
+
+  return _t;
 end
 
 T.timeHandler = function(component)
@@ -354,9 +342,9 @@ T.simplifyComponents = function(component)
   end
 
   if component.type == nil or component.type == "banner" then
-    _c = T.bannerHandler(component);
+    _c = T.newBannerHandler(component);
   elseif component.type == "recents" then
-    _c = T.recentsHandler(component)
+    _c = T.newRecentsHandler(component)
   elseif component.type == "time" then
     _c = T.timeHandler(component);
   elseif component.type == "keymaps" then

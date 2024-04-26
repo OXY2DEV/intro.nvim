@@ -598,7 +598,7 @@ P.startify = {
         {
           type = "banner",
           width = 0.8,
-          lines = { { " ▒▒ ", "Recently opened files:" } },
+          lines = { { "▒▒ ", "Recently opened files:" } },
           secondaryColors = { { "label_1", "" } }
         },
         "",
@@ -627,7 +627,7 @@ P.startify = {
         {
           type = "banner",
           width = 0.8,
-          lines = { { " ▒▒ ", "Recently opened files in ", "current", " directory:" } },
+          lines = { { "▒▒ ", "Recently opened files in ", "current", " directory:" } },
           secondaryColors = { { "label_1", "", "Special", "" } }
         },
         {
