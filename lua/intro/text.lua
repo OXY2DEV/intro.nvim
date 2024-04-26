@@ -123,7 +123,7 @@ T.recentsHandler = function(component)
 
     if component.width ~= nil then
       if component.width < 1 then
-        line.width = math.floor(component.width * V.api.nvim_win_get_width(0));
+        line.width = math.floor(component.width * data.width);
       else
         line.width = component.width;
       end

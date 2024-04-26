@@ -89,7 +89,7 @@ Currently you can't directly use `lines` and instead use `components` but I will
 >[!TIP]
 >**Why does the plugin use** `lines`**?**
 > 
->The reason for this is that all the Components need to do various things(e.g. read old-files, set keymaps, set default options, communicate with other parts of the plugin etc.) and doing this things every time the screen resizes will cause *A LOT* of lag and slow down everything.
+>The reason for this is that all the Components need to do various things(e.g. read oldfiles, set keymaps, set default options, communicate with other parts of the plugin etc.) and doing this things every time the screen resizes will cause *A LOT* of lag and slow down everything.
 >So, things that are only need to be done once aren't done over & over again and whem things are added to the screen, the plugin only needs to worry about a single line rather than the entire configuration table.
 > 
 >There used to be a `bug` that crashed the entire terminal in the older version of the `plugin`(when the window was resized) for this exact reason.
@@ -271,4 +271,99 @@ You can use something like this in your component.
 
 Even though there are(and will be) more `components` the `banner` component was the only component when the plugin was first made. So, all the other components are just variation of it. As such many of the properties are also available in other `components`.
 
+#### Custom width?
+Yes, the plugin allows you to set the width for all the lines or `individually` for each line.
+
+When the value is less than 1 it is considered a % value. So, for example 0.8 means 80% of the `window width`. And a larger value is used directly.
+It can be a list ans the values are applied based on lines index and the last `non-nil` value is used in cass a line has no width.
+
+### Recents
+A component built for showing `oldfiles`. This component allows listing recently opened files in `Neovim`.
+```lua
+{
+	type = "recents", -- Component type, required
+	useIcons = false, -- show/hide file icons
+	useAnchors = true, -- enable/disable file path preview
+	entryCount = 5, -- length of the list
+	width = 0.6, -- width of the list
+  colors = {}, -- coloring of the items
+  dir = false, -- directory whose files to be included
+  keymap = "<Space><Space>", -- Keymap to open file under cursor
+  gradientRepeat = false -- Gradient colors behaviour
+}
+```
+>[!WARNING]
+>If you set `useIcons` to true you **MUST** install `nvim-web-devicons` as a dependency and have a **Nerd font** installed.
+
+>[!TIP]
+>You don't need to use every option in the table. Only use what you need to change.
+
+You can open the file under the cursor by using the combination set in `keymap`. By default it is set to `<Space><Space>`.
+
+>[!TIP]
+>If you want a more detailed explanation along with examples check the `intro.nvim-c-recents` help tag.
+
+### Styles
+Currently you can either have a list with entry number or centered names.
+```lua
+{
+  type = "recents",
+  style = "list" -- "centered"
+}
+```
+
+### How the plugin gets the list
+If you have been reading from the start you may realise that I haven't talked about some of the properties in the example. One of them is `shadaValidate`.
+
+>**Why is** `shadaValidate` **important?**
+>
+>**Answer:** `Neovim` will store every single file you open in it(wether it actually existed or was opened as a typo) in the `shada` log.
+>This means files that have been `deleted` are also there along with the files that were opened as a `typo`. By setting `shadaValidate` to true the plugin will ignore files that do not exist.
+
+>**Can** `shadaValidate` **impact load time?**
+>
+>**Answer:** Well, kind of. I actually don't want to store(aka *cache*) the validated version of oldfiles as that would require `reading/writing` in the user's file system which may introduce more bugs or compatibility issues and security issues as protecting the file from being tampered is also something that needs to be tnought out.
+>Plus the performance *decrease* is not even significant enough to make the process worthwhile. And I don't think anyone is going to be bothered with changing this behaviour.
+
+As it is directly passed into `string.gmatch()` you are not limited to just paths! You can complex `regex` patterns too if you like.clear
+
+### difference in `colors`
+Even though this `component` also has `colors` in its properties it works slightly differently.
+```lua
+{
+  colors = {
+    name = {},
+    number = "Special",
+    whiteSpace = nil
+  }
+}
+```
+You can set colors to the `file names`, `entry number`and the `spaces` between them.
+
+Their values work the same way as **colors** & **secondaryColors** in the `banner` component.
+They also support **Gradient colors** and using "" to skip.
+
+### Anchors?
+Have you ever used `chrome`? If you hover over a `link` in `chrome`(in the PC version) it will show you the full url at the `bottom left` corner of the screen. This plugin has something similar.
+
+>**But** `OXY2DEV` **,I have an *ultra wide* monitor just to show long file paths. Now how will I use it?** 😠
+>
+>**Answer:** Well, I don't. The plugin is built on *mobile* so of course I couldn't have file paths take up half of the screen. So, Deal with it 😒.
+>Just kidding 😆, I will provide options(and more highlight group) for showing *relative* paths instead of the filename.
+
+You can change how the file paths are shown using the `anchors` table in the setup function.
+```lua
+require("intro").setup({
+  anchors = {
+    position = "bottom", -- position of the preview
+    textStyle = {}, -- Options for the file path highlight group
+    cornerStyle = {}, -- Options for anchor_corner highlight group
+    corner = "" -- The character(s) used to show the corner
+  }
+})
+```
+You can also prevent a component from using `anchors` by setting the components `useAnchors` property to **false**.
+
+### Width?
+When ths `list` style is used you can set how wide the list items are supposed to be. It can NOT be used as a list.
 

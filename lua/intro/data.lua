@@ -85,6 +85,7 @@ data.movements = function(configMain)
 
   data.highlights(config);
   data.height = V.api.nvim_win_get_height(0);
+  data.width = V.api.nvim_win_get_width(0);
 
   if #data.anchors < 1 then
     return;
@@ -120,6 +121,7 @@ data.movements = function(configMain)
       local corner = type(config.corner) == "string" and config.corner or " ";
       local y = V.api.nvim_win_get_cursor(0)[1] - 1;
       data.height = V.api.nvim_win_get_height(0);
+      data.width = V.api.nvim_win_get_width(0);
 
       for aI, v in ipairs(data.anchorTexts) do
         local position = v[1];

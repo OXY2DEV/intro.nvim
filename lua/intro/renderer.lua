@@ -37,6 +37,9 @@ R.handleConfig = function (config, isResizing)
     R.width = V.api.nvim_win_get_width(0);
     R.height = V.api.nvim_win_get_height(0);
 
+    data.width = R.width;
+    data.height = R.height;
+
     -- Clear the screen
     V.bo.modifiable = true;
     V.api.nvim_buf_set_lines(data.introBuffer, R.height, R.height * 2, false, { "" });
