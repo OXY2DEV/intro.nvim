@@ -73,6 +73,26 @@ These are the currently available `components`,
   3. Keymaps
 
 Even though I will try to be as **short** and **on point** as I can this section will be quite **big**.
+If you want to read more and a detailed version(with examples) of this section check the `intro.nvim-components` help file.
+
+
+To be less of a *performance hog* all the `components` are turned into `lines`.
+```lua
+{ -- An example of how a line looks like
+  text = "",
+  color = "",
+  secondaryColors = {}
+}
+```
+
+Currently you can't directly use `lines` and instead use `components` but I will be adding custom components in a later update which will allow direct usage of `lines`.
+>[!TIP]
+>**Why does the plugin use** `lines`**?**
+> 
+>The reason for this is that all the Components need to do various things(e.g. read old-files, set keymaps, set default options, communicate with other parts of the plugin etc.) and doing this things every time the screen resizes will cause *A LOT* of lag and slow down everything.
+>So, things that are only need to be done once aren't done over & over again and whem things are added to the screen, the plugin only needs to worry about a single line rather than the entire configuration table.
+> 
+>There used to be a `bug` that crashed the entire terminal in the older version of the `plugin`(when the window was resized) for this exact reason.
 
 ### Banner
 Originally created for easy coloring and aligning `text arts`. This component allows setting various options(e.g. colors, alignment, gradient behaviour etc.) to 1 or more lines.
@@ -102,9 +122,11 @@ These are all the values this component provides. It may seem like a lot but mos
 This will add "Hello World" to the start screen with the `Special` highlight group applied to the text.
 
 >**Why does this component have 2 color properties?**
+>
 >**Answer:** The answer is very simple. A lot of the times you would need specific parts of the text to be of a different color. With just **color** you apply a highlight group(or a bunch of them if it's a gradient) to the entire text. With **secondaryColors** you can choose where to apply what color.
 >
 >**Shouldn't just having one be enough?**
+>
 >**Answer:** It would have been if it weren't for the fact that in that case you would need to set a color for every single letter manually. You wouldn't be able to set a default color without using a different property.
 >Plus, now you can choose which property to use depending on your usage.
 
@@ -131,8 +153,9 @@ But the proper way is to define them using a `table` like this.
 
 Colors are applied based on line index(on `banner` type components) and entry number(on `recents` type components). So, how do we color 10 or more lines without making *ugly* nested tables? It's simple, by default the plugin will first look into `colors` and see if a value on the lines index is `nil` or not. If it's not then that color will be applied. However, if a lines colors value is `nil` it will default to the last `non-nil` value in the `colors` table(this process is completely skipped if `colors` nil).
 
->[!NOTE]
+>[!TIP]
 >**I don't want to color a specific line. What do I do?**
+>
 >**Answer:** You set the `colors` tables value for that line to "". This will skip that line.
 
 This is how you can skip a line and not color it.
@@ -213,6 +236,7 @@ Let me explain, when you want to apply a pattern of color it makes sense that th
 
 >[!NOTE]
 >**But can't you just use** `secondaryColors` **to do that?**
+> 
 >**Answer:** Yes, you can. But to do that you would need to change the text into a table, apply color using `secondaryColors`. This makes the configuration table more confusing than necessary.
 >Plus it limits the customisability of the plugin which is one of it's key features. So, I decided it would be better to have an `option` for it. Now, you won't have to write, delete and write every time you want to change how the gradient is applied.
 
