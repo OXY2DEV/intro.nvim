@@ -60,7 +60,7 @@ To see a more detailed explanation of what each property does I suggest you chec
 
 Additionally there is also a quick list for easily glancing over all the properties and their sub properties in the same help file(`:h intro.nvim-opts-tldr).
 
->[!INFO]
+>[!TIP]
 >If you are new to the plugin I suggest you skip the next section as it can be *VERY* overwhelming especially if you are a beginner.
 >I suggest you to start using `presets` first, then watching some examples and this section together. Or you can go read the `documentations` too if you would prefer that.
 
@@ -101,7 +101,6 @@ These are all the values this component provides. It may seem like a lot but mos
 
 This will add "Hello World" to the start screen with the `Special` highlight group applied to the text.
 
->[!INFO]
 >**Why does this component have 2 color properties?**
 >**Answer:** The answer is very simple. A lot of the times you would need specific parts of the text to be of a different color. With just **color** you apply a highlight group(or a bunch of them if it's a gradient) to the entire text. With **secondaryColors** you can choose where to apply what color.
 >
@@ -132,7 +131,7 @@ But the proper way is to define them using a `table` like this.
 
 Colors are applied based on line index(on `banner` type components) and entry number(on `recents` type components). So, how do we color 10 or more lines without making *ugly* nested tables? It's simple, by default the plugin will first look into `colors` and see if a value on the lines index is `nil` or not. If it's not then that color will be applied. However, if a lines colors value is `nil` it will default to the last `non-nil` value in the `colors` table(this process is completely skipped if `colors` nil).
 
->[!QUESTION]
+>[!NOTE]
 >**I don't want to color a specific line. What do I do?**
 >**Answer:** You set the `colors` tables value for that line to "". This will skip that line.
 
@@ -212,7 +211,7 @@ This will make the path appear the same color as `comments`. It also supports Gr
 When I first started working on the `Gradient color` support I was having trouble with wether a gradient should repeat or not.
 Let me explain, when you want to apply a pattern of color it makes sense that the gradient would repeat. However, if the gradient only needs to be present at the start of the text then it would be better if the gradient didn't repeat.
 
->[!QUESTION]
+>[!NOTE]
 >**But can't you just use** `secondaryColors` **to do that?**
 >**Answer:** Yes, you can. But to do that you would need to change the text into a table, apply color using `secondaryColors`. This makes the configuration table more confusing than necessary.
 >Plus it limits the customisability of the plugin which is one of it's key features. So, I decided it would be better to have an `option` for it. Now, you won't have to write, delete and write every time you want to change how the gradient is applied.
