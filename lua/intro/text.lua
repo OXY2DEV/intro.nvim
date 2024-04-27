@@ -5,7 +5,7 @@ local arts = require("intro.arts");
 local T = {};
 local V = vim;
 
-T.setDefs = function (component)
+T.setDefaults = function (component)
   if component.type == nil or component.type == "banner" then
     component = V.tbl_deep_extend("keep", component, {
       align = "center",
@@ -42,6 +42,22 @@ T.setDefs = function (component)
 
       gap = " ",
     })
+  elseif component.type == "keymaps" then
+    if component.style == "list" or component.style == nil then
+      component = V.tbl_extend("keep", component, {
+        style = "silent",
+        spaceBetween = 1,
+        width = "auto"
+      })
+    elseif component.style == "columns" then
+      component = V.tbl_extend("keep", component, {
+        columnSeparator = " ",
+        separatorHl = "",
+
+        maxColumns = 4,
+        lineGaps = 0,
+      })
+    end
   end
 
   return component;
@@ -68,7 +84,7 @@ end
 T.newBannerHandler = function (component)
   local _t = {};
 
-  component = T.setDefs(component);
+  component = T.setDefaults(component);
 
   for line = 1, #component.lines do
     local text = {
@@ -129,7 +145,7 @@ T.newRecentsHandler = function (component)
   local devIcons = nil;
 
   -- Set all the default values
-  component = T.setDefs(component);
+  component = T.setDefaults(component);
 
   -- Import dependency
   if component.useIcons == true then
@@ -206,126 +222,71 @@ T.newRecentsHandler = function (component)
   return _t;
 end
 
-T.timeHandler = function(component)
+T.newKeymapsHandler = function (component)
   local _t = {};
-  local theme = component.theme ~= nil and component.theme or "clock";
+  component = T.setDefaults(component);
 
-  local apply = function(i)
-    table.insert(_t, {
-      align = "center",
-      color = "Special",
-      text = { "tm" },
-      functions = {
-        tm = function()
-          return arts.returnTime(nil,true)[i];
-        end
-      }
-    })
-  end
-
-    for i = 1, 3 do
-      apply(i);
+  if component.style == "silent" then
+    -- Silently add the keymaps
+    for _, keyOpts in ipairs(component.keymaps) do
+      V.api.nvim_buf_set_keymap(data.introBuffer, keyOpts.keyModes, keyOpts.keyCombination, keyOpts.keyAction, keyOpts.keyOptions)
     end
+  elseif component.style == "columns" then
+    local stacks = {
+      texts = {},
+      highlights = {},
+    };
+    local columnsInThisLine = 0;
 
-  return _t;
-end
+    for keyIndex, keyOpts in ipairs(component.keymaps) do
+      V.api.nvim_buf_set_keymap(data.introBuffer, keyOpts.keyModes, keyOpts.keyCombination, keyOpts.keyAction, keyOpts.keyOptions)
 
-T.keymapsHandler = function(component)
-  local _t = {};
+      if V.tbl_islist(keyOpts.text) == true then
+        V.list_extend(stacks.texts, keyOpts.text);
+        V.list_extend(stacks.highlights, keyOpts.color);
+      else
+        table.insert(stacks.texts, keyOpts.text);
+        table.insert(stacks.highlights, keyOpts.color);
+      end
 
-  if component.style == nil or component.style == "compact" then
-    local itemLimit = component.itemLimit ~= nil and component.itemLimit or 3;
+      columnsInThisLine = columnsInThisLine + 1;
 
-    local textStack = {};
-    local hlStack = {};
-    local funcStack = {};
-    local itemAdded = 0;
-
-    for itemIndex = 1, #component.keys do
-      if itemAdded >= itemLimit then
+      if columnsInThisLine < component.maxColumns and keyIndex ~= #component.keymaps then
+        table.insert(stacks.texts, component.columnSeparator);
+        table.insert(stacks.highlights, component.separatorHl);
+      else
+        V.print(stacks.highlights)
         table.insert(_t, {
           align = "center",
-          text = textStack, secondaryColors = hlStack, functions = funcStack
+
+          text = stacks.texts,
+          secondaryColors = stacks.highlights,
+
+          gradientRepeat = keyOpts.gradientRepeat ~= nil and keyOpts.gradientRepeat or component.gradientRepeat
         });
 
-        textStack = {};
-        hlStack = {};
-        funcStack = {}
-        itemAdded = 0;
-      end
+        stacks.texts = {};
+        stacks.highlights = {};
 
-      itemAdded = itemAdded + 1;
-      local thisItem = component.keys[itemIndex];
-      local modes = thisItem.modes or "n";
-      local options = thisItem.keyOptions or { silent = true };
-      local gaps = thisItem.gaps ~= nil and thisItem.gaps or component.gaps ~= nil and component.gaps or "   ";
-      local gapsHl = thisItem.gapsHl ~= nil and thisItem.gapsHl or component.gapsHl ~= nil and component.gapsHl or ""
-
-      V.api.nvim_buf_set_keymap(data.introBuffer, modes, thisItem.keyCombination, thisItem.keyAction, options);
-
-      if type(thisItem.text) == "string" then
-        table.insert(textStack, thisItem.text);
-
-        if thisItem.color ~= nil then
-          table.insert(hlStack, thisItem.color)
-        else
-          table.insert(hlStack, "");
-        end
-      elseif V.tbl_islist(thisItem.text) then
-        V.list_extend(textStack, thisItem.text);
-
-        if V.tbl_islist(thisItem.color) == true then
-          V.list_extend(hlStack, thisItem.color)
-        else
-          -- This looks so weird
-          for _ = 1, #thisItem.text do
-            table.insert(hlStack, "");
-          end
-        end
-      end
-
-      if thisItem.functions ~= nil then
-        if #funcStack < 1 then
-          funcStack = thisItem.functions
-        else
-          V.tbl_extend("force", funcStack, thisItem.functions);
-        end
-
-      end
-
-      if itemAdded ~= itemLimit and itemIndex ~= #component.keys then
-        table.insert(textStack, gaps);
-        table.insert(hlStack, gapsHl);
-        V.print(hlStack)
+        columnsInThisLine = 0;
       end
     end
-
-    local gradientRepeat = false;
-
-    if type(component.gradientRepeat) == "boolean" then
-      gradientRepeat = component.gradientRepeat
-    end
-
-    table.insert(_t, {
-      align = "center", gradientRepeat = gradientRepeat,
-      text = textStack, secondaryColors = hlStack, functions = funcStack
-    });
   elseif component.style == "list" then
-    for _, keys in ipairs(component.keys) do
-      local width = component.width;
-      local options = keys.keyOptions ~= nil and keys.keyOptions or { silent = true }
-      V.api.nvim_buf_set_keymap(data.introBuffer, "n", keys.keyCombination, keys.keyAction, options);
+    for keyIndex, keyOpts in ipairs(component.keymaps) do
+      V.api.nvim_buf_set_keymap(data.introBuffer, keyOpts.keyModes, keyOpts.keyCombination, keyOpts.keyAction, keyOpts.keyOptions)
 
-      local gradientRepeat = false;
+      table.insert(_t, {
+        align = "center",
+        text = keyOpts.text,
 
-      if type(component.gradientRepeat) == "boolean" then
-        gradientRepeat = component.gradientRepeat
-      end
+        colors = type(keyOpts.text) == "string" and keyOpts.colors or nil,
+        secondaryColors = V.tbl_islist(keyOpts.text) == true and keyOpts.colors or nil
+      })
 
-      if type(keys.text) == "string" then
-        table.insert(_t, { align = "center", width = width, text = keys.text, color = keys.color, gradientRepeat = gradientRepeat });
-      elseif type(keys.text) == "table" then
-        table.insert(_t, { align = "center", width = width, text = keys.text, secondaryColors = keys.color, gradientRepeat = gradientRepeat, functions = keys.functions })
+      if keyIndex < #component.keymaps and component.lineGaps ~= nil and component.lineGaps ~= 0 then
+        for _ = 1, component.lineGaps do
+          table.insert(_t, { text = "" });
+        end
       end
     end
   end
@@ -348,7 +309,7 @@ T.simplifyComponents = function(component)
   elseif component.type == "time" then
     _c = T.timeHandler(component);
   elseif component.type == "keymaps" then
-    _c = T.keymapsHandler(component);
+    _c = T.newKeymapsHandler(component);
   end
 
   ::finish::
