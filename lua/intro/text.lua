@@ -58,6 +58,15 @@ T.setDefaults = function (component)
         lineGaps = 0,
       })
     end
+  elseif component.type == "clock" then
+    component = V.tbl_deep_extend("keep", component, {
+      separateDigits = false,
+      colors = {},
+      style = {
+        clockStyle = "simple",
+        textStyle = "fill"
+      }
+    })
   end
 
   return component;
@@ -142,15 +151,12 @@ end
 
 T.newRecentsHandler = function (component)
   local _t = {};
-  local devIcons = nil;
 
   -- Set all the default values
   component = T.setDefaults(component);
 
   -- Import dependency
-  if component.useIcons == true then
-    devIcons = require("nvim-web-devicons");
-  end
+  local devIcons = component.useIcons == true and require("nvim-web-devicons") or nil;
 
   -- List of files to show
   local file_list = data.recents(component.dir);
@@ -201,7 +207,7 @@ T.newRecentsHandler = function (component)
       local fileNumberHl = T.listBehaviour(component.colors.number, entry) or "";
       local fileSpcaesHl = T.listBehaviour(component.colors.spaces, entry) or "";
 
-      text.text = { fileIcon, fileIcon ~= "" and " " or "", fileName, "fileSpaces", tostring(entry) };
+      text.text = { fileIcon, "gap", fileName, "fileSpaces", tostring(entry) };
       text.secondaryColors = {
         fileIconColor, fileSpcaesHl, fileNameHl, fileSpcaesHl, fileNumberHl
       };
@@ -211,6 +217,10 @@ T.newRecentsHandler = function (component)
 
           local str =  string.rep(component.gap, fileIcon ~= "" and totalSize - V.fn.strchars(fileIcon .. fileName .. tostring(entry)) or  totalSize - V.fn.strchars(fileIcon .. fileName .. tostring(entry)) + 1);
           return str;
+        end,
+
+        gap = function ()
+          return fileIcon ~= "" and " " or "";
         end
       }
     end
@@ -294,6 +304,49 @@ T.newKeymapsHandler = function (component)
   return _t;
 end
 
+T.newClockHandler = function (component)
+  local _t = {};
+  component = T.setDefaults(component);
+
+  local hr = data.getHour;
+  local mn = data.getMinute;
+  local se = data.getSeconds;
+  local m  = data.getAmPm;
+
+  if component.style.clockStyle == "clean" then
+    for line = 1, 3 do
+      table.insert(_t, {
+        align = "left",
+        text = { "border_l", "time", "border_r" },
+        gradientRepeat = true,
+        secondaryColors = component.colors,
+        functions = {
+          border_l = function ()
+            return "│  ";
+          end,
+          border_r = function ()
+            return "  │";
+          end,
+
+          time = function ()
+            local h = hr({ style = component.style.textStyle, line = line });
+            local n = mn({ style = component.style.textStyle, line = line });
+            local s = se({ style = component.style.textStyle, line = line });
+            local A =  m({ style = component.style.textStyle, line = line + 3 });
+
+            return h .. "  " .. n .. "  " .. s .. "  " .. A;
+          end
+        }
+      })
+    end
+  elseif component.style.clockStyle == "bordered" then
+  elseif component.style.clockStyle == "rounded" then
+  elseif component.style.clockStyle == "text" then
+  end
+
+  return _t;
+end
+
 T.simplifyComponents = function(component)
   local _c;
 
@@ -310,6 +363,8 @@ T.simplifyComponents = function(component)
     _c = T.timeHandler(component);
   elseif component.type == "keymaps" then
     _c = T.newKeymapsHandler(component);
+  elseif component.type == "clock" then
+    _c = T.newClockHandler(component);
   end
 
   ::finish::

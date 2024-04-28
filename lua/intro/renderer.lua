@@ -71,7 +71,7 @@ R.handleConfig = function (config, isResizing)
 
       -- Add the line to the buffer and apply the highlights
       txt.textRenderer(line, l, whSpaces);
-      hls.applier(line, l)
+      hls.newHlApplier(line, l)
     end
 
     -- Where to start the spaces again
@@ -129,7 +129,7 @@ R.handleConfig = function (config, isResizing)
 
       -- Add the line to the buffer and apply the highlights
       txt.textRenderer(line, l, whSpaces);
-      hls.applier(line, l)
+      hls.newHlApplier(line, l)
     end
 
     -- Where to start the spaces again
