@@ -109,7 +109,9 @@ H.newHlApplier = function (lineConfig, lineIndex)
     goto noSecondColor;
   end
 
-  for secondIndex, colors in ipairs(lineConfig.secondaryColors) do
+  for secondIndex = 1, #partPositions do
+    local colors = lineConfig.secondaryColors[secondIndex];
+
     if type(colors) == "string" then
       local part = partPositions[secondIndex];
 

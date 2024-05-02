@@ -54,8 +54,10 @@ intro.setup = function(setupTable)
     tbl.anchors = {}
   end
 
+  --local T1 = vim.loop.hrtime();
   renderer.handleConfig(tbl);
   data.movements(tbl);
+  --V.print((vim.loop.hrtime() - T1) / 1000000)
 
   animations.animationWorker(tbl.animations)
 end;

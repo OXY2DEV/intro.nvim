@@ -28,6 +28,10 @@ data.paths = {
   { "~/", " ~/" }
 };
 
+data.getNumber = function(config)
+  return AR[config.style][config.line][config.number + 1];
+end
+
 data.getHour = function(config)
   local time = tostring(os.date("%I"));
   local line = config ~= nil and config.line or 1;

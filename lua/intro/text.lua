@@ -60,11 +60,28 @@ T.setDefaults = function (component)
     end
   elseif component.type == "clock" then
     component = V.tbl_deep_extend("keep", component, {
-      separateDigits = false,
-      colors = {},
+      colors = {
+        spaces = "Special",
+        colon = "Special",
+        border = "Comment",
+
+        clock = "Character",
+
+        day = "Conditional",
+        date = "GitSignsChange",
+        month = "Special",
+        year = "@constructor"
+      },
       style = {
-        clockStyle = "simple",
-        textStyle = "fill"
+        clockStyle = "basic",
+        textStyle = "fill",
+
+        clockParts = {
+          "╭", "─", "╮",
+          "│", " ", "│",
+          "╰", "─", "╯"
+        },
+        colon = "•"
       }
     })
   end
@@ -308,40 +325,369 @@ T.newClockHandler = function (component)
   local _t = {};
   component = T.setDefaults(component);
 
-  local hr = data.getHour;
-  local mn = data.getMinute;
-  local se = data.getSeconds;
-  local m  = data.getAmPm;
+  if component.style.clockStyle == "basic" then
+    local lines = {
+      { component.style.clockParts[1], "borderTop", component.style.clockParts[3] },
+      { component.style.clockParts[4], "padding_ve", component.style.clockParts[6] },
 
-  if component.style.clockStyle == "clean" then
-    for line = 1, 3 do
+      { component.style.clockParts[4], "padding_hr", "hr_1_1", component.style.clockParts[5], "hr_2_1", "colonGap", "mn_1_1", component.style.clockParts[5], "mn_2_1", "colonGap", "se_1_1", component.style.clockParts[5], "se_2_1", "colonGap", "mm_1", "padding_hr", component.style.clockParts[6] },
+      { component.style.clockParts[4], "padding_hr", "hr_1_2", component.style.clockParts[5], "hr_2_2", "colon"   , "mn_1_2", component.style.clockParts[5], "mn_2_2", "colon"   , "se_1_2", component.style.clockParts[5], "se_2_2", "colonGap", "mm_2", "padding_hr", component.style.clockParts[6] },
+      { component.style.clockParts[4], "padding_hr", "hr_1_3", component.style.clockParts[5], "hr_2_3", "colonGap", "mn_1_3", component.style.clockParts[5], "mn_2_3", "colonGap", "se_1_3", component.style.clockParts[5], "se_2_3", "colonGap", "mm_3", "padding_hr", component.style.clockParts[6] },
+
+      { component.style.clockParts[4], "padding_ve", component.style.clockParts[6] },
+      { component.style.clockParts[7], "borderBottom", component.style.clockParts[9] },
+    };
+
+    local colors = {
+      { component.colors.border, component.colors.border, component.colors.border },
+      { component.colors.border, component.colors.spaces, component.colors.border },
+
+      { component.colors.border, component.colors.spaces, component.colors.hour, component.colors.spaces, component.colors.hour, component.colors.colon, component.colors.minute, component.colors.spaces, component.colors.minute, component.colors.colon,  component.colors.second, component.colors.spaces, component.colors.second, component.colors.spaces, component.colors.dayNight, component.colors.spaces, component.colors.border },
+      { component.colors.border, component.colors.spaces, component.colors.hour, component.colors.spaces, component.colors.hour, component.colors.colon, component.colors.minute, component.colors.spaces, component.colors.minute, component.colors.colon,  component.colors.second, component.colors.spaces, component.colors.second, component.colors.spaces, component.colors.dayNight, component.colors.spaces, component.colors.border },
+      { component.colors.border, component.colors.spaces, component.colors.hour, component.colors.spaces, component.colors.hour, component.colors.colon, component.colors.minute, component.colors.spaces, component.colors.minute, component.colors.colon,  component.colors.second, component.colors.spaces, component.colors.second, component.colors.spaces, component.colors.dayNight, component.colors.spaces, component.colors.border },
+
+      { component.colors.border, component.colors.spaces, component.colors.border },
+      { component.colors.border, component.colors.border, component.colors.border },
+    };
+
+    local funcs = {
+      hr_1_1 = function()
+        local hour = tostring(os.date("%I"));
+
+        return data.getNumber({ line = 1, number = tonumber(string.sub(hour, 1, 1)), style = component.style.textStyle })
+      end,
+      hr_1_2 = function()
+        local hour = tostring(os.date("%I"));
+
+        return data.getNumber({ line = 2, number = tonumber(string.sub(hour, 1, 1)), style = component.style.textStyle })
+      end,
+      hr_1_3 = function()
+        local hour = tostring(os.date("%I"));
+
+        return data.getNumber({ line = 3, number = tonumber(string.sub(hour, 1, 1)), style = component.style.textStyle })
+      end,
+
+      hr_2_1 = function()
+        local hour = tostring(os.date("%I"));
+
+        return data.getNumber({ line = 1, number = tonumber(string.sub(hour, 2, 2)), style = component.style.textStyle })
+      end,
+      hr_2_2 = function()
+        local hour = tostring(os.date("%I"));
+
+        return data.getNumber({ line = 2, number = tonumber(string.sub(hour, 2, 2)), style = component.style.textStyle })
+      end,
+      hr_2_3 = function()
+        local hour = tostring(os.date("%I"));
+
+        return data.getNumber({ line = 3, number = tonumber(string.sub(hour, 2, 2)), style = component.style.textStyle })
+      end,
+
+
+      mn_1_1 = function()
+        local minute = tostring(os.date("%M"));
+
+        return data.getNumber({ line = 1, number = tonumber(string.sub(minute, 1, 1)), style = component.style.textStyle })
+      end,
+      mn_1_2 = function()
+        local minute = tostring(os.date("%M"));
+
+        return data.getNumber({ line = 2, number = tonumber(string.sub(minute, 1, 1)), style = component.style.textStyle })
+      end,
+      mn_1_3 = function()
+        local minute = tostring(os.date("%M"));
+
+        return data.getNumber({ line = 3, number = tonumber(string.sub(minute, 1, 1)), style = component.style.textStyle })
+      end,
+
+      mn_2_1 = function()
+        local minute = tostring(os.date("%M"));
+
+        return data.getNumber({ line = 1, number = tonumber(string.sub(minute, 2, 2)), style = component.style.textStyle })
+      end,
+      mn_2_2 = function()
+        local minute = tostring(os.date("%M"));
+
+        return data.getNumber({ line = 2, number = tonumber(string.sub(minute, 2, 2)), style = component.style.textStyle })
+      end,
+      mn_2_3 = function()
+        local minute = tostring(os.date("%M"));
+
+        return data.getNumber({ line = 3, number = tonumber(string.sub(minute, 2, 2)), style = component.style.textStyle })
+      end,
+
+
+      se_1_1 = function()
+        local second = tostring(os.date("%S"));
+
+        return data.getNumber({ line = 1, number = tonumber(string.sub(second, 1, 1)), style = component.style.textStyle })
+      end,
+      se_1_2 = function()
+        local second = tostring(os.date("%S"));
+
+        return data.getNumber({ line = 2, number = tonumber(string.sub(second, 1, 1)), style = component.style.textStyle })
+      end,
+      se_1_3 = function()
+        local second = tostring(os.date("%S"));
+
+        return data.getNumber({ line = 3, number = tonumber(string.sub(second, 1, 1)), style = component.style.textStyle })
+      end,
+
+      se_2_1 = function()
+        local second = tostring(os.date("%S"));
+
+        return data.getNumber({ line = 1, number = tonumber(string.sub(second, 2, 2)), style = component.style.textStyle })
+      end,
+      se_2_2 = function()
+        local second = tostring(os.date("%S"));
+
+        return data.getNumber({ line = 2, number = tonumber(string.sub(second, 2, 2)), style = component.style.textStyle })
+      end,
+      se_2_3 = function()
+        local second = tostring(os.date("%S"));
+
+        return data.getNumber({ line = 3, number = tonumber(string.sub(second, 2, 2)), style = component.style.textStyle })
+      end,
+
+
+      mm_1 = function()
+        local dayOrNight = os.date("%p") == "AM" and 0 or 1;
+
+        return data.getNumber({ line = 4, number = dayOrNight, style = component.style.textStyle })
+      end,
+      mm_2 = function()
+        local dayOrNight = os.date("%p") == "AM" and 0 or 1;
+
+        return data.getNumber({ line = 5, number = dayOrNight, style = component.style.textStyle })
+      end,
+      mm_3 = function()
+        local dayOrNight = os.date("%p") == "AM" and 0 or 1;
+
+        return data.getNumber({ line = 6, number = dayOrNight, style = component.style.textStyle })
+      end,
+
+
+      colonGap = function ()
+        if component.style.colon == nil then
+          return "";
+        else
+          return string.rep(component.style.clockParts[5], V.fn.strchars(component.style.colon))
+        end
+      end,
+      colon = function ()
+        if component.style.colon == nil then
+          return "";
+        else
+          return component.style.colon;
+        end
+      end,
+
+      padding_hr = function ()
+        return string.rep(component.style.clockParts[5], 3)
+      end,
+      padding_ve = function ()
+        return string.rep(component.style.clockParts[5], (8 * 3) + 4 + (V.fn.strchars(component.style.colon) * 3) + 6)
+      end,
+
+      borderTop = function ()
+        return string.rep(component.style.clockParts[2], (8 * 3) + 4 + (V.fn.strchars(component.style.colon) * 3) + 6)
+      end,
+      borderBottom = function ()
+        return string.rep(component.style.clockParts[8], (8 * 3) + 4 + (V.fn.strchars(component.style.colon) * 3) + 6)
+      end
+    }
+
+    for index, line in ipairs(lines) do
       table.insert(_t, {
-        align = "left",
-        text = { "border_l", "time", "border_r" },
-        gradientRepeat = true,
-        secondaryColors = component.colors,
-        functions = {
-          border_l = function ()
-            return "│  ";
-          end,
-          border_r = function ()
-            return "  │";
-          end,
+        align = "center",
+        --width = 27,
+        text = line,
+        functions = funcs,
 
-          time = function ()
-            local h = hr({ style = component.style.textStyle, line = line });
-            local n = mn({ style = component.style.textStyle, line = line });
-            local s = se({ style = component.style.textStyle, line = line });
-            local A =  m({ style = component.style.textStyle, line = line + 3 });
-
-            return h .. "  " .. n .. "  " .. s .. "  " .. A;
-          end
-        }
+        secondaryColors = colors[index]
       })
     end
-  elseif component.style.clockStyle == "bordered" then
-  elseif component.style.clockStyle == "rounded" then
-  elseif component.style.clockStyle == "text" then
+  elseif component.style.clockStyle == "widget_small" then
+    local lines = {
+      { component.style.clockParts[1], "borderTop", component.style.clockParts[3], "padding_right" },
+      { component.style.clockParts[4], "padding_fill", component.style.clockParts[6], "padding_right" },
+
+      { component.style.clockParts[4], "widget_padding", "hr_1_1", component.style.clockParts[5], "hr_2_1", "widget_padding", component.style.clockParts[6], component.style.clockParts[5], "mm_1", "padding_mm" },
+      { component.style.clockParts[4], "widget_padding", "hr_1_2", component.style.clockParts[5], "hr_2_2", "widget_padding", component.style.clockParts[6], component.style.clockParts[5], "mm_2", "padding_mm" },
+      { component.style.clockParts[4], "widget_padding", "hr_1_3", component.style.clockParts[5], "hr_2_3", "widget_padding", component.style.clockParts[6], component.style.clockParts[5], "mm_3", "padding_mm" },
+
+      { component.style.clockParts[4], "padding_fill", component.style.clockParts[6], "padding_right" },
+
+      { component.style.clockParts[4], "widget_padding", "mn_1_1", component.style.clockParts[5], "mn_2_1", "widget_padding", component.style.clockParts[6], component.style.clockParts[4], "day", "padding_day" },
+      { component.style.clockParts[4], "widget_padding", "mn_1_2", component.style.clockParts[5], "mn_2_2", "widget_padding", component.style.clockParts[6], component.style.clockParts[4], "date", component.style.clockParts[5], "month", "padding_date" },
+      { component.style.clockParts[4], "widget_padding", "mn_1_3", component.style.clockParts[5], "mn_2_3", "widget_padding", component.style.clockParts[6], component.style.clockParts[4], "year", "padding_year" },
+
+      { component.style.clockParts[4], "padding_fill", component.style.clockParts[6], "padding_right" },
+      { component.style.clockParts[7], "borderBottom", component.style.clockParts[9], "padding_right" }
+    };
+
+    local colors = {
+      { component.colors.border, component.colors.border, component.colors.border, component.colors.spaces },
+      { component.colors.border, component.colors.spaces, component.colors.border, component.colors.spaces },
+
+      { component.colors.border, component.colors.spaces, component.colors.hour, component.colors.spaces, component.colors.hour, component.colors.spaces, component.colors.border, component.colors.spaces, component.colors.dayNight, component.colors.spaces },
+      { component.colors.border, component.colors.spaces, component.colors.hour, component.colors.spaces, component.colors.hour, component.colors.spaces, component.colors.border, component.colors.spaces, component.colors.dayNight, component.colors.spaces },
+      { component.colors.border, component.colors.spaces, component.colors.hour, component.colors.spaces, component.colors.hour, component.colors.spaces, component.colors.border, component.colors.spaces, component.colors.dayNight, component.colors.spaces },
+
+      { component.colors.border, component.colors.spaces, component.colors.border, component.colors.spaces },
+
+      { component.colors.border, component.colors.spaces, component.colors.minute, component.colors.spaces, component.colors.minute, component.colors.spaces, component.colors.border, component.colors.border, component.colors.day, component.colors.spaces },
+      { component.colors.border, component.colors.spaces, component.colors.minute, component.colors.spaces, component.colors.minute, component.colors.spaces, component.colors.border, component.colors.border, component.colors.date, component.colors.spaces, component.colors.month, component.colors.spaces },
+      { component.colors.border, component.colors.spaces, component.colors.minute, component.colors.spaces, component.colors.minute, component.colors.spaces, component.colors.border, component.colors.border, component.colors.year, component.colors.spaces },
+
+      { component.colors.border, component.colors.spaces, component.colors.border, component.colors.spaces },
+      { component.colors.border, component.colors.border, component.colors.border, component.colors.spaces }
+    }
+
+    local funcs = {
+      borderTop = function ()
+        return string.rep(component.style.clockParts[2], 6 + (V.fn.strchars(component.style.clockParts[5]) * 7))
+      end,
+      borderBottom = function ()
+        return string.rep(component.style.clockParts[8], 6 + (V.fn.strchars(component.style.clockParts[5]) * 7))
+      end,
+
+      widget_padding = function ()
+        return string.rep(component.style.clockParts[5], 3);
+      end,
+
+      padding_fill = function ()
+        return string.rep(component.style.clockParts[5], 6 + (V.fn.strchars(component.style.clockParts[5]) * 7));
+      end,
+
+      padding_right = function ()
+        return string.rep(component.style.clockParts[5], 15);
+      end,
+
+      padding_mm = function ()
+        return string.rep(component.style.clockParts[5], 8 - V.fn.strchars(component.style.clockParts[5]));
+      end,
+
+      padding_day = function ()
+        return string.rep(component.style.clockParts[5], 15 - V.fn.strchars(component.style.clockParts[4] .. os.date("%A")));
+      end,
+
+      padding_date = function ()
+        return string.rep(component.style.clockParts[5], 15 - V.fn.strchars(component.style.clockParts[4] .. os.date("%d") .. component.style.clockParts[5] .. os.date("%B")));
+      end,
+
+      padding_year = function ()
+        return string.rep(component.style.clockParts[5], 15 - V.fn.strchars(component.style.clockParts[4] .. os.date("%Y")));
+      end,
+
+      hr_1_1 = function()
+        local hour = tostring(os.date("%I"));
+
+        return data.getNumber({ line = 1, number = tonumber(string.sub(hour, 1, 1)), style = component.style.textStyle })
+      end,
+      hr_1_2 = function()
+        local hour = tostring(os.date("%I"));
+
+        return data.getNumber({ line = 2, number = tonumber(string.sub(hour, 1, 1)), style = component.style.textStyle })
+      end,
+      hr_1_3 = function()
+        local hour = tostring(os.date("%I"));
+
+        return data.getNumber({ line = 3, number = tonumber(string.sub(hour, 1, 1)), style = component.style.textStyle })
+      end,
+
+      hr_2_1 = function()
+        local hour = tostring(os.date("%I"));
+
+        return data.getNumber({ line = 1, number = tonumber(string.sub(hour, 2, 2)), style = component.style.textStyle })
+      end,
+      hr_2_2 = function()
+        local hour = tostring(os.date("%I"));
+
+        return data.getNumber({ line = 2, number = tonumber(string.sub(hour, 2, 2)), style = component.style.textStyle })
+      end,
+      hr_2_3 = function()
+        local hour = tostring(os.date("%I"));
+
+        return data.getNumber({ line = 3, number = tonumber(string.sub(hour, 2, 2)), style = component.style.textStyle })
+      end,
+
+
+      mn_1_1 = function()
+        local minute = tostring(os.date("%M"));
+
+        return data.getNumber({ line = 1, number = tonumber(string.sub(minute, 1, 1)), style = component.style.textStyle })
+      end,
+      mn_1_2 = function()
+        local minute = tostring(os.date("%M"));
+
+        return data.getNumber({ line = 2, number = tonumber(string.sub(minute, 1, 1)), style = component.style.textStyle })
+      end,
+      mn_1_3 = function()
+        local minute = tostring(os.date("%M"));
+
+        return data.getNumber({ line = 3, number = tonumber(string.sub(minute, 1, 1)), style = component.style.textStyle })
+      end,
+
+      mn_2_1 = function()
+        local minute = tostring(os.date("%M"));
+
+        return data.getNumber({ line = 1, number = tonumber(string.sub(minute, 2, 2)), style = component.style.textStyle })
+      end,
+      mn_2_2 = function()
+        local minute = tostring(os.date("%M"));
+
+        return data.getNumber({ line = 2, number = tonumber(string.sub(minute, 2, 2)), style = component.style.textStyle })
+      end,
+      mn_2_3 = function()
+        local minute = tostring(os.date("%M"));
+
+        return data.getNumber({ line = 3, number = tonumber(string.sub(minute, 2, 2)), style = component.style.textStyle })
+      end,
+
+
+      mm_1 = function()
+        local dayOrNight = os.date("%p") == "AM" and 0 or 1;
+
+        return data.getNumber({ line = 4, number = dayOrNight, style = component.style.textStyle })
+      end,
+      mm_2 = function()
+        local dayOrNight = os.date("%p") == "AM" and 0 or 1;
+
+        return data.getNumber({ line = 5, number = dayOrNight, style = component.style.textStyle })
+      end,
+      mm_3 = function()
+        local dayOrNight = os.date("%p") == "AM" and 0 or 1;
+
+        return data.getNumber({ line = 6, number = dayOrNight, style = component.style.textStyle })
+      end,
+
+      day = function ()
+        return os.date("%A");
+      end,
+
+      date = function ()
+        return os.date("%d");
+      end,
+      month = function ()
+        return os.date("%B");
+      end,
+
+      year = function ()
+        return os.date("%Y");
+      end,
+    };
+
+    for index, line in ipairs(lines) do
+      table.insert(_t, {
+        align = "center",
+        width = 30,
+        text = line,
+        functions = funcs,
+
+        secondaryColors = colors[index]
+      })
+    end
   end
 
   return _t;
