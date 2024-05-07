@@ -25,7 +25,6 @@ R.setBuffer = function(showStatusline)
 
   -- Disabling various columns
   V.cmd("setlocal nonumber norelativenumber signcolumn=no foldcolumn=0 nospell");
-  print(showStatusline)
   if showStatusline ~= true then
     V.cmd("set laststatus=0");
   end
@@ -153,9 +152,16 @@ R.handleConfig = function (config, isResizing)
     V.api.nvim_create_autocmd("VimResized", {
       pattern = { "<buffer>" },
       callback = function()
-        R.handleConfig(config, true)
+        R.handleConfig(data.cachedConfig, true)
       end
     })
+
+    V.api.nvim_create_user_command("Refresh",
+      function()
+        R.handleConfig(data.cachedConfig, true);
+      end,
+      {}
+    );
   end
 end
 

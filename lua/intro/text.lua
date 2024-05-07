@@ -242,7 +242,6 @@ T.newRecentsHandler = function (component)
       }
     end
 
-    V.print(text.secondaryColors)
     table.insert(_t, text)
   end
 
@@ -282,7 +281,6 @@ T.newKeymapsHandler = function (component)
         table.insert(stacks.texts, component.columnSeparator);
         table.insert(stacks.highlights, component.separatorHl);
       else
-        V.print(stacks.highlights)
         table.insert(_t, {
           align = "center",
 

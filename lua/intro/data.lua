@@ -6,6 +6,8 @@ data.oldfiles = {};
 data.introBuffer = 0;
 data.whiteSpaces = 0;
 
+data.cachedConfig = {};
+
 data.anchors = {};
 data.anchorTexts = {};
 data.anchorStatus = {};
@@ -19,86 +21,25 @@ data.paths = {
   { "~/.config/nvim/", " nvim/" },
 
   { "~/.config/gh/", "  gh/" },
-
   { "~/.config/lazygit/", "  lazygit/" },
-
   { "~/.config/tmux/", " tmux/" },
 
-  { "~/.config/", " config/" },
-  { "~/", " ~/" }
+  { "~/.config/", " config/" },
+
+  { "~/.local/share/", "󱁿 share/" },
+
+  { "~/.termux/", "  termux/" },
+
+  { "~/Desktop/", " Desktop/" },
+
+  { "/data/data/com.termux/files/usr/share/nvim/runtime/doc/", " docs/" },
+  { "~/", "  ~/" }
 };
 
 data.getNumber = function(config)
   return AR[config.style][config.line][config.number + 1];
 end
 
-data.getHour = function(config)
-  local time = tostring(os.date("%I"));
-  local line = config ~= nil and config.line or 1;
-
-  if config.style == "fill" then
-    return config.separated == true and { AR.timeFill[line][string.sub(time, 1, 1) + 1], " ", AR.timeFill[line][string.sub(time, 2, 2) + 1]} or AR.timeFill[line][string.sub(time, 1, 1) + 1] .. " " .. AR.timeFill[line][string.sub(time, 2, 2) + 1];
-  elseif config.style == "dotMatrix" then
-    return config.separated == true and { AR.timeDotMatrix[line][string.sub(time, 1, 1) + 1], " ", AR.timeDotMatrix[line][string.sub(time, 2, 2) + 1]} or AR.timeDotMatrix[line][string.sub(time, 1, 1) + 1] .. " " .. AR.timeDotMatrix[line][string.sub(time, 2, 2) + 1];
-  elseif config.style == "rounded" then
-    return config.separated == true and { AR.timeRounded[line][string.sub(time, 1, 1) + 1], " ", AR.timeRounded[line][string.sub(time, 2, 2) + 1]} or AR.timeRounded[line][string.sub(time, 1, 1) + 1] .. " " .. AR.timeRounded[line][string.sub(time, 2, 2) + 1];
-  elseif config.style == "cornered" then
-    return config.separated == true and { AR.timeCornered[line][string.sub(time, 1, 1) + 1], " ", AR.timeCornered[line][string.sub(time, 2, 2) + 1]} or AR.timeCornered[line][string.sub(time, 1, 1) + 1] .. " " .. AR.timeCornered[line][string.sub(time, 2, 2) + 1];
-  elseif config.style == "raw" then
-    return time;
-  end
-end
-
-data.getMinute = function(config)
-  local time = tostring(os.date("%M"));
-  local line = config.line or 1;
-
-  if config.style == "fill" then
-    return config.separated == true and { AR.timeFill[line][string.sub(time, 1, 1) + 1], " ", AR.timeFill[line][string.sub(time, 2, 2) + 1]} or AR.timeFill[line][string.sub(time, 1, 1) + 1] .. " " .. AR.timeFill[line][string.sub(time, 2, 2) + 1];
-  elseif config.style == "dotMatrix" then
-    return config.separated == true and { AR.timeDotMatrix[line][string.sub(time, 1, 1) + 1], " ", AR.timeDotMatrix[line][string.sub(time, 2, 2) + 1]} or AR.timeDotMatrix[line][string.sub(time, 1, 1) + 1] .. " " .. AR.timeDotMatrix[line][string.sub(time, 2, 2) + 1];
-  elseif config.style == "rounded" then
-    return config.separated == true and { AR.timeRounded[line][string.sub(time, 1, 1) + 1], " ", AR.timeRounded[line][string.sub(time, 2, 2) + 1]} or AR.timeRounded[line][string.sub(time, 1, 1) + 1] .. " " .. AR.timeRounded[line][string.sub(time, 2, 2) + 1];
-  elseif config.style == "cornered" then
-    return config.separated == true and { AR.timeCornered[line][string.sub(time, 1, 1) + 1], " ", AR.timeCornered[line][string.sub(time, 2, 2) + 1]} or AR.timeCornered[line][string.sub(time, 1, 1) + 1] .. " " .. AR.timeCornered[line][string.sub(time, 2, 2) + 1];
-  elseif config.style == "raw" then
-    return time;
-  end
-end
-
-data.getSeconds = function(config)
-  local time = tostring(os.date("%S"));
-  local line = config.line or 1;
-
-  if config.style == "fill" then
-    return config.separated == true and { AR.timeFill[line][string.sub(time, 1, 1) + 1], " ", AR.timeFill[line][string.sub(time, 2, 2) + 1]} or AR.timeFill[line][string.sub(time, 1, 1) + 1] .. " " .. AR.timeFill[line][string.sub(time, 2, 2) + 1];
-  elseif config.style == "dotMatrix" then
-    return config.separated == true and { AR.timeDotMatrix[line][string.sub(time, 1, 1) + 1], " ", AR.timeDotMatrix[line][string.sub(time, 2, 2) + 1]} or AR.timeDotMatrix[line][string.sub(time, 1, 1) + 1] .. " " .. AR.timeDotMatrix[line][string.sub(time, 2, 2) + 1];
-  elseif config.style == "rounded" then
-    return config.separated == true and { AR.timeRounded[line][string.sub(time, 1, 1) + 1], " ", AR.timeRounded[line][string.sub(time, 2, 2) + 1]} or AR.timeRounded[line][string.sub(time, 1, 1) + 1] .. " " .. AR.timeRounded[line][string.sub(time, 2, 2) + 1];
-  elseif config.style == "cornered" then
-    return config.separated == true and { AR.timeCornered[line][string.sub(time, 1, 1) + 1], " ", AR.timeCornered[line][string.sub(time, 2, 2) + 1]} or AR.timeCornered[line][string.sub(time, 1, 1) + 1] .. " " .. AR.timeCornered[line][string.sub(time, 2, 2) + 1];
-  elseif config.style == "raw" then
-    return time;
-  end
-end
-
-data.getAmPm = function(config)
-  local time = os.date("%p") == "am" and 1 or 2;
-  local line = config.line or 4;
-
-  if config.style == "fill" then
-    return AR.timeFill[line][time];
-  elseif config.style == "dotMatrix" then
-    return AR.timeDotMatrix[line][time];
-  elseif config.style == "rounded" then
-    return AR.timeRounded[line][time];
-  elseif config.style == "cornered" then
-    return AR.timeCornered[line][time];
-  elseif config.style == "raw" then
-    return os.date("%p");
-  end
-end
 
 data.toRelative = function(path)
   local p = path ~= nil and path or V.loop.cwd();
@@ -201,7 +142,7 @@ data.movements = function(configMain)
 
       for aI, v in ipairs(data.anchorTexts) do
         local position = v[1];
-        local link = v[2];
+        local link = v[2] .. " ";
 
         if (y - data.whiteSpaces) == position and data.anchorStatus[aI] ~= false then
           if config.position == nil or config.position == "bottom" then

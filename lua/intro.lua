@@ -55,6 +55,7 @@ intro.setup = function(setupTable)
   end
 
   --local T1 = vim.loop.hrtime();
+  data.cachedConfig = tbl;
   renderer.handleConfig(tbl);
   data.movements(tbl);
   --V.print((vim.loop.hrtime() - T1) / 1000000)
@@ -62,7 +63,8 @@ intro.setup = function(setupTable)
   animations.animationWorker(tbl.animations)
 end;
 
-V.api.nvim_create_user_command("Gradient", function(options)
+V.api.nvim_create_user_command("Gradient",
+  function(options)
     local c1 = options.fargs[1];
     local c2 = options.fargs[2];
 
