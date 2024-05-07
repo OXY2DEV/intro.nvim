@@ -17,6 +17,10 @@ R.height = V.api.nvim_win_get_height(0)
 R.setBuffer = function(showStatusline)
   R.width = V.api.nvim_win_get_width(0);
   R.height = V.api.nvim_win_get_height(0);
+    
+  data.width = R.width;
+  data.height = R.height;
+
 
   data.introBuffer = V.api.nvim_create_buf(false, true);
 
@@ -25,7 +29,6 @@ R.setBuffer = function(showStatusline)
 
   -- Disabling various columns
   V.cmd("setlocal nonumber norelativenumber signcolumn=no foldcolumn=0 nospell");
-  print(showStatusline)
   if showStatusline ~= true then
     V.cmd("set laststatus=0");
   end

@@ -101,7 +101,7 @@ T.recentsHandler = function(component)
     local line = {
       anchor = nil,
       align = "center",
-      width = 0.6,
+      width = 0.8,
 
       gradientRepeat = true,
       functions = {}
@@ -118,14 +118,6 @@ T.recentsHandler = function(component)
         end
       else
         line.gradientRepeat = component.gradientRepeat;
-      end
-    end
-
-    if component.width ~= nil then
-      if component.width < 1 then
-        line.width = math.floor(component.width * data.width);
-      else
-        line.width = component.width;
       end
     end
 
@@ -201,9 +193,9 @@ T.recentsHandler = function(component)
 
       line.functions.SP = function()
         if component.useIcons == true then
-          amount = line.width - V.fn.strchars(icon .. " " .. filename .. r);
+          amount = (component.width * data.width) - V.fn.strchars(icon .. " " .. filename .. r);
         else
-          amount = line.width - V.fn.strchars(filename .. r);
+          amount = (component.width * data.width) - V.fn.strchars(filename .. r);
         end
 
         return string.rep(" ", amount);
@@ -308,7 +300,6 @@ T.keymapsHandler = function(component)
       if itemAdded ~= itemLimit and itemIndex ~= #component.keys then
         table.insert(textStack, gaps);
         table.insert(hlStack, gapsHl);
-        V.print(hlStack)
       end
     end
 

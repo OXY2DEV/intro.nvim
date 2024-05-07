@@ -93,9 +93,9 @@ V.api.nvim_create_user_command("Gradient", function(options)
     end
 
     if #output == 0 then
-      V.print(text);
+      --V.print(text);
     else
-      V.print(output);
+      --V.print(output);
     end
   end,
   {}
