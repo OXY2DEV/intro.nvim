@@ -275,15 +275,37 @@ A.animationWorker = function (animations)
 
   ::noTxAnim::
 
+  -- Hide the cursor
+  --local cachedCursorStatus = vim.go.guicursor;
+  --local cachedCursorLine = vim.o.cursorline;
+  --vim.go.guicursor = "a:NoiceHiddenCursor";
+
+  --if cachedCursorLine == true then
+    --vim.o.cursorline = false;
+  --end
+  --vim.print(vim.o.cursorcolumn)
+
   timer:start(delay, updateDelay, V.schedule_wrap(
     function()
       -- if there is no animations then exit
       if animations.highlightBased == nil and animations.highlightBased == nil then
+        --vim.go.guicursor = cachedCursorStatus;
+
+        --if cachedCursorLine == true then
+          --vim.o.cursorline = true;
+        --end
+
         timer:stop();
         return;
       end
 
       if #A.renderComplete >= totalAnimationLength then
+        --vim.go.guicursor = cachedCursorStatus;
+
+        --if cachedCursorLine == true then
+          --vim.o.cursorline = true;
+        --end
+
         timer:stop();
         return;
       end
@@ -310,6 +332,7 @@ A.animationWorker = function (animations)
   V.api.nvim_create_autocmd({ "BufDelete" }, {
     pattern = { "<buffer>" },
     callback = function()
+      vim.go.guicursor = cachedCursorStatus;
       timer:stop();
     end
   })
