@@ -1,7 +1,9 @@
-https://github.com/OXY2DEV/intro.nvim/assets/122956967/85737e5b-0f01-4ffd-b22c-cc1adda17e60
+<!--https://github.com/OXY2DEV/intro.nvim/assets/122956967/85737e5b-0f01-4ffd-b22c-cc1adda17e60-->
 
-~Animated `Intro` for Neovim~
+<!--~Animated `Intro` for Neovim~-->
 
-[Installation]() | [Documentation]() | [Presets]() | [Showcase]()
+<!--[Installation]() | [Documentation]() | [Presets]() | [Showcase]()-->
 
-# Introduction
+<!-- Introduction-->
+
+README.md is under construction. Check the `developement` branch for more details.
