@@ -47,6 +47,7 @@ R.handleConfig = function (config, isResizing)
     V.bo.modifiable = false;
 
     -- Re render the lines
+    local addedLines = 0;
     local whSpaces = (#R.preparedLines < R.height) and math.floor((R.height - #R.preparedLines) / 2) or 0;
     data.whiteSpaces = whSpaces;
 
@@ -55,6 +56,7 @@ R.handleConfig = function (config, isResizing)
 
     -- Add spaces before the components
     for w = 0, whSpaces do
+      addedLines = addedLines + 1;
       V.api.nvim_buf_set_lines(data.introBuffer, w, w + 1, false, { string.rep(" ", R.width) })
     end
 
@@ -69,6 +71,7 @@ R.handleConfig = function (config, isResizing)
       end
 
       -- Add the line to the buffer and apply the highlights
+      addedLines = addedLines + 1;
       txt.textRenderer(line, l, whSpaces);
       hls.newHlApplier(line, l)
     end
@@ -79,11 +82,20 @@ R.handleConfig = function (config, isResizing)
     -- Add spaces after the components
     if config.showStatusline == true then
       for w = 2, whSpaces + 1 do
+        addedLines = addedLines + 1;
         V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w, false, { string.rep(" ", R.width) })
       end
     else
       for w = 2, whSpaces do
+        addedLines = addedLines + 1;
         V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w, false, { string.rep(" ", R.width) })
+      end
+    end
+
+    if addedLines < R.height then
+      while addedLines <= R.height do
+        addedLines = addedLines + 1;
+        V.api.nvim_buf_set_lines(0, addedLines, addedLines + 1, false, { string.rep(" ", R.width) });
       end
     end
 
@@ -104,6 +116,8 @@ R.handleConfig = function (config, isResizing)
       V.list_extend(R.preparedLines, _s);
     end
 
+    -- Re render the lines
+    local addedLines = 0;
     local whSpaces = (#R.preparedLines < R.height) and math.floor((R.height - #R.preparedLines) / 2) or 0;
     data.whiteSpaces = whSpaces;
 
@@ -112,21 +126,22 @@ R.handleConfig = function (config, isResizing)
 
     -- Add spaces before the components
     for w = 0, whSpaces do
+      addedLines = addedLines + 1;
       V.api.nvim_buf_set_lines(data.introBuffer, w, w + 1, false, { string.rep(" ", R.width) })
     end
 
     for l, line in ipairs(R.preparedLines) do
       if line.anchor ~= nil then
         table.insert(data.anchors, { l, line.anchor });
-        table.insert(data.anchorTexts, { l, data.pathForamtter(line.anchor) });
 
         -- Should I use anchors?
-        if line.useAnchors ~= false then
+        if line.useAnchors ~= nil then
           table.insert(data.anchorStatus,  line.useAnchors)
         end
       end
 
       -- Add the line to the buffer and apply the highlights
+      addedLines = addedLines + 1;
       txt.textRenderer(line, l, whSpaces);
       hls.newHlApplier(line, l)
     end
@@ -137,11 +152,20 @@ R.handleConfig = function (config, isResizing)
     -- Add spaces after the components
     if config.showStatusline == true then
       for w = 2, whSpaces + 1 do
+        addedLines = addedLines + 1;
         V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w, false, { string.rep(" ", R.width) })
       end
     else
-      for w = 1, whSpaces + 1 do
+      for w = 2, whSpaces do
+        addedLines = addedLines + 1;
         V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w, false, { string.rep(" ", R.width) })
+      end
+    end
+
+    if addedLines < R.height then
+      while addedLines <= R.height do
+        addedLines = addedLines + 1;
+        V.api.nvim_buf_set_lines(0, addedLines, addedLines + 1, false, { string.rep(" ", R.width) });
       end
     end
 

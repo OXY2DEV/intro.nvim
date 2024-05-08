@@ -625,9 +625,9 @@ P.cats = {
       {
         width = 12,
         lines = A.cat,
-        colors = "cat_1"
+        colors = { "cat_1" }
       }
-    }
+    },
   },
 
   c1x2 = {
