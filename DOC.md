@@ -6,17 +6,17 @@ As such, this plugin provides `components` to make the entire process of creatin
 You can also create simple animations using the highlight groups. And also some text animations(this is still a work in progress).
 
 These are the topics that are explained in this page,
-0. [Configuration table](#config)
-1. [Components](#components)
+1. [Configuration table](#config)
+2. [Components](#components)
     - [Banner](#c_banner)
     - [Recents](#c_recents)
     - [Keymaps](#c_keymaps)
     -  [Clock](#c_clock)
-1. [Coloring](#coloring)
+3. [Coloring](#coloring)
     - [How colors are applied](#clr_how)
     - [Gradients](#clr_gradients)
     - [Helper function](#clr_helper)
-2. [Animations](#animations)
+4. [Animations](#animations)
     - [How the animation loop works](#anim_how)
     - [How to create animations](#anim_create)
     - [Highlight group based animation](#anim_hl)
@@ -60,15 +60,15 @@ Here's what all the properties do,
 - shadaValidate `true, false or nil`
   > When set to **true**, files that don't exist are not added to the list created by the `recents` component.
 
-  >[!WARNING]
-  > May impact performance if the `shada` file is too long. But it shouldn't be something you notice.
+>[!WARNING]
+> May impact performance if the `shada` file is too long. But it shouldn't be something you notice.
 
 - openFileUnderCursor `string or nil`
   > The keymap for opening files under the cursor. Only takes effect when a `recents` component is used.
 
 - Anchors `table or nil`
-  >[!NOTE]
-  > As the plugin was made on a phone, it is impractical to show the entire file path. However you can change this behaviour in the `recents` components properties.
+>[!NOTE]
+> As the plugin was made on a phone, it is impractical to show the entire file path. However you can change this behaviour in the `recents` components properties.
   
   > Change how the file path previews are shown. They are sent to a function which uses the patterns in the `pathModifiers` and replaces them with their texts. This can be used for extra customisation.
   > More details about these are in the [anchors](#anchors) section.
@@ -85,8 +85,8 @@ Here's what all the properties do,
 - globalHighlights `table or nil`
   > Define `highlight group` names and their values. They are directly passed into `nvim_set_hl()`. An `Intro_` prefix is added to a highlight group.
   
-  >[!WARNING]
-  > You can use it to change other highlight groups too(if it is already defined). This is intended.
+>[!WARNING]
+> You can use it to change other highlight groups too(if it is already defined). This is intended.
 
 - Animations `table or nil`
   > A table containing all the animations and animation related options.
@@ -175,15 +175,15 @@ Supports `custom width` of text, `alignment options`, `gradient colors` and even
 - width `number or nil`
   > Width of the `lines`. Useful when you have characters whose width is bigger than a single character(e.g. some arabic characters). You can also set it to `auto`(or `nil`) to disable it.
   
-  >[!TIP]
-  > If you are using nerd font characters, you don't have to add a `width`. It will still work just fine, just make sure they don't overlap(in which case the output will also have character overlaps).
-  
-  > ```lua
-  > {
-  >   width = 5,
-  >   -- this makes the line behave like it has 5 characters in it
-  > }
-  > ```
+>[!TIP]
+> If you are using nerd font characters, you don't have to add a `width`. It will still work just fine, just make sure they don't overlap(in which case the output will also have character overlaps).
+
+> ```lua
+> {
+>   width = 5,
+>   -- this makes the line behave like it has 5 characters in it
+> }
+> ```
   
 - align `string or table or nil`
   > Changes the alignment of the text. It can be `left`, `right` or `center`. By default, it is `center`.
@@ -196,16 +196,16 @@ Supports `custom width` of text, `alignment options`, `gradient colors` and even
 - lines `table`
   > List containing all the lines to add. Lines can be either a `string` or a `table`.
    
-   >[!TIP]
-   > If the line only uses a single color(or a single gradient) then it is best to use a `string`. If the line has more complex coloring(or has [function names](#functions) in them) it is best to use a `table` as this provides more control.
-   > ```lua
-   > {
-   >   lines = {
-   >     { "A", " line ", "as a", " tae" },
-   >     "A line as a string"
-   >   }
-   > }
-   > ```
+>[!TIP]
+> If the line only uses a single color(or a single gradient) then it is best to use a `string`. If the line has more complex coloring(or has [function names](#functions) in them) it is best to use a `table` as this provides more control.
+> ```lua
+> {
+>   lines = {
+>     { "A", " line ", "as a", " tae" },
+>     "A line as a string"
+>   }
+> }
+> ```
    
 - colors `string or table or nil`
    > Contains the highlight groups that will be used for coloring the text. Can be a `table` of colors(for individual lines) or a `string`.
@@ -227,8 +227,8 @@ Supports `custom width` of text, `alignment options`, `gradient colors` and even
 - secondaryColors `table or nil`
    > Coloring with finer control. Useful when you have something like a table(or any type of structured data as text) or code that you may have on your start screen.
    
-   >[!WARNING]
-   > This only takes effect *when* the lines are `table`.
+>[!WARNING]
+> This only takes effect *when* the lines are `table`.
    
    > ```lua
    > {
@@ -304,10 +304,10 @@ Additionally shows the file path with using `anchors` and supports operating fil
 - style `string`
  > Determines what component a table is.
  
- >[!NOTE] 
- > Currently available styles are,
- > - list
- > - list_2
+>[!NOTE] 
+> Currently available styles are,
+> - list
+> - list_2
  
 - entryCount `number or nil`
  > Number of entries to add. Default is `5`.
@@ -315,15 +315,15 @@ Additionally shows the file path with using `anchors` and supports operating fil
 - width `number or nil`
   > Change how wide lists are supposed to be.
   
-  >[!TIP]
-  > This can be an `integer` or a `float`. When a float is used it is considered that % of the window width.
-  > By default, it is set to 0.6.
-  > ```lua
-  > {
-  >   width = 50, -- the list will be 50 characters wide
-  >   width = 0.6, -- the list will be 60% of total window width
-  > }
-  > ```
+>[!TIP]
+> This can be an `integer` or a `float`. When a float is used it is considered that % of the window width.
+> By default, it is set to 0.6.
+> ```lua
+> {
+>   width = 50, -- the list will be 50 characters wide
+>   width = 0.6, -- the list will be 60% of total window width
+> }
+> ```
   
 - useAnchors `boolean or nil`
   > Toggle the usage of [anchors](#anchors).
@@ -331,8 +331,8 @@ Additionally shows the file path with using `anchors` and supports operating fil
 - useIcons `boolean or nil`
   > Toggle the use of `nerd-font` icons for file icons.
   
-  >[!NOTE]
-  > This requires `nvim-web-devicons`. So, you have to install it as a dependency.
+>[!NOTE]
+> This requires `nvim-web-devicons`. So, you have to install it as a dependency.
   
  - dir `boolean or string or nil`
   > Used to filter through the files. When set to `true` it will only show the files in the `current working directory`. When the value is a `string` it is used to match(using `string.match()`) match the file paths.
@@ -363,8 +363,8 @@ Additionally shows the file path with using `anchors` and supports operating fil
   > - cornerGroup (changes the highlight group used to color the corner)
   > - textGroup (changes the highlight group used to color the text)
   
-  >[!WARNING]
-  > As the plugin uses `virtual text` for anchors. Gradients are not supposed, *yet*.
+>[!WARNING]
+> As the plugin uses `virtual text` for anchors. Gradients are not supposed, *yet*.
   
 - keymapPrefix `string or nil`
   > Change the prefix key for quickly accessing files. It can be used by typing the entry number after the prefix.
