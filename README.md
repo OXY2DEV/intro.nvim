@@ -4,7 +4,7 @@ https://github.com/OXY2DEV/intro.nvim/assets/122956967/b2ffb4ca-d543-46f6-8d7c-c
 <p align="center">Animated <code>:intro</code> for Neovim</p>
 
 <p align="center">
-  <a href="#install">Installation</a> | <a href="#doc">Documentation</a> | <a href="#presets">Presets</a> | <a href="#showcase">Showcase</a>
+  <a href="#install">Installation</a> | <a href="DOC.md">Documentation</a> | <a href="#presets">Presets</a> | <a href="#showcase">Showcase</a>
 </p>
 
 <h2>🏝️ Introduction</h2>

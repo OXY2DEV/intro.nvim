@@ -59,6 +59,14 @@ H.newHlApplier = function (lineConfig, lineIndex)
 
   local padding = 0;
 
+  if lineConfig.width == "auto" or lineConfig.width == nil then
+    textWidth = nil;
+  elseif lineConfig.width < 1 then
+    textWidth = lineConfig.width * data.width;
+  else
+    textWidth = lineConfig.width;
+  end
+
   if type(lineConfig.text) == "string" then
     cachedText = lineConfig.text;
   elseif type(lineConfig.text) == "table" then
@@ -78,7 +86,7 @@ H.newHlApplier = function (lineConfig, lineIndex)
     textWidth = V.fn.strchars(cachedText);
     totalByteLength = #cachedText;
   else
-      totalByteLength = #string.sub(cachedText, 0, lineConfig.width)
+    totalByteLength = #string.sub(cachedText, 0, width)
   end
 
   if lineConfig.align == "center" and textWidth < data.width then
@@ -92,7 +100,6 @@ H.newHlApplier = function (lineConfig, lineIndex)
   end
 
   if type(lineConfig.color) == "string" then
-    --print(totalByteLength)
     H.checkHl(lineConfig.color, data.whiteSpaces + lineIndex, padding, padding + totalByteLength)
   elseif type(lineConfig.color) == "table" then
     local colorIndex = 1;

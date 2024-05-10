@@ -29,18 +29,21 @@ T.setDefaults = function (component)
       useAnchors = true,
       dir = false,
 
+      gap = " ",
+
       colors = {
         name = "",
+        path = "",
         number = "",
         spaces = ""
       },
       anchorStyle = {
-        textGroup = "Special",
+        textGroup = nil,
         cornerGroup = nil,
         corner = "//"
       },
 
-      gap = " ",
+      keymapPrefix = "<leader>",
     })
   elseif component.type == "keymaps" then
     if component.style == "list" or component.style == nil then
@@ -90,6 +93,10 @@ T.setDefaults = function (component)
 end
 
 T.listBehaviour = function (list, index)
+  if list == nil then
+    return;
+  end
+
   if list[index] ~= nil then
     return list[index];
   else
@@ -182,6 +189,8 @@ T.newRecentsHandler = function (component)
     local thisFile = file_list[entry] or "Empty";
     local fileName = V.fn.fnamemodify(thisFile, ":t");
     local fileExtension = V.filetype.match({ filename = fileName });
+    local filePath = vim.fn.fnamemodify(thisFile, ":~:h") .. "/";
+
 
     local text = {
       anchor = nil,
@@ -206,8 +215,18 @@ T.newRecentsHandler = function (component)
 
     -- No file found
     if thisFile ~= "Empty" then
-      text.anchor = thisFile;
-      text.anchorStyle = component.anchorStyle;
+      vim.api.nvim_buf_set_keymap(data.introBuffer, "n", component.keymapPrefix .. entry, ":e" .. thisFile .. "<CR>", { silent = true })
+
+      text.anchor = {
+        path = "",
+
+        corner = nil,
+        cornerStyle = nil,
+        textStyle = nil,
+      };
+
+      text.anchor.path = thisFile;
+      vim.tbl_deep_extend("force", text.anchor, component.anchorStyle);
     end
 
     -- File Icons
@@ -239,7 +258,29 @@ T.newRecentsHandler = function (component)
         gap = function ()
           return fileIcon ~= "" and " " or "";
         end
-      }
+      };
+    elseif component.style == "list_2" then
+      local fileNameHl = T.listBehaviour(component.colors.name, entry) or "";
+      local filePathHl = T.listBehaviour(component.colors.path, entry) or "";
+      local fileNumberHl = T.listBehaviour(component.colors.number, entry) or "";
+      local fileSpcaesHl = T.listBehaviour(component.colors.spaces, entry) or "";
+
+      text.text = { fileIcon, "gap", filePath, fileName, "fileSpaces", tostring(entry) };
+      text.secondaryColors = {
+        fileIconColor, fileSpcaesHl, filePathHl, fileNameHl, fileSpcaesHl, fileNumberHl
+      };
+      text.functions = {
+        fileSpaces = function ()
+          local totalSize = component.width < 1 and math.floor(data.width * component.width) or math.floor(component.width);
+
+          local str =  string.rep(component.gap, fileIcon ~= "" and totalSize - V.fn.strchars(fileIcon .. filePath .. fileName .. tostring(entry)) or  totalSize - V.fn.strchars(fileIcon .. filePath .. fileName .. tostring(entry)) + 1);
+          return str;
+        end,
+
+        gap = function ()
+          return fileIcon ~= "" and " " or "";
+        end
+      };
     end
 
     table.insert(_t, text)
@@ -715,15 +756,16 @@ T.simplifyComponents = function(component)
   return _c;
 end
 
-T.textRenderer = function(line, lineIndex, whitespaces)
-  local width = V.api.nvim_win_get_width(0);
+T.textRenderer = function(line, lineIndex)
+  local width;
+  local whitespaces = data.whiteSpaces;
 
   local txt = line.text;
 
   if type(line.width) == "number" and line.width < 1 then
-    line.width = line.width * width;
+    width = line.width * data.width;
   elseif line.width == "auto" then
-    line.width = nil;
+    width = nil;
   end
 
   if type(txt) == "string" then
@@ -731,22 +773,22 @@ T.textRenderer = function(line, lineIndex, whitespaces)
     local _s2 = "";
 
     if line.align == "center" then
-      if line.width ~= nil then
-        _s = string.rep(" ", line.width <= width and math.floor((width - line.width) / 2) or 0)
-        _s2 = _s;
+      if width ~= nil then
+        _s = string.rep(" ", width <= data.width and math.floor((data.width - width) / 2) or 0)
+        _s2 = string.rep(" ", width <= data.width and math.ceil((data.width - width) / 2) or 0);
       else
-        _s = string.rep(" ", V.fn.strchars(txt) <= width and math.floor((width - V.fn.strchars(txt)) / 2) or 0);
-        _s2 = _s;
+        _s = string.rep(" ", V.fn.strchars(txt) <= data.width and math.floor((data.width - V.fn.strchars(txt)) / 2) or 0);
+        _s2 = string.rep(" ", V.fn.strchars(txt) <= data.width and math.ceil((data.width - V.fn.strchars(txt)) / 2) or 0);
       end
     elseif line.align == "right" then
-      if line.width ~= nil then
-        _s = string.rep(" ", width - line.width);
+      if width ~= nil then
+        _s = string.rep(" ", data.width - width);
       else
-        _s = string.rep(" ", width - V.fn.strchars(txt));
+        _s = string.rep(" ", data.width - V.fn.strchars(txt));
       end
     end
 
-    V.api.nvim_buf_set_lines(0, whitespaces + lineIndex, whitespaces + lineIndex + 1, false, { _s .. line.text .. _s2 })
+    V.api.nvim_buf_set_lines(0, whitespaces + lineIndex, whitespaces + lineIndex, false, { _s .. line.text .. _s2 })
   else
     local _s = "";
 
@@ -758,27 +800,31 @@ T.textRenderer = function(line, lineIndex, whitespaces)
       end
     end
 
-    local sp;
+    local sp, spEnd;
 
     if line.align == "center" then
-      sp = V.fn.strchars(_s) <= width and math.floor((width - V.fn.strchars(_s)) / 2) or 0;
+      if width ~= nil then
+        sp = width <= data.width and math.floor((data.width - width) / 2) or 0;
+        spEnd = width <= data.width and math.floor((data.width - width) / 2) or 0;
 
-      if line.width ~= nil then
-        _s = line.width <= width and string.rep(" ", math.floor((width - line.width) / 2)) .. _s .. string.rep(" ", math.floor((width - line.width) / 2) or _s)
+        _s = string.rep(" ", sp) .. _s .. string.rep(" ", spEnd);
       else
-        _s = string.rep(" ", sp) .. _s .. string.rep(" ", sp);
+        sp = V.fn.strchars(_s) <= data.width and math.floor((data.width - V.fn.strchars(_s)) / 2) or 0;
+        spEnd = V.fn.strchars(_s) <= data.width and math.ceil((data.width - V.fn.strchars(_s)) / 2) or 0;
+
+        _s = string.rep(" ", sp) .. _s .. string.rep(" ", spEnd);
       end
     elseif line.align == "right" then
-      sp = V.fn.strchars(_s) <= width and width - V.fn.strchars(_s) or 0;
+      sp = V.fn.strchars(_s) <= data.width and data.width - V.fn.strchars(_s) or 0;
 
-      if line.width ~= nil and line.width <= width then
-        _s = line.width <= width and string.rep(" ", width - line.width) .. _s .. string.rep(" ", width - line.width) or _s;
+      if width ~= nil and width <= data.width then
+        _s = width <= data.width and string.rep(" ", data.width - width) .. _s or _s;
       else
-        _s = string.rep(" ", sp) .. _s .. string.rep(" ", sp);
+        _s = string.rep(" ", sp) .. _s;
       end
     end
 
-    V.api.nvim_buf_set_lines(0, whitespaces + lineIndex, whitespaces + lineIndex + 1, false, { _s });
+    V.api.nvim_buf_set_lines(0, whitespaces + lineIndex, whitespaces + lineIndex, false, { _s });
   end
 end
 

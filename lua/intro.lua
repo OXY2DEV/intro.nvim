@@ -36,6 +36,24 @@ intro.setup = function(setupTable)
     tbl = setupTable;
   end
 
+  if setupTable.merge == true then
+    for setupKey, setupValue in pairs(setupTable) do
+      if setupKey == "preset" or setupKey == "merge" then
+        goto doNotMerge;
+      end
+
+      if tbl[setupKey] == nil or type(tbl[setupKey]) == "string" then
+        tbl[setupKey] = setupValue;
+      elseif vim.tbl_islist(tbl[setupKey]) == true then
+        tbl[setupKey] = vim.list_extend( tbl[setupKey], setupValue);
+      elseif type(tbl[setupKey]) == "table" then
+        tbl[setupKey] = vim.tbl_deep_extend("force",tbl[setupKey], setupValue);
+      end
+
+      ::doNotMerge::
+    end
+  end
+
   if setupTable ~= nil and setupTable.showStatusline ~= nil then
     tbl.showStatusline = setupTable.showStatusline;
   end
@@ -55,6 +73,7 @@ intro.setup = function(setupTable)
   end
 
   --local T1 = vim.loop.hrtime();
+  data.pathModifiers(tbl.pathModifiers)
   data.cachedConfig = tbl;
   renderer.handleConfig(tbl);
   data.movements(tbl);

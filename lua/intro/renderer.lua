@@ -18,6 +18,14 @@ R.setBuffer = function(showStatusline)
   R.width = V.api.nvim_win_get_width(0);
   R.height = V.api.nvim_win_get_height(0);
 
+  if showStatusline == true then
+    R.availableHeight = R.height;
+  else
+    R.availableHeight = R.height + 1;
+  end
+
+  data.availableHeight = R.availableHeight;
+
   data.introBuffer = V.api.nvim_create_buf(false, true);
 
   V.cmd("buf " .. data.introBuffer);
@@ -25,12 +33,16 @@ R.setBuffer = function(showStatusline)
 
   -- Disabling various columns
   V.cmd("setlocal nonumber norelativenumber signcolumn=no foldcolumn=0 nospell");
+
   if showStatusline ~= true then
+    data.lastStatus = vim.o.laststatus;
     V.cmd("set laststatus=0");
   end
 end
 
 R.handleConfig = function (config, isResizing)
+  R.availableHeight = 0;
+
   if isResizing == true then
     -- Set new Width and Height
     R.width = V.api.nvim_win_get_width(0);
@@ -39,30 +51,35 @@ R.handleConfig = function (config, isResizing)
     data.width = R.width;
     data.height = R.height;
 
+    R.availableHeight = R.height;
+
+    data.availableHeight = R.availableHeight;
+
     -- Clear the screen
     V.bo.modifiable = true;
     V.api.nvim_buf_set_lines(data.introBuffer, R.height, R.height * 2, false, { "" });
 
+    vim.api.nvim_win_set_cursor(0, { 1, 1 })
     V.api.nvim_buf_set_lines(0, 0, -1, false, {});
-    V.bo.modifiable = false;
 
-    -- Re render the lines
-    local addedLines = 0;
-    local whSpaces = (#R.preparedLines < R.height) and math.floor((R.height - #R.preparedLines) / 2) or 0;
-    data.whiteSpaces = whSpaces;
+    -- Start adding things
+    vim.bo.modifiable = true;
 
-    -- Modify the buffer
-    V.bo.modifiable = true
+    local paddingTop = (#R.preparedLines <= R.availableHeight) and math.ceil((R.availableHeight - #R.preparedLines) / 2) or 0;
+    local paddingBottom = (#R.preparedLines <= R.availableHeight) and math.floor((R.availableHeight - #R.preparedLines) / 2) or 0;
 
-    -- Add spaces before the components
-    for w = 0, whSpaces do
-      addedLines = addedLines + 1;
-      V.api.nvim_buf_set_lines(data.introBuffer, w, w + 1, false, { string.rep(" ", R.width) })
+    data.whiteSpaces = paddingTop;
+
+    for sp = 1, paddingTop do
+      vim.api.nvim_buf_set_lines(data.introBuffer, sp - 1, sp - 1, false, { string.rep(" ", R.width) } )
     end
 
     for l, line in ipairs(R.preparedLines) do
+      -- Buffer index is 0 based
+      local indexOnBuffer = l - 1;
+
       if line.anchor ~= nil then
-        table.insert(data.anchors, { l, line.anchor });
+        table.insert(data.anchors, { indexOnBuffer, line.anchor });
 
         -- Should I use anchors?
         if line.useAnchors ~= nil then
@@ -71,36 +88,26 @@ R.handleConfig = function (config, isResizing)
       end
 
       -- Add the line to the buffer and apply the highlights
-      addedLines = addedLines + 1;
-      txt.textRenderer(line, l, whSpaces);
-      hls.newHlApplier(line, l)
+      txt.textRenderer(line, indexOnBuffer);
+      hls.newHlApplier(line, indexOnBuffer)
     end
 
-    -- Where to start the spaces again
-    local afterWhStart = whSpaces + #R.preparedLines;
 
-    -- Add spaces after the components
+    for spE = 1, paddingBottom do
+      local actualIndex = paddingTop + #R.preparedLines + spE;
+
+      vim.api.nvim_buf_set_lines(data.introBuffer, actualIndex - 1, actualIndex -1, false, { string.rep(" ", R.width) } )
+    end
+
+    -- BUG: Incorrect number of empty lines are added when statusline is present
+    -- cause: Unknown
     if config.showStatusline == true then
-      for w = 2, whSpaces + 1 do
-        addedLines = addedLines + 1;
-        V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w, false, { string.rep(" ", R.width) })
-      end
-    else
-      for w = 2, whSpaces do
-        addedLines = addedLines + 1;
-        V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w, false, { string.rep(" ", R.width) })
-      end
-    end
-
-    if addedLines < R.height then
-      while addedLines <= R.height do
-        addedLines = addedLines + 1;
-        V.api.nvim_buf_set_lines(0, addedLines, addedLines + 1, false, { string.rep(" ", R.width) });
-      end
+      vim.api.nvim_buf_set_lines(data.introBuffer, paddingTop + #R.preparedLines + paddingBottom, paddingTop + #R.preparedLines + paddingBottom, false, { string.rep(" ", R.width) } )
     end
 
     -- Don't let the user modify the buffer
     V.bo.modifiable = false;
+    vim.api.nvim_win_set_cursor(0, { 1, 1 })
   else
     -- Set the buffer and store it's information
     R.setBuffer(config.showStatusline);
@@ -116,23 +123,24 @@ R.handleConfig = function (config, isResizing)
       V.list_extend(R.preparedLines, _s);
     end
 
-    -- Re render the lines
-    local addedLines = 0;
-    local whSpaces = (#R.preparedLines < R.height) and math.floor((R.height - #R.preparedLines) / 2) or 0;
-    data.whiteSpaces = whSpaces;
+    -- Start adding things
+    vim.bo.modifiable = true;
 
-    -- Modify the buffer
-    V.bo.modifiable = true
+    local paddingTop = (#R.preparedLines <= R.availableHeight) and math.ceil((R.availableHeight - #R.preparedLines) / 2) or 0;
+    local paddingBottom = (#R.preparedLines <= R.availableHeight) and math.floor((R.availableHeight - #R.preparedLines) / 2) or 0;
 
-    -- Add spaces before the components
-    for w = 0, whSpaces do
-      addedLines = addedLines + 1;
-      V.api.nvim_buf_set_lines(data.introBuffer, w, w + 1, false, { string.rep(" ", R.width) })
+    data.whiteSpaces = paddingTop;
+
+    for sp = 1, paddingTop do
+      vim.api.nvim_buf_set_lines(data.introBuffer, sp - 1, sp - 1, false, { string.rep(" ", R.width) } )
     end
 
     for l, line in ipairs(R.preparedLines) do
+      -- Buffer index is 0 based
+      local indexOnBuffer = l - 1;
+
       if line.anchor ~= nil then
-        table.insert(data.anchors, { l, line.anchor });
+        table.insert(data.anchors, { indexOnBuffer, line.anchor });
 
         -- Should I use anchors?
         if line.useAnchors ~= nil then
@@ -141,36 +149,21 @@ R.handleConfig = function (config, isResizing)
       end
 
       -- Add the line to the buffer and apply the highlights
-      addedLines = addedLines + 1;
-      txt.textRenderer(line, l, whSpaces);
-      hls.newHlApplier(line, l)
+      txt.textRenderer(line, indexOnBuffer);
+      hls.newHlApplier(line, indexOnBuffer)
     end
 
-    -- Where to start the spaces again
-    local afterWhStart = whSpaces + #R.preparedLines;
 
-    -- Add spaces after the components
-    if config.showStatusline == true then
-      for w = 2, whSpaces + 1 do
-        addedLines = addedLines + 1;
-        V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w, false, { string.rep(" ", R.width) })
-      end
-    else
-      for w = 2, whSpaces do
-        addedLines = addedLines + 1;
-        V.api.nvim_buf_set_lines(0, afterWhStart + w, afterWhStart + w, false, { string.rep(" ", R.width) })
-      end
-    end
+    for spE = 1, paddingBottom do
+      local actualIndex = paddingTop + #R.preparedLines + spE;
 
-    if addedLines < R.height then
-      while addedLines <= R.height do
-        addedLines = addedLines + 1;
-        V.api.nvim_buf_set_lines(0, addedLines, addedLines + 1, false, { string.rep(" ", R.width) });
-      end
+      vim.api.nvim_buf_set_lines(data.introBuffer, actualIndex - 1, actualIndex -1, false, { string.rep(" ", R.width) } )
     end
 
     -- Don't let the user modify the buffer
     V.bo.modifiable = false;
+    vim.api.nvim_win_set_cursor(0, { 1, 1 })
+
 
     -- Set resize autocommand
     V.api.nvim_create_autocmd("VimResized", {
@@ -180,12 +173,23 @@ R.handleConfig = function (config, isResizing)
       end
     })
 
-    V.api.nvim_create_user_command("Refresh",
+    V.api.nvim_buf_create_user_command(data.introBuffer, "Refresh",
       function()
         R.handleConfig(data.cachedConfig, true);
       end,
       {}
     );
+
+    if config.showStatusline == true then
+      return;
+    end
+
+    V.api.nvim_create_autocmd("BufLeave", {
+      pattern = { "<buffer>" },
+      callback = function()
+        vim.cmd("set laststatus=" .. data.lastStatus)
+      end
+    })
   end
 end
 

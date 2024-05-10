@@ -9,32 +9,14 @@ data.whiteSpaces = 0;
 data.cachedConfig = {};
 
 data.anchors = {};
-data.anchorTexts = {};
-data.anchorStatus = {};
 
 data.height = V.api.nvim_win_get_height(0);
 data.width = V.api.nvim_win_get_width(0);
+data.availableHeight = data.height;
 
-data.paths = {
-  { "~/.config/nvim/lua/plugins/", " plugins/" },
-  { "~/.config/nvim/lua/", "󰢱 nvim/lua/" },
-  { "~/.config/nvim/", " nvim/" },
+data.lastStatus = 0;
 
-  { "~/.config/gh/", "  gh/" },
-  { "~/.config/lazygit/", "  lazygit/" },
-  { "~/.config/tmux/", " tmux/" },
-
-  { "~/.config/", " config/" },
-
-  { "~/.local/share/", "󱁿 share/" },
-
-  { "~/.termux/", "  termux/" },
-
-  { "~/Desktop/", " Desktop/" },
-
-  { "/data/data/com.termux/files/usr/share/nvim/runtime/doc/", " docs/" },
-  { "~/", "  ~/" }
-};
+data.paths = {};
 
 data.getNumber = function(config)
   return AR[config.style][config.line][config.number + 1];
@@ -45,6 +27,12 @@ data.toRelative = function(path)
   local p = path ~= nil and path or V.loop.cwd();
 
   return V.fn.fnamemodify(p, ":~");
+end
+
+data.pathModifiers = function (option)
+  if option ~= nil then
+    data.paths = option;
+  end
 end
 
 data.pathForamtter = function (path)
@@ -74,7 +62,7 @@ data.recents = function (isDir)
     local _t = {};
 
     for _, entry in ipairs(data.oldfiles) do
-      if string.match(entry, isDir) ~= nil then
+      if string.match(V.fn.fnamemodify(entry, ":~"), isDir) ~= nil then
         table.insert(_t, entry);
       end
     end
@@ -108,11 +96,11 @@ data.movements = function(configMain)
     return;
   end
 
-  local keymap = config ~= nil and config.keymap or "<leader><leader>"
+  local keymap = config ~= nil and config.openFileUnderCursor or "<leader><leader>"
 
   V.api.nvim_buf_set_keymap(data.introBuffer, "n",
     keymap,
-    ":lua print('Opening File')<CR>",
+    "",
     {
       noremap = true, silent = true,
       callback = function ()
@@ -121,10 +109,11 @@ data.movements = function(configMain)
 
         for _, v in ipairs(data.anchors) do
           local pos = v[1];
-          local lnk = v[2];
+          local lnk = v[2]["path"];
 
           if (y - data.whiteSpaces) == pos then
-            V.cmd("e" .. lnk)
+            V.cmd("e" .. lnk);
+            V.cmd("set laststatus=2")
           end
         end
       end
@@ -135,46 +124,56 @@ data.movements = function(configMain)
   V.api.nvim_create_autocmd({ "CursorMoved" }, {
     pattern = { "<buffer>" },
     callback = function ()
-      local corner = type(config.corner) == "string" and config.corner or " ";
+      local cr = type(config.corner) == "string" and config.corner or "▒";
+
       local y = V.api.nvim_win_get_cursor(0)[1] - 1;
       data.height = V.api.nvim_win_get_height(0);
       data.width = V.api.nvim_win_get_width(0);
 
-      for aI, v in ipairs(data.anchorTexts) do
+      for _, v in ipairs(data.anchors) do
         local position = v[1];
-        local link = v[2] .. " ";
+        local link = data.pathForamtter(v[2]["path"]);
 
-        if (y - data.whiteSpaces) == position and data.anchorStatus[aI] ~= false then
-          if config.position == nil or config.position == "bottom" then
-            V.api.nvim_buf_set_extmark(data.introBuffer, 1, (configMain.hasStatusline == nil or configMain.hasStatusline) == true and data.height - 1 or data.height, 0, {
+        local anchorPos = v[2]["position"] ~= nil and v[2]["position"] or config.position
+        local corner = type(v[2]["corner"]) == "string" and v[2]["corner"] or cr;
+        local bodyHl = type(v[2]["textStyle"]) == "string" and v[2]["textStyle"] or "Intro_anchor_body";
+        local cornerHl = type(v[2]["cornerStyle"]) == "string" and v[2]["cornerStyle"] or "Intro_anchor_corner"
+
+        if (y - data.whiteSpaces) == position then
+          if anchorPos == nil or anchorPos == "bottom" then
+            V.api.nvim_buf_set_extmark(data.introBuffer, 1, data.availableHeight - 1, 0, {
               id = 10,
               strict = false,
-              virt_text = { { " " .. link, "Intro_anchor_body" } },
-             virt_text_pos = "overlay"
-            })
-
-            V.api.nvim_buf_set_extmark(data.introBuffer, 1, data.height - 1, 0, {
+              virt_text = {
+                { " " .. link .. " ", bodyHl }
+              },
+              virt_text_pos = "overlay"
+            });
+            V.api.nvim_buf_set_extmark(data.introBuffer, 1, data.availableHeight - 1, 0, {
               id = 11,
               strict = false,
               virt_text = {
-                { corner, "Intro_anchor_corner" }
+                { corner, cornerHl }
               },
-              virt_text_win_col = V.fn.strchars(link) + 1,
+              virt_text_win_col = V.fn.strchars(" " .. link .. " "),
               virt_text_pos = "overlay"
             })
-          elseif config.position == "top" then
+          else
             V.api.nvim_buf_set_extmark(data.introBuffer, 1, 0, 0, {
               id = 10,
               strict = false,
-              virt_text = { { ' ' .. link, "Intro_anchor_body" } },
-             virt_text_pos = "overlay"
-            })
-
+              virt_text = {
+                { " " .. link .. " ", bodyHl }
+              },
+              virt_text_pos = "overlay"
+            });
             V.api.nvim_buf_set_extmark(data.introBuffer, 1, 0, 0, {
               id = 11,
               strict = false,
-              virt_text = { { corner, "Intro_anchor_corner" } },
-              virt_text_win_col = V.fn.strchars(link) + 1,
+              virt_text = {
+                { corner, cornerHl }
+              },
+              virt_text_win_col = V.fn.strchars(" " .. link .. " "),
               virt_text_pos = "overlay"
             })
           end
