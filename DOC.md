@@ -174,17 +174,17 @@ Supports `custom width` of text, `alignment options`, `gradient colors` and even
   
 - width `number or nil`
   > Width of the `lines`. Useful when you have characters whose width is bigger than a single character(e.g. some arabic characters). You can also set it to `auto`(or `nil`) to disable it.
+  > ```lua
+  > {
+  >   width = 5,
+  >   -- this makes the line behave like it has 5 characters in it
+  > }
+  > ```
+  
   
 >[!TIP]
 > If you are using nerd font characters, you don't have to add a `width`. It will still work just fine, just make sure they don't overlap(in which case the output will also have character overlaps).
 
-> ```lua
-> {
->   width = 5,
->   -- this makes the line behave like it has 5 characters in it
-> }
-> ```
-  
 - align `string or table or nil`
   > Changes the alignment of the text. It can be `left`, `right` or `center`. By default, it is `center`.
   > ```lua
@@ -226,10 +226,6 @@ Supports `custom width` of text, `alignment options`, `gradient colors` and even
    
 - secondaryColors `table or nil`
    > Coloring with finer control. Useful when you have something like a table(or any type of structured data as text) or code that you may have on your start screen.
-   
->[!WARNING]
-> This only takes effect *when* the lines are `table`.
-   
    > ```lua
    > {
    >   lines = {
@@ -241,6 +237,9 @@ Supports `custom width` of text, `alignment options`, `gradient colors` and even
    >   }
    > }
    > ```
+   
+>[!WARNING]
+> This only takes effect *when* the lines are `table`.
    
 - gradientRepeat `boolean or table or nil`
    > Controls wether `gradients` should repeat or not. By default, it is set to `false`.
@@ -314,16 +313,16 @@ Additionally shows the file path with using `anchors` and supports operating fil
  
 - width `number or nil`
   > Change how wide lists are supposed to be.
+  > ```lua
+  > {
+  >   width = 50, -- the list will be 50 characters wide
+  >   width = 0.6, -- the list will be 60% of total window width
+  > }
+  > ```
   
 >[!TIP]
 > This can be an `integer` or a `float`. When a float is used it is considered that % of the window width.
 > By default, it is set to 0.6.
-> ```lua
-> {
->   width = 50, -- the list will be 50 characters wide
->   width = 0.6, -- the list will be 60% of total window width
-> }
-> ```
   
 - useAnchors `boolean or nil`
   > Toggle the usage of [anchors](#anchors).
