@@ -184,7 +184,7 @@ R.handleConfig = function (config, isResizing)
       return;
     end
 
-    V.api.nvim_create_autocmd("BufLeave", {
+    V.api.nvim_create_autocmd("BufDelete", {
       pattern = { "<buffer>" },
       callback = function()
         vim.cmd("set laststatus=" .. data.lastStatus)
