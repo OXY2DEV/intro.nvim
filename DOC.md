@@ -1,4 +1,4 @@
-<img align="center" src="Showcase gif](https://github.com/OXY2DEV/intro.nvim/assets/122956967/fa61c4b0-bff3-4cc8-815b-820c6f887194">
+<img align="center" src="https://github.com/OXY2DEV/intro.nvim/assets/122956967/fa61c4b0-bff3-4cc8-815b-820c6f887194">
 
 <h1 align="center">Intro.nvim</h1>
 <p align="center">Animated <code>:intro</code> for Neovim</p>
