@@ -1,4 +1,4 @@
-<img align="center" src="https://github.com/OXY2DEV/intro.nvim/assets/122956967/fa61c4b0-bff3-4cc8-815b-820c6f887194">
+https://github.com/OXY2DEV/intro.nvim/assets/122956967/b2ffb4ca-d543-46f6-8d7c-c4dbd42caa56
 
 <h1 align="center">Intro.nvim</h1>
 <p align="center">Animated <code>:intro</code> for Neovim</p>
@@ -18,7 +18,10 @@ The documentation here is written like a tutorial. However, there are useful lin
 - [🚀 Configuration table](#config)
 - [📦 Components](#components)
   - [🧰 Important information you should know](#imp_info)
+    - [🌌 How lists behave](#imp_list)
+    - [⚓ Anchors](#imp_anchors)
   - [🎋 Banner](#banner)
+  - [📜 Recent files](#recent_files)
 
 <h2 id="basics">🧭 Starting with some basics</h2>
 
@@ -93,6 +96,7 @@ require("intro").setup({
         name = "nvim",
         opts = { "animated" }
     },
+    merge = false,
 
     showStatusline = false,
     shadaValidate = false,
@@ -143,6 +147,10 @@ require("intro").setup({
 >[!TIP]
 > The **order** in the `opts` list **matters**. Due to how presets work some presets may override settings set by other presets.
 > As such, it is recommended to use `component` presets first followed vy the `color` presets and then the `animation` presets.
+
+- merge `boolean or nil`
+
+  Used in case you want to merge your own configuration table with a `presets` configuration table. By default, it is set to `false`.
 
 - showStatusline `boolean or nil`
 
@@ -386,6 +394,28 @@ This will result in the first `line`/`entry` to be aligned `left` and the rest o
 > When used as a `table`, the `table` can't have `nil` inside of it. As it uses a `for` loop and `nil` values will stop the loop. Thus, the values after that will **not** be used.
 
 If the `table` is shorter than the number of `lines`/`entries` then the last `non-nil` value will be used for the lines that have no value.
+
+<h4 id="imp_anchors">⚓ Anchors</h4>
+
+If you ever used browsers on your PC, you may have noticed that when you **hover** over some **link** you get to see the **entire url** at the bottom left corner of the window.
+
+`Anchors` in this plugin do the same thing but for file names.
+
+>**Why not show the entire path?**
+>
+> Because, phones don't have enough spaces to show the entire **file path** and the plugin is made on a phone.
+>
+> Plus, there's no point in adding the **file path** since most of the time you would recognise the file with just it's name.
+
+
+https://github.com/OXY2DEV/intro.nvim/assets/122956967/a507fc9a-cecb-4ea6-993d-6c593775d704
+
+
+>[!TIP]
+> The path shown by the `anchors` can be customised. So, if you have a long path(e.g. "~/.local/share/nvim/lazy/intro.nvim/lua/intro/") you can replace it with something easy to remember such as "📂 Lazy/intro/lua".
+>
+>>[!NOTE]
+>> If you plan on using this you should add **longer paths** first in the `pathModifiers` table.
 
 ---
 
@@ -632,6 +662,7 @@ This will result in a simple `4 color` gradient to be used in coloring the text.
 
 
 - secondaryColors `table or nil`
+
   Coloring option for when you need to color a certain part of a `line` differently.
   This also works with `gradients` too.
 
@@ -667,6 +698,35 @@ require("intro").setup({
 
 >[!TIP]
 > You can add a `nil` for a specific part of the `line` if you want to skip over it.
+>
+> You can also skip over a line by using "skip".
+
+```lua
+require("intro").setup({
+  components = {
+    {
+      lines = {
+        { "Gradient", " | ", "solid" },
+        { "Gradient", " | ", "solid" },
+      },
+
+      secondaryColors = {
+        { "Red", nil, "Green" },
+        "skip" -- remove this line to see the difference
+      },
+
+      -- Optional, For better visibility
+      gradientRepeat = true
+    },
+
+  },
+
+  globalHighlights = {
+    red = { fg = "#F38BA8" },
+    green = { fg = "#A6E3A1" }
+  }
+});
+```
 
 - gradientRepeat `boolean or table or nil`
 
@@ -718,7 +778,7 @@ This allows you to control the gradients in `colors` & `secondaryColors` individ
 >[!TIP]
 > `gradientRepeat = false` can be used to make cool fading effects.
 
-A simple fading effet done using `gradientRepeat`.
+A simple fading effect done using `gradientRepeat`.
 
 ```lua
 require("intro").setup({
@@ -748,5 +808,235 @@ require("intro").setup({
 });
 ```
 
+<h3 id="recent_files">📜 Recent files</h3>
+
+Show your recently opened files with *style*. It also supports `icons`, `keymap` for opening one of the files listed, ability to open a file of the list when it is under the cursor & much more.
+
+It has the following sub-properties.
+
+```lua
+{
+    type = "recentFiles",       -- Determines the components type
+    style = "list",             -- Optional, changes how the items are shown
+
+    entryCount = 5,             -- Optional, number of items to show
+    width = 0.8,                -- Optional, width of the items
+
+    useIcons = false,           -- Optional, enables/disables file icons
+    useAnchors = true,          -- Optional, enables/disables file path preview
+    dir = false,                -- Optional, directory whoose files are shown
+
+    gap = " ",                  -- Optional, the character used as spaces
+
+    colors = {
+        name = {},              -- Optional, color for file names
+        path = {},              -- Optional, color for file paths(without the filename)
+
+        number = {},            -- Optional, color for the item number
+
+        spaces = {}             -- Optional, color for the spaces
+    },
+
+    anchorStyle = {
+        corner = nil,           -- Optional, character to use as the anchor's corner
+
+        textGroup = nil,        -- Optional, highlight group for the anchor text
+        cornerGroup = nil       -- Optioanl, highlight group for the corner
+    }
+}
+```
+- type `string or nil`
+
+  Required for defining a `component`'s type.
+
+- style `string or nil`
+
+  Changes how the items are shown. By default, it is set to `list`.
+
+  It's possible values are `list` & `list_path`.
+
+> List
+> ![list showcase](https://private-user-images.githubusercontent.com/122956967/329949462-1d62a7e5-a02a-4b57-877c-47cbeb25bdef.jpg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTU1ODMxNDIsIm5iZiI6MTcxNTU4Mjg0MiwicGF0aCI6Ii8xMjI5NTY5NjcvMzI5OTQ5NDYyLTFkNjJhN2U1LWEwMmEtNGI1Ny04NzdjLTQ3Y2JlYjI1YmRlZi5qcGc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNTEzJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDUxM1QwNjQ3MjJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT0zYWM0ODA1ODFjMjQwYjdhNzk1MTY5YTNlNmU2Njk4YmVkODAzZDRkODA2ZmZmYzBjZDJkYTZkODQ4NjQzNDFkJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.n-tW8q207YoJ7RsO_FLk-k1RMbvH82ABgoIlCZJ_vRg)
+
+```lua
+require("intro").setup({
+  components = {
+    {
+      type = "recentFiles",
+      style = "list",
+
+      width = 0.6,
+      useIcons = true
+    }
+  }
+})
+```
+
+>list_path
+> ![list_path showcase](https://private-user-images.githubusercontent.com/122956967/329949478-f89ed3bb-f7cb-423f-8872-75ab0980f76a.jpg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTU1ODMxNDIsIm5iZiI6MTcxNTU4Mjg0MiwicGF0aCI6Ii8xMjI5NTY5NjcvMzI5OTQ5NDc4LWY4OWVkM2JiLWY3Y2ItNDIzZi04ODcyLTc1YWIwOTgwZjc2YS5qcGc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNTEzJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDUxM1QwNjQ3MjJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1kM2I0YjUzMmFjYTBhNDhlMzQ0OWRmYjI1NGM2ZGMxYjRiZjVlYjdmNmQwZGYwMjU4OTYzMDc4MjBkZjAyNmFjJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.aBC5wepA4CxWrqzhgFUrkiX-Y6IwYVR2rZ4c6WhkCCY)
+
+```lua
+require("intro").setup({
+  components = {
+    {
+      type = "recentFiles",
+      style = "list_paths",
+
+      width = 0.6,
+      useIcons = true,
+
+      -- just for styling purposes
+      colors = {
+        path = { "fade_3" }
+      }
+    }
+  },
+
+  globalHighlights = {
+    fade_3 = { fg = "#878ca4" },
+  }
+})
+```
+
+- entryCount `number or nil`
+
+  Number of items to show in the list. By default, it is `5`.
+
+- width `number or nil`
+
+  Changes how wide the lists should be. If the value is smaller than 1 it is used as % value.
+
+  By default, it is set to `0.8`(80% of window width).
+
+>[!IMPORTANT]
+> Having a `width` smaller than the actual text results in the entire thing being centered.
+> ![awkward_width]()
 
 
+- useIcons `boolean or nil`
+
+  Enable/Disable file icons. Requires `nvim-web-devIcons`. This also adds colors to the icons.
+
+```lua
+-- plugins.lua
+{
+    "OXY2DEV/intro.nvim",
+    dependencies = {
+        "nvim-tree/nvim-web-devicons"
+    },
+
+    config = function ()
+        require("intro").setup({
+            components = {
+                {
+                    type = "recentFiles",
+                    useIcons = true
+                }
+            }
+        });
+    end
+}
+
+-- plugins/intro.lua
+return {
+    "OXY2DEV/intro.nvim",
+    dependencies = {
+        "nvim-tree/nvim-web-devicons"
+    },
+
+    config = function ()
+        require("intro").setup({
+            components = {
+                {
+                    type = "recentFiles",
+                    useIcons = true
+                }
+            }
+        });
+    end
+}
+```
+
+- useAnchors `boolean or nil`
+
+  Enable/Disable the **file path preview**. By default, it is set to `true`. Check the [anchors](#imp_anchors) section to see what `anchors` are.
+
+- dir `boolean or string or nil`
+
+  Changes which files are listed. When set to `true`, only the files in the **current working directory** are shown. When set to a `string`, `string.match()` is used to find files to list.
+
+  If set to `false` or `nil`, all the files are listed. By default, it is set to `false`.
+
+>[!TIP]
+> You can set `shadaValidate` to `true`, if you want to only show files that **exist**.
+
+For example, you can tell the plugin to only show files that **exist** and files that are **in your current directory**.
+
+```lua
+require("intro").setup({
+    shadaValidate = true,
+
+    components = {
+        {
+            type = "recentFiles",
+            dir = true,
+
+            -- Optional
+            useIcons = true,
+        }
+    }
+});
+```
+
+- gap `string or nil`
+
+  Character(s) to use as **empty spaces** between the `file name` & the `entry number`. Default is " "
+
+```lua
+require("intro").setup({
+    components = {
+        {
+            type = "recentFiles",
+            gap = "•",
+
+            -- Optional
+            useIcons = true,
+        }
+    }
+});
+```
+
+>[!TIP]
+> You can use `gap` along with `colors` to further customise your `recentFiles` component.
+
+
+```lua
+require("intro").setup({
+    components = {
+        {
+            type = "recentFiles",
+            gap = "•",
+
+            colors = {
+              spaces = {
+                { "fade_1", "fade_2", "fade_3", "fade_4", "fade_5", "fade_4", "fade_3", "fade_2", "fade_1", "fade_0" }
+              },
+              --number = "Normal"
+            },
+
+            -- Optional
+            useIcons = true,
+            gradientRepeat = true
+        }
+    },
+
+    globalHighlights = {
+        fade_5 = { fg = "#cdd6f4" },
+        fade_4 = { fg = "#aab1cc" },
+        fade_3 = { fg = "#878ca4" },
+        fade_2 = { fg = "#64677d" },
+        fade_1 = { fg = "#414255" },
+        fade_0 = { fg = "#1e1e2e" },
+    }
+});
+```

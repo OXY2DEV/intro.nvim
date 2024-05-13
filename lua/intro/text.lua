@@ -18,7 +18,7 @@ T.setDefaults = function (component)
       secondaryColors = {},
       gradientRepeat = false
     })
-  elseif component.type == "recents" then
+  elseif component.type == "recentFiles" then
     component = V.tbl_deep_extend("keep", component, {
       style = "list",
 
@@ -40,7 +40,7 @@ T.setDefaults = function (component)
       anchorStyle = {
         textGroup = nil,
         cornerGroup = nil,
-        corner = "//"
+        corner = nil
       },
 
       keymapPrefix = "<leader>",
@@ -92,13 +92,21 @@ T.setDefaults = function (component)
   return component;
 end
 
-T.listBehaviour = function (list, index)
+T.listBehaviour = function (list, index, exception)
   if list == nil then
     return;
   end
 
+  if type(list) ~= "table" then
+    return list;
+  end
+
   if list[index] ~= nil then
-    return list[index];
+    if exception ~= nil and list[index] == exception then
+      return;
+    else
+      return list[index];
+    end
   else
     return list[#list];
   end
@@ -133,39 +141,19 @@ T.newBannerHandler = function (component)
     };
 
     -- Text alignment
-    if V.tbl_islist(component.align) == true then
-      text.align = T.listBehaviour(component.align, line);
-    else
-      text.align = component.align;
-    end
+    text.align = T.listBehaviour(component.align, line)
 
     -- Line width
-    if V.tbl_islist(component.width) == true then
-      text.width = T.listBehaviour(component.width, line);
-    else
-      text.width = component.width;
-    end
+    text.width = T.listBehaviour(component.width, line);
 
     -- Main color
-    if V.tbl_islist(component.colors) == true then
-      text.color = T.listBehaviour(component.colors, line);
-    else
-      text.color = component.color;
-    end
+    text.color = T.listBehaviour(component.colors, line);
 
     -- Changes color
-    if V.tbl_islist(component.secondaryColors) == true and component.secondaryColors[line] ~= nil then
-      text.secondaryColors = T.listBehaviour(component.secondaryColors, line);
-    else
-      text.secondaryColors = component.secondaryColors;
-    end
+    text.secondaryColors = T.listBehaviour(component.secondaryColors, line, "skip");
 
     -- Gradient behaviour
-    if V.tbl_islist(component.gradientRepeat) == true then
-      text.gradientRepeat = T.listBehaviour(component.gradientRepeat, line);
-    else
-      text.gradientRepeat = component.gradientRepeat;
-    end
+    text.gradientRepeat = T.listBehaviour(component.gradientRepeat, line);
 
     table.insert(_t, text);
   end
@@ -183,13 +171,14 @@ T.newRecentsHandler = function (component)
   local devIcons = component.useIcons == true and require("nvim-web-devicons") or nil;
 
   -- List of files to show
-  local file_list = data.recents(component.dir);
+  local file_list = data.recentFilesLog(component.dir);
 
   for entry = 1, component.entryCount do
     local thisFile = file_list[entry] or "Empty";
     local fileName = V.fn.fnamemodify(thisFile, ":t");
     local fileExtension = V.filetype.match({ filename = fileName });
     local filePath = vim.fn.fnamemodify(thisFile, ":~:h") .. "/";
+    local gap = T.listBehaviour(component.gap, entry)
 
 
     local text = {
@@ -207,11 +196,7 @@ T.newRecentsHandler = function (component)
     };
 
     -- Gradient repeat handler
-    if type(component.gradientRepeat) == "boolean" or (type(component.gradientRepeat) == "table" and V.tbl_islist(component.gradientRepeat) == false) then
-      text.gradientRepeat = component.gradientRepeat;
-    elseif type(component.gradientRepeat) == "table" and V.tbl_islist(component.gradientRepeat) == true then
-      text.gradientRepeat = T.listBehaviour(component.gradientRepeat, entry);
-    end
+    text.gradientRepeat = T.listBehaviour(component.gradientRepeat, entry);
 
     -- No file found
     if thisFile ~= "Empty" then
@@ -245,13 +230,40 @@ T.newRecentsHandler = function (component)
 
       text.text = { fileIcon, "gap", fileName, "fileSpaces", tostring(entry) };
       text.secondaryColors = {
-        fileIconColor, fileSpcaesHl, fileNameHl, fileSpcaesHl, fileNumberHl
+        fileIconColor, nil, fileNameHl, fileSpcaesHl, fileNumberHl
       };
       text.functions = {
         fileSpaces = function ()
           local totalSize = component.width < 1 and math.floor(data.width * component.width) or math.floor(component.width);
+          local spcSize = 0;
+          local gapSize = vim.fn.strchars(gap);
+          local addSpaces = 0;
+          local reminder = 0;
 
-          local str =  string.rep(component.gap, fileIcon ~= "" and totalSize - V.fn.strchars(fileIcon .. fileName .. tostring(entry)) or  totalSize - V.fn.strchars(fileIcon .. fileName .. tostring(entry)) + 1);
+          if totalSize <= data.width then
+            if fileIcon ~= "" then
+              spcSize = totalSize - V.fn.strchars(fileIcon .. fileName .. tostring(entry));
+            else
+              spcSize = totalSize - V.fn.strchars(fileIcon .. fileName .. tostring(entry)) + 1;
+            end
+
+            if spcSize % gapSize == 0 then
+              addSpaces = spcSize / gapSize;
+            else
+              reminder = spcSize % gapSize
+              addSpaces = math.floor(spcSize / gapSize);
+            end
+          end
+
+          local str = "";
+
+          if reminder == 0 then
+            str =  string.rep(component.gap, addSpaces);
+          else
+            -- This needs more investigation
+            str = string.rep(component.gap, addSpaces) .. vim.fn.strcharpart(gap, 0, reminder)
+          end
+
           return str;
         end,
 
@@ -259,7 +271,7 @@ T.newRecentsHandler = function (component)
           return fileIcon ~= "" and " " or "";
         end
       };
-    elseif component.style == "list_2" then
+    elseif component.style == "list_paths" then
       local fileNameHl = T.listBehaviour(component.colors.name, entry) or "";
       local filePathHl = T.listBehaviour(component.colors.path, entry) or "";
       local fileNumberHl = T.listBehaviour(component.colors.number, entry) or "";
@@ -742,7 +754,7 @@ T.simplifyComponents = function(component)
 
   if component.type == nil or component.type == "banner" then
     _c = T.newBannerHandler(component);
-  elseif component.type == "recents" then
+  elseif component.type == "recentFiles" then
     _c = T.newRecentsHandler(component)
   elseif component.type == "time" then
     _c = T.timeHandler(component);

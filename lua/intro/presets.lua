@@ -554,7 +554,7 @@ P.startify = {
         },
         "",
         {
-          type = "recents",
+          type = "recentFiles",
           width = 0.8,
           useIcons = true,
           useAnchors = true,
@@ -593,7 +593,7 @@ P.startify = {
         },
         "",
         {
-          type = "recents",
+          type = "recentFiles",
           width = 0.8,
           dir = true,
           useIcons = true,

@@ -45,7 +45,7 @@ data.pathForamtter = function (path)
   return formattedPath;
 end
 
-data.recents = function (isDir)
+data.recentFilesLog = function (isDir)
   if isDir == false or isDir == nil then
     return data.oldfiles;
   elseif isDir == true then
