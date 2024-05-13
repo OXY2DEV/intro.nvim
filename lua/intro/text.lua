@@ -93,6 +93,8 @@ T.setDefaults = function (component)
 end
 
 T.listBehaviour = function (list, index, exception)
+  local exceptionString = exception or "skip";
+
   if list == nil then
     return;
   end
@@ -102,7 +104,7 @@ T.listBehaviour = function (list, index, exception)
   end
 
   if list[index] ~= nil then
-    if exception ~= nil and list[index] == exception then
+    if list[index] == exceptionString then
       return;
     else
       return list[index];

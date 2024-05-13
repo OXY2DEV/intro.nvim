@@ -109,6 +109,7 @@ require("intro").setup({
         cornerStyle = { bg = "#BAC2DE", fg = "#181825" },
     },
     pathModifiers = {},
+    openFileUnderCursor = "<leader><leader>",
 
     components = {},
     globalHighlights = {},
@@ -183,6 +184,7 @@ require("intro").setup({
 
 
 - anchors `table or nil`
+
 >[!NOTE]
 > If you are curious about what `anchors` are, they show the `path` of the file under cursor. It is **only** used when `recents` component is present in your configuration table.
 > You can also **disable** it if you like.
@@ -261,6 +263,12 @@ require("intro").setup({
 ```
 This will result in `~/.config/nvim` showing up as `🔩 Config/nvim/` instead of `💻 Neovim`. So, **longer** paths should go first in the list.
 
+- openFileUnderCursor `string or nil`
+
+  `Keymap` to open filw under the cursor. Only works when a `recentFiles` component is used.
+
+  Default value is `<leader><leader>`.
+
 - components `table`
 
   A list containing all the components you will use.
@@ -287,13 +295,11 @@ require("intro").setup({
 
 - animations `table or nil`
 
-  table containing animation settings and all the animations.
-
-It has the following sub-properties.
-1. delay `number or nil`
-2. updateDelay `number or nil`
-3. highlightBased `table or nil`
-4. textBased `table or nil`
+  A `table` containing animation settings and all the animations. It has the following sub-properties.
+    1. delay `number or nil`
+    2. updateDelay `number or nil`
+    3. highlightBased `table or nil`
+    4. textBased `table or nil`
 
 Here's what all of them do.
 
@@ -842,7 +848,9 @@ It has the following sub-properties.
 
         textGroup = nil,        -- Optional, highlight group for the anchor text
         cornerGroup = nil       -- Optioanl, highlight group for the corner
-    }
+    },
+
+    keymapPrefix = "<leader>"   -- Optional, the prefix key for opening files on the list
 }
 ```
 - type `string or nil`
@@ -1009,6 +1017,7 @@ require("intro").setup({
 >[!TIP]
 > You can use `gap` along with `colors` to further customise your `recentFiles` component.
 
+Example usage of both.
 
 ```lua
 require("intro").setup({
@@ -1020,8 +1029,7 @@ require("intro").setup({
             colors = {
               spaces = {
                 { "fade_1", "fade_2", "fade_3", "fade_4", "fade_5", "fade_4", "fade_3", "fade_2", "fade_1", "fade_0" }
-              },
-              --number = "Normal"
+              }
             },
 
             -- Optional
@@ -1040,3 +1048,33 @@ require("intro").setup({
     }
 });
 ```
+
+- colors `table or nil`
+
+  Define `highlight group(s)` to color the various parts of the list. It has the following sub-properties.
+    - name
+    - path
+    - number
+    - spaces
+
+```lua
+{
+    name = nil,     -- Changes the color of file names
+    path = nil,     -- Changes the color of file paths(without the file name)
+    number = nil,   -- Changes the color of the list number
+    spaces = nil    -- Changes the color of the spaces between the file name
+                    -- and the list number
+}
+```
+All of them support `gradient` colors. You can also skip items by using "skip" as their value.
+
+Just like all the other properties who support `lists`, the last `non-nil` value is used if an item has `nil` value for it.
+
+- keymapPrefix `string or nil`
+
+  The **key** to use for easily opening files. Even though you can open files under the cursror using `openFileUnderCursor`, sometimes you need to quickly open a file.
+
+  So, by using the `keymapPrefix` followed by the **item number** you can easily open a file without needing to move the **cursor**.
+
+
+

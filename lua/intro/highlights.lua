@@ -133,7 +133,8 @@ H.newHlApplier = function (lineConfig, lineIndex)
       local part = partPositions[secondIndex];
       local colorIndex = 1;
 
-      for char = 0, part.finish - part.start do
+      -- Bug fix: gradients bleeding out of their parts
+      for char = 0, (part.finish - part.start) - 1 do
         local start = V.fn.strcharpart(cachedText, 0, part.start + char);
         local finish = V.fn.strcharpart(cachedText, 0, part.start + char + 1);
 
