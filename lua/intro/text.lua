@@ -46,34 +46,47 @@ T.setDefaults = function (component)
       keymapPrefix = "<leader>",
     })
   elseif component.type == "keymaps" then
-    if component.style == "list" or component.style == nil then
-      component = V.tbl_extend("keep", component, {
-        style = "silent",
-        spaceBetween = 1,
-        width = "auto"
-      })
-    elseif component.style == "columns" then
-      component = V.tbl_extend("keep", component, {
-        columnSeparator = " ",
-        separatorHl = "",
+    component = V.tbl_deep_extend("keep", component, {
+      style = "list",
 
-        maxColumns = 4,
-        lineGaps = 0,
-      })
+      columnSeparator = " ",
+      separatorHl = "",
+      maxColumns = 4,
+
+      lineGaps = 0
+    })
+
+    if component.keymaps ~= nil then
+      for index, keyTable in ipairs(component.keymaps) do
+        component.keymaps[index] = V.tbl_extend("keep", keyTable, {
+          text = "Keymap",
+          colors = "Special",
+
+          keyModes = "n",
+          keyOptions = {
+            silent = true
+          }
+        });
+      end
     end
   elseif component.type == "clock" then
     component = V.tbl_deep_extend("keep", component, {
       colors = {
-        spaces = "Special",
-        colon = "Special",
-        border = "Comment",
+        spaces = "",
+        colon = "",
+        border = "",
 
-        clock = "Character",
+        clock = "",
 
-        day = "Conditional",
-        date = "GitSignsChange",
-        month = "Special",
-        year = "@constructor"
+        hour = "",
+        minute = "",
+        second = "",
+        dayNight = "",
+
+        day = "",
+        date = "",
+        month = "",
+        year = ""
       },
       style = {
         clockStyle = "basic",
@@ -324,10 +337,10 @@ T.newKeymapsHandler = function (component)
 
       if V.tbl_islist(keyOpts.text) == true then
         V.list_extend(stacks.texts, keyOpts.text);
-        V.list_extend(stacks.highlights, keyOpts.color);
+        V.list_extend(stacks.highlights, keyOpts.colors);
       else
         table.insert(stacks.texts, keyOpts.text);
-        table.insert(stacks.highlights, keyOpts.color);
+        table.insert(stacks.highlights, keyOpts.colors);
       end
 
       columnsInThisLine = columnsInThisLine + 1;
@@ -359,7 +372,7 @@ T.newKeymapsHandler = function (component)
         align = "center",
         text = keyOpts.text,
 
-        colors = type(keyOpts.text) == "string" and keyOpts.colors or nil,
+        color = type(keyOpts.text) == "string" and keyOpts.colors or nil,
         secondaryColors = V.tbl_islist(keyOpts.text) == true and keyOpts.colors or nil
       })
 
@@ -560,7 +573,7 @@ T.newClockHandler = function (component)
         secondaryColors = colors[index]
       })
     end
-  elseif component.style.clockStyle == "widget_small" then
+  elseif component.style.clockStyle == "compact" then
     local lines = {
       { component.style.clockParts[1], "borderTop", component.style.clockParts[3], "padding_right" },
       { component.style.clockParts[4], "padding_fill", component.style.clockParts[6], "padding_right" },

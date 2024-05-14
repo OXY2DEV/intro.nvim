@@ -22,6 +22,8 @@ The documentation here is written like a tutorial. However, there are useful lin
     - [⚓ Anchors](#imp_anchors)
   - [🎋 Banner](#banner)
   - [📜 Recent files](#recent_files)
+  - [🗝️ Keymaps](#keymaps)
+  - [⏰ Clock](#clock)
 
 <h2 id="basics">🧭 Starting with some basics</h2>
 
@@ -29,7 +31,7 @@ Even though you may have followed the `installation` instruction, in some cases 
 For this example I am using `Lazy.nvim`. But the process should be similar for other **plugin managers**.
 
 >[!NOTE]
-> To remove *unnecessary codes & complexities* I have put the configuration for the plugin in a seperate file.
+> To remove *unnecessary codes & complexities* I have put the configuration for the plugin in a separate file.
 
 To test the plugin, just using the `setup()` function is enough. 
 
@@ -1076,5 +1078,221 @@ Just like all the other properties who support `lists`, the last `non-nil` value
 
   So, by using the `keymapPrefix` followed by the **item number** you can easily open a file without needing to move the **cursor**.
 
+<h3 id="keymaps">🗝️ Keymaps</h3>
+
+A **fancy** way of setting keymaps. Supports silently setting them up to in case you don't like the style options.
+
+It has the following sub-properties.
+
+```lua
+{
+    style = "list",         -- Optional, changes how keymaps are shown
+
+    columnSeparator = " ",  -- Optional, characters added between columns
+    separatorHl = "",      -- Optional, color for the characters between columns
+    maxcolumns = 4,         -- Optional, max number of columns per line
+
+    lineGaps = 0            -- Optioanl, number of gaps between each items
+}
+```
+
+- style `string or nil`
+
+  Changes how items are shown in the buffer. Can be either `silent`, `columns` or `list`
+
+  By default, it is set to "list".
+
+Here's a demonstration of the `columns` style.
+
+```lua
+require("intro").setup({
+    components = {
+        {
+            type = "keymaps",
+
+            style = "columns",
+            lineGaps = 1,
+
+            -- Optional
+            columnSeparator = " ║ ",
+            separatorHl = "Comment",
+
+            keymaps = {
+                {
+                    text = { "  ", "M", "inimap" },
+                    colors = { "sky", "sky_1", "sky" },
+
+                    keyCombination = "M",
+                    keyAction = ":lua require('mini.map').toggle()<CR>",
+                },
+                {
+                    text = { "  ", "T", "elescope" },
+                    colors = { "comp", "comp_1", "comp" },
+
+                    keyCombination = "T",
+                    keyAction = ":Telescope<CR>",
+                }
+            }
+        }
+    },
+
+    globalHighlights = {
+        sky = { fg = "#89B4FA" },
+        sky_1 = { fg = "#89B4FA", underline = true },
+        comp = { fg = "#F9E2AF" },
+        comp_1 = { fg = "#F9E2AF", underline = true }
+    }
+});
+```
+
+- columnSeparator `string or nil`
+
+  The Character(s) to use as **separator** between the columns. Only works when `style = "column"`.
+
+  By default, it is " ".
+
+- separatorHl `string or table or nil`
+
+  The highlight group(s) to use for the `columnSeparator`. Also supports gradients.
+
+- maxColumns `number or nil`
+
+  The maximum number of columns on a single line. Can be used for styling purposes. Only works when `style = "column"`.
+
+  By default, it is set to 4.
+
+- lineGaps `number or nil`
+
+  Number of empty lines between each item in the list. Only works when `style = "list"`. Default value is 0.
+
+
+<h3 id="clock">⏰ Clock</h3>
+
+Fancy way of showing the current time.
+
+This component has the following sub-properties.
+
+
+```lua
+{
+    style = {
+        clockStyle = "basic",       -- Optional, style for the component
+        textStyle = "fill",         -- Optional, style for the texts in the component
+
+        clockParts = {              -- Optioanl, parts for the borders
+            "╭", "─", "╮",
+            "│", " ", "│",
+            "╰", "─", "╯"
+        },
+        colon = "•"                 -- Optioanl, character used as : in the clock
+    }
+
+    colors = {
+        spaces = "",                -- Optional, color for the empty spaces
+        colon = "",                 -- Optional, color for the colon
+        border = "",                -- Optional, color for the borders
+                                    
+        clock = "",                 -- Optioanl, color for the digits
+                                    
+        hour = "",                  -- Optional, color for the hour part
+        minute = "",                -- Optional, color for the minute part
+        second = "",                -- Optioanl, color for the second part
+        dayNight = "",              -- Optional, color for "am" or "pm" text
+                                    
+        day = "",                   -- Optioanl, color for the day of the week
+        date = "",                  -- Optioanl, color for the date
+        month = "",                 -- Optioanl, color for the month name
+        year = ""                   -- Optioanl, color for the year
+    }
+}
+```
+
+- style `table or nil`
+
+  Changes the appearance of the component. It has the following sub-properties.
+    - clockStyle `string or nil`
+
+      Changes how the clock is shown. Currently available options are `basic` & `compact`. Default is `basic`.
+
+    - textStyle `string or nil`
+
+      Chnages how the Numbers/digits are shown. Currently available values are `round`, `corner`, `dots` & `fill`.
+
+      The default is `fill`.
+
+    - clockParts `table or nil`
+
+      A table containing various parts of the borders. You can see the code block above to check which value representa what border part.
+
+    - colon `string or nil`
+
+      Character(s) to use as colons between parts of the clock. Only works when `clockStyle = "basic"`.
+
+Example usage of `style`.
+
+```lua
+require("intro").setup({
+    components = {
+        {
+            type = "clock",
+
+            style = {
+                colon = " • ",
+            },
+
+            colors = {
+                border = "comp",
+
+                hour = "sky",
+                minute = "sky",
+                second = "sky",
+
+                dayNight = "comp"
+            }
+        }
+    },
+
+    globalHighlights = {
+        sky = { fg = "#89B4FA" },
+        comp = { fg = "#F9E2AF" },
+    }
+});
+```
+
+- colors `table or nil`
+
+  Changes the colors for various parts of the component. Supports `gradients`. By default, no color is applied.
+  
+  Check the table with all the properties to see what all of the sub-properties do.
+
+```lua
+require("intro").setup({
+    components = {
+        {
+            type = "clock",
+
+            -- Optional
+            style = {
+                colon = " • ",
+            },
+
+            colors = {
+                border = "comp",
+
+                hour = "sky",
+                minute = "sky",
+                second = "sky",
+
+                dayNight = "comp"
+            }
+        }
+    },
+
+    globalHighlights = {
+        sky = { fg = "#89B4FA" },
+        comp = { fg = "#F9E2AF" },
+    }
+});
+```
 
 
