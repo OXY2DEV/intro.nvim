@@ -24,6 +24,7 @@ The documentation here is written like a tutorial. However, there are useful lin
   - [📜 Recent files](#recent_files)
   - [🗝️ Keymaps](#keymaps)
   - [⏰ Clock](#clock)
+- [📼 Animations](#animations)
 
 <h2 id="basics">🧭 Starting with some basics</h2>
 
@@ -590,7 +591,7 @@ require("intro").setup({
 ```
 This will result in "Red" having a **red** color and "Blue" having a **blue** color.
 
-This is explained in more detail in the [coloring](#coloring) section.
+~~This is explained in more detail in the [coloring](#coloring) section.~~
 
 - functions `table or nil`
 
@@ -1294,5 +1295,269 @@ require("intro").setup({
     }
 });
 ```
+
+---
+
+As you may have noticed, the last 2 components provides less options then the 1st component. This is because you adding more configuration option wouldn't really add anything since you can get the exact thing done by using `banner` component(most of the time).
+
+Also, I ran out of idea on what customisation options to add 😶. So, if you have an idea feel free to open an issue describing it.
+
+---
+
+<h2 id="animations">📼 Animations</h2>
+
+Now, that you have successfully added things to the screen, it is about time you learned how to animate things.
+
+There are 2 types of animations available in this plugin.
+  1. highlightBased
+  2. textBased
+
+---
+
+Before learning to make your own animations, you should at least learn a bit about how the plugin animates things.
+This **might help** you better fine tune your animations and time them properly.
+
+> **ISSUE 1: Creating the illusion of animations**
+>
+> Neovim runs in a `terminal` and as such has no way to actually do animations. So, the plugin uses `nvim_set_hl()` for the color related animations and `nvim_buf_set_text()` & `nvim_buf_set_extmarl()` for the text related animations.
+>
+> These functions are called at a specific `interval` which fakes an animation(idea was taken from `windline.nvim`). So, to create an animation that doesn't feel like a `slideshow` you need to have a large number of `values`. More values(especially in the case transitioning of `colors`) can make the animations feel much smoother then they really are.
+
+> **ISSUE 2: The timer problem**
+>
+> To run something in a loop you need to either **A.** use some type of `sleep()` function along with a loop statement or **B.** use a `timer`.
+>
+> In this plugin I use `vim.loop.new_timer()`(`vim.uv.new_timer()` in 0.10) as this gives me more control over the animation(s).
+>
+> However, this also comes with it's own issues. Depending on your **hardware**, calling too many `new_timer()` can cause neovim to **crash**. So, instead of having a new timer for every animation the plugin uses 1 timer for the `animation loop` which handles all the animations.
+>
+> As such, to provide ways to individually control the animations this plugin has something called `frames`.
+
+>[!NOTE]
+> **What are frames?**
+>
+> Every iteration of the `animation loop` is considered a frame(as they render a single frame of all the animations). Frames are used as a way to mimic the options provided by animation libraries. You can change the delay between each frame by changing the `updateDelay`. All the animations have `startDelay`, `frameDelay` & `loopDelay` for controlling various parts of the animation.
+>
+> `startDelay` controls the number of frames to wait before starting an animation, `frameDelay` does the same thing but the delay is used when switching from one value to another in the animation. And finally, `loopDelay` is used to wait between every loop of an animation.
+
+
+>[!IMPORTANT]
+> Color related animation values are applied first. So, this can change how texts are colored in the animations(if you use that highlight for coloring).
+
+---
+
+The `animations` property has the following options
+```lua
+animations = {
+    delay = 0,
+    updateDelay = 200,
+
+    highlightBased = {},
+
+    textBased = {}
+}
+```
+
+`delay` is used for controlling **when** all the animations start, `updateDelay` is used for controlling the `speed` of all the animations.
+
+On the other hand, `highlightBased` & `textBased` are containers for the different types of `animations`. Animations have a few common properties.
+
+```lua
+{
+    loop = false,               -- Controls the looping of an animation
+
+    startDelay = 0,             -- Number of frames to wait before starting
+                                -- the animation
+    frameDelay = 0,             -- Number of frames to wait before an animation
+                                -- switches to the next value
+    loopDelay = 0,              -- Number of frames to wait between loops
+
+    -- internally set values
+
+    __state = "play",           -- State of the animation during a frame
+    __loopFinished = 0,         -- Number of loop finished
+    __thisFrameIndex = 0,       -- Current value's index
+    __delayPassed = 1           -- Number of idle frames passed
+}
+```
+
+- loop `number or boolean or nil`
+
+  Controls the looping of a specific `animation`. When set to `true`, the animation will repeat forever. When it is set to a `number`, it will repeat that number of times.
+
+>[!NOTE]
+> The first time an animation is completed it is not counted as a `loop`. 
+>
+> So, `loop = 1` will result in the animation happening **twice**(once from the main animation & once for the `loop = 1`).
+
+- startDelay `numbet or nil`
+
+  Number of frames to wait before starting an animation.
+
+- frameDelay `number or nil`
+
+  Number of frames to wait before changing the current value of an animation. It is useful for controlling a specific animations **speed**.
+
+For example,
+```lua
+{
+    frameDelay = 5,
+    values = {
+        "A         ",
+        "An        ",
+        "An        ",
+        "An e      ",
+        "An ex     ",
+        "An exa    ",
+        "An exam   ",
+        "An examp  ",
+        "An exampl ",
+        "An example"
+    }
+}
+```
+This will result in the animation loop waiting 5 frames of time before changing the applied value. In this case, the applied value will be "A         " first and it will not change in the next **5** frames. Afterwards, it will change to "An        " and it will be repeating the same thing for all the other values too.
+
+- loopDelay `number or nil`
+
+  Number of frames to wait before starting a loop.
+
+---
+
+- \_\_state `string` 
+  <sub>internally set</sub>
+
+  A string defining what an animation will do in the current `frame`. The posibble `states` are `play`, `start_delay`, `frame_delay`, `loop_delay`, `over`.
+
+  When an animation is completed it's `\_\_state` becomes `over`.
+
+- \_\_loopFinished `number`
+  <sub>internally set</sub>
+
+  The number `loops` an animation has completed. The value is increased by 1 when the value of `\_\_thisFrameIndex` becomes larger then the number of values in an animation and `loops` isn't **false** or **nil** for that animation.
+
+- \_\_thisFrameIndex `number`
+  <sub>internally set</sub>
+
+  The index of the current `value` of an animation.
+
+- \_\_delayPassed `number`
+  <sub>internally set</sub>
+
+  The number of frames passed in a delay.
+
+<h3 id="anim_hl">🪩 Color related animations</h3>
+
+Also called `highlightBased`. This table contains highlight group related animations.
+
+Highlight group related animations have the following structure.
+
+```lua
+{
+    groupName = "",
+    values = {},
+
+    loop = false,
+    startDelay = 0,
+    frameDelay = 0,
+    loopDelay = 0
+}
+```
+
+- groupName `string`
+
+  Name of the `highlight group`. The plugin will first check if a highlight group with the `string` is present or not. If its not present then a prefix("Intro_") is added before the `string`.
+
+- values `table`
+
+  A list containing all the values for an animation. Check the `{opts}` section of `nvim_set_hl()` in the help files for all the valid options.
+
+
+Example usage.
+
+```lua
+require("intro").setup({
+    components = {},    -- components needs to be something for the plugin
+                        -- to work
+    animations = {
+        delay = 500,        -- Large delay to prevent being suppressed by other plugins
+        updateDelay = 25,   -- Small update delay for smoither transitioning
+
+        highlightBased = {
+            {
+                groupName = "Normal",
+                values = {
+                    { bg = "#1e1e2e" }, { bg = "#272738" }, { bg = "#303142" }, { bg = "#393b4d" }, { bg = "#424457" }, { bg = "#4c4e62" }, { bg = "#55586c" }, { bg = "#5e6176" }, { bg = "#676b81" }, { bg = "#70758b" }, { bg = "#7a7e96" }, { bg = "#8388a0" }, { bg = "#8c92ab" }, { bg = "#959bb5" }, { bg = "#9ea5bf" }, { bg = "#a8afca" }, { bg = "#b1b8d4" }, { bg = "#bac2df" }, { bg = "#c3cce9" }, { bg = "#cdd6f4" }
+                }
+            }
+        }
+});
+```
+
+Now, you can *flashbang* yourself every time you open Neovim. 🙂
+
+<h3 id="anim_tx">📃 Text related animations</h3>
+
+>[!WARNING]
+> New feature, so things may be a bit buggy sometimes.
+
+Also called `textBased`. Holds text related animations as `tables`.
+
+Text related animations have the following structure.
+
+```lua
+{
+    mode = "",
+    position = "",
+    updateCache = false,
+
+    x = 0,
+    y = 0,
+
+    values = {},
+    colors = {},
+    secondaryColors = {},
+
+    gradientRepeat = {}
+}
+```
+
+- mode `string`
+
+  Changes how the text animation will be applied. Available options are `line`, `virt_text`.
+
+>[!NOTE]
+>
+> Changes made by `virt_text` are not permanent as it uses virtual text for it.
+
+- position `string`
+
+  Allows to switch between either changing a line in the buffer by it's index or changing the lines made by the components. Possible values are `fixed`, `relative`.
+
+  When set to `fixed`, the value of `y` is used as the line number in the buffer. On he other hand, if it is set to `relative` the value of `y` is set relative to where the components started to render the text.
+
+- updateCache `boolean or nil`
+
+  You can use this to make the changes permanent. ONLY works when `position = "relative"`.
+
+- x `number`
+
+  The position of the text in the X-axis. Only works when `mode = "virt_text"`.
+
+- y `number`
+
+  The position of the text in the Y-axis.
+
+- values `table`
+
+  Holds all the text values that will be looped through. Texts can be `strings` or `tables`.
+
+- colors, secondaryColors, gradientRepeat
+
+  Works exactly like in [banners](#banners)
+
+
+
+
 
 

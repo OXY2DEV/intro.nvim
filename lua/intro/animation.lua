@@ -1,4 +1,5 @@
 local data = require("intro.data");
+local txt = require("intro.text");
 
 local A = {};
 local V = vim;
@@ -113,49 +114,13 @@ end
 
 A.textChanger = function(element)
   if element.mode == "line" then
-    local ln = element.line == nil and data.whiteSpaces + 1 or data.whiteSpaces + element.line;
-    local texts;
-    local lnEnd = ln;
-
-    if type(element.values[element.__thisFrameIndex]) == "string" then
-      texts = { element.values[element.__thisFrameIndex] };
-
-      lnEnd = lnEnd + 1
-    elseif type(element.values[element.__thisFrameIndex]) == "table" then
-      texts = {};
-
-      for _, line in ipairs(element.values[element.__thisFrameIndex]) do
-        table.insert(texts, line);
-        lnEnd = lnEnd + 1;
-      end
-    end
-
     V.bo.modifiable = true;
-    V.api.nvim_buf_set_lines(data.introBuffer, ln, lnEnd, false, texts)
+
+    txt.lineUpdater(element);
+
     V.bo.modifiable = false;
   elseif element.mode == "virt_text" then
-    local X = element.x ~= nil and element.x or 0;
-    local Y = element.y ~= nil and element.y or 0;
-
-    local text;
-
-    if type(element.values[element.__thisFrameIndex]) == "table" then
-      text = element.values[element.__thisFrameIndex];
-    else
-      text = {
-        { element.values[element.__thisFrameIndex], "Normal" }
-      };
-    end
-
-    local v_opts = {
-      end_line = Y + #element.values[element.__thisFrameIndex];
-      id = 1,
-
-      virt_text = text,
-      virt_text_pos = "overlay"
-    }
-
-    V.api.nvim_buf_set_extmark(data.introBuffer, 1, Y, X, v_opts)
+    txt.virtualTextRenderer(element);
   end
 end
 
@@ -278,7 +243,7 @@ A.animationWorker = function (animations)
   timer:start(delay, updateDelay, V.schedule_wrap(
     function()
       -- if there is no animations then exit
-      if animations.highlightBased == nil and animations.highlightBased == nil then
+      if animations.highlightBased == nil and animations.textBased == nil then
         timer:stop();
         return;
       end
@@ -288,9 +253,15 @@ A.animationWorker = function (animations)
         return;
       end
 
+      if animations.highlightBased == nil then
+        goto noHighlightAnim;
+      end
+
       for _, tbl in ipairs(animations.highlightBased) do
         A.renderHandler(tbl, "hl");
       end
+
+      ::noHighlightAnim::
 
       if animations.textBased == nil then
         goto noTextAnim;

@@ -7,7 +7,6 @@ local hls = require("intro.highlights");
 local V = vim;
 
 R.lineCount = 0;
-R.preparedLines = {};
 
 R.rendering = false;
 
@@ -65,8 +64,8 @@ R.handleConfig = function (config, isResizing)
     -- Start adding things
     vim.bo.modifiable = true;
 
-    local paddingTop = (#R.preparedLines <= R.availableHeight) and math.ceil((R.availableHeight - #R.preparedLines) / 2) or 0;
-    local paddingBottom = (#R.preparedLines <= R.availableHeight) and math.floor((R.availableHeight - #R.preparedLines) / 2) or 0;
+    local paddingTop = (#data.cachedLines <= R.availableHeight) and math.ceil((R.availableHeight - #data.cachedLines) / 2) or 0;
+    local paddingBottom = (#data.cachedLines <= R.availableHeight) and math.floor((R.availableHeight - #data.cachedLines) / 2) or 0;
 
     data.whiteSpaces = paddingTop;
 
@@ -74,7 +73,7 @@ R.handleConfig = function (config, isResizing)
       vim.api.nvim_buf_set_lines(data.introBuffer, sp - 1, sp - 1, false, { string.rep(" ", R.width) } )
     end
 
-    for l, line in ipairs(R.preparedLines) do
+    for l, line in ipairs(data.cachedLines) do
       -- Buffer index is 0 based
       local indexOnBuffer = l - 1;
 
@@ -94,7 +93,7 @@ R.handleConfig = function (config, isResizing)
 
 
     for spE = 1, paddingBottom do
-      local actualIndex = paddingTop + #R.preparedLines + spE;
+      local actualIndex = paddingTop + #data.cachedLines + spE;
 
       vim.api.nvim_buf_set_lines(data.introBuffer, actualIndex - 1, actualIndex -1, false, { string.rep(" ", R.width) } )
     end
@@ -102,7 +101,7 @@ R.handleConfig = function (config, isResizing)
     -- BUG: Incorrect number of empty lines are added when statusline is present
     -- cause: Unknown
     if config.showStatusline == true then
-      vim.api.nvim_buf_set_lines(data.introBuffer, paddingTop + #R.preparedLines + paddingBottom, paddingTop + #R.preparedLines + paddingBottom, false, { string.rep(" ", R.width) } )
+      vim.api.nvim_buf_set_lines(data.introBuffer, paddingTop + #data.cachedLines + paddingBottom, paddingTop + #data.cachedLines + paddingBottom, false, { string.rep(" ", R.width) } )
     end
 
     -- Don't let the user modify the buffer
@@ -120,14 +119,14 @@ R.handleConfig = function (config, isResizing)
     -- Turn all the component into lines
     for _, component in ipairs(config.components) do
       local _s = txt.simplifyComponents(component);
-      V.list_extend(R.preparedLines, _s);
+      V.list_extend(data.cachedLines, _s);
     end
 
     -- Start adding things
     vim.bo.modifiable = true;
 
-    local paddingTop = (#R.preparedLines <= R.availableHeight) and math.ceil((R.availableHeight - #R.preparedLines) / 2) or 0;
-    local paddingBottom = (#R.preparedLines <= R.availableHeight) and math.floor((R.availableHeight - #R.preparedLines) / 2) or 0;
+    local paddingTop = (#data.cachedLines <= R.availableHeight) and math.ceil((R.availableHeight - #data.cachedLines) / 2) or 0;
+    local paddingBottom = (#data.cachedLines <= R.availableHeight) and math.floor((R.availableHeight - #data.cachedLines) / 2) or 0;
 
     data.whiteSpaces = paddingTop;
 
@@ -135,7 +134,7 @@ R.handleConfig = function (config, isResizing)
       vim.api.nvim_buf_set_lines(data.introBuffer, sp - 1, sp - 1, false, { string.rep(" ", R.width) } )
     end
 
-    for l, line in ipairs(R.preparedLines) do
+    for l, line in ipairs(data.cachedLines) do
       -- Buffer index is 0 based
       local indexOnBuffer = l - 1;
 
@@ -155,7 +154,7 @@ R.handleConfig = function (config, isResizing)
 
 
     for spE = 1, paddingBottom do
-      local actualIndex = paddingTop + #R.preparedLines + spE;
+      local actualIndex = paddingTop + #data.cachedLines + spE;
 
       vim.api.nvim_buf_set_lines(data.introBuffer, actualIndex - 1, actualIndex -1, false, { string.rep(" ", R.width) } )
     end

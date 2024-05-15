@@ -1,6 +1,6 @@
 -- INFO text processor for `intro.nvim`
 local data = require("intro.data");
-local arts = require("intro.arts");
+local hl = require("intro.highlights");
 
 local T = {};
 local V = vim;
@@ -832,7 +832,7 @@ T.textRenderer = function(line, lineIndex)
     if line.align == "center" then
       if width ~= nil then
         sp = width <= data.width and math.floor((data.width - width) / 2) or 0;
-        spEnd = width <= data.width and math.floor((data.width - width) / 2) or 0;
+        spEnd = width <= data.width and math.ceil((data.width - width) / 2) or 0;
 
         _s = string.rep(" ", sp) .. _s .. string.rep(" ", spEnd);
       else
@@ -854,5 +854,191 @@ T.textRenderer = function(line, lineIndex)
     V.api.nvim_buf_set_lines(0, whitespaces + lineIndex, whitespaces + lineIndex, false, { _s });
   end
 end
+
+T.lineUpdater = function (animationElement)
+  local textWidth, textParts = 0, {};
+  local padLeft, padRight, padSize = "", "", 0;
+
+  -- set some default options
+  animationElement = vim.tbl_deep_extend("keep", animationElement, {
+    y = 0,
+
+    align = "center",
+
+    values = {},
+    functions = {},
+
+    gradientRepeat = false,
+
+    position = "fixed",
+    updateCache = false
+  });
+
+  local textNow = animationElement.values[animationElement.__thisFrameIndex];
+  local addedText = "";
+  local colNow = T.listBehaviour(animationElement.colors, animationElement.__thisFrameIndex);
+  local secNow = T.listBehaviour(animationElement.secondaryColors, animationElement.__thisFrameIndex);
+
+  if type(textNow) == "string" then
+    textWidth = V.fn.strchars(textNow);
+    addedText = textNow;
+  elseif V.tbl_islist(textNow) == true then
+    local charsPassed = 0;
+
+    for _, part in ipairs(textNow) do
+      if animationElement.functions[part] ~= nil then
+        addedText = addedText .. animationElement.functions[part]();
+        textWidth = textWidth + V.fn.strchars(animationElement.functions[part]());
+        table.insert(textParts, { start = charsPassed, finish = charsPassed + V.fn.strchars(functions[part]()) });
+
+        charsPassed = charsPassed + V.fn.strchars(animationElement.functions[part]());
+      else
+        addedText = addedText .. part;
+        textWidth = textWidth + V.fn.strchars(part);
+        table.insert(textParts, { start = charsPassed, finish = charsPassed + V.fn.strchars(part) });
+
+        charsPassed = charsPassed + V.fn.strchars(part);
+      end
+    end
+  end
+
+
+  if animationElement.align == "center" then
+    padLeft = string.rep(" ", textWidth <= data.width and math.floor((data.width - textWidth) / 2) or 0);
+    padRight = string.rep(" ", textWidth <= data.width and math.ceil((data.width - textWidth) / 2) or 0);
+
+    padSize = textWidth <= data.width and math.floor((data.width - textWidth) / 2) or 0;
+  elseif animationElement.align == "right" then
+    padLeft = string.rep(" ", textWidth <= data.width and data.width - textWidth or 0);
+
+    padSize = textWidth <= data.width and data.width - textWidth or 0;
+  end
+
+  local linePosition = animationElement.y;
+
+  if animationElement.position == "relative" then
+    linePosition = data.whiteSpaces + animationElement.y;
+  end
+
+  -- adding the line
+  V.api.nvim_buf_set_text(data.introBuffer, linePosition, 0, linePosition, data.width, { padLeft .. addedText .. padRight });
+
+  -- coloring the line
+  if colNow == nil then
+    goto noMainColor;
+  end
+
+  if type(colNow) == "string" then
+    hl.checkHl(colNow, linePosition, padSize, padSize + textWidth)
+  elseif type(colNow) == "table" then
+    local colorIndex = 1;
+
+    for char = 0, textWidth do
+      local start = V.fn.strcharpart(addedText, 0, char);
+      local finish = V.fn.strcharpart(addedText, 0, char + 1);
+
+      hl.checkHl(colNow[colorIndex], linePosition, padSize + #start, padSize + #finish)
+      colorIndex = hl.gradientIndexHandler(animationElement.gradientRepeat, colNow, colorIndex);
+    end
+  end
+
+  ::noMainColor::
+
+  if secNow == nil then
+    goto noSecondColor;
+  end
+
+  for secondIndex = 1, #textParts do
+    local colors = secNow[secondIndex];
+
+    if type(colors) == "string" then
+      local part = textParts[secondIndex];
+
+      local start = V.fn.strcharpart(addedText, 0, part.start);
+      local finish = V.fn.strcharpart(addedText, 0, part.finish);
+
+      hl.checkHl(colors, linePosition, padSize + #start, padSize + #finish)
+    elseif type(colors) == "table" then
+      local part = textParts[secondIndex];
+      local colorIndex = 1;
+
+      -- Bug fix: gradients bleeding out of their parts
+      for char = 0, (part.finish - part.start) - 1 do
+        local start = V.fn.strcharpart(addedText, 0, part.start + char);
+        local finish = V.fn.strcharpart(addedText, 0, part.start + char + 1);
+
+        hl.checkHl(colors[colorIndex], linePosition, padSize + #start, padSize + #finish)
+        colorIndex = hl.gradientIndexHandler(animationElement.gradientRepeat, colors, colorIndex);
+      end
+    end
+  end
+
+  ::noSecondColor::
+
+  if animationElement.updateCache == true and animationElement.position == "relative" then
+    data.cachedLines[animationElement.y + 1] = {
+      align = animationElement.align,
+
+      text = textNow,
+      color = colNow,
+      secondaryColors = secNow,
+
+      gradientRepeat = animationElement.gradientRepeat
+    }
+  end
+end
+
+T.virtualTextRenderer = function (animationElement)
+  animationElement = V.tbl_deep_extend("keep", animationElement, {
+    x = 0, y = 0,
+
+    colors = {},
+  });
+
+  local X;
+  local Y;
+  local textNow = T.listBehaviour(animationElement.values, animationElement.__thisFrameIndex);
+  local colNow = T.listBehaviour(animationElement.colors, animationElement.__thisFrameIndex);
+
+  if type(T.listBehaviour(animationElement.x, animationElement.__thisFrameIndex)) == "number" then
+    X = T.listBehaviour(animationElement.x, animationElement.__thisFrameIndex);
+
+    if X < 1 then
+      X = math.floor(X * data.width);
+    end
+  end
+
+  if type(T.listBehaviour(animationElement.y, animationElement.__thisFrameIndex)) == "number" then
+    Y = T.listBehaviour(animationElement.y, animationElement.__thisFrameIndex);
+
+    if Y < 1 then
+      Y = math.floor(Y * data.height);
+    end
+  end
+
+  if type(textNow) == "string" then
+    textNow = {
+      { textNow, colNow }
+    };
+  elseif V.tbl_islist(textNow) == true then
+    local tmp = {};
+
+    for index, line in ipairs(textNow) do
+      table.insert(tmp, { line, T.listBehaviour(colNow, index) });
+    end
+
+    --vim.print(tmp)
+    textNow = tmp;
+  end
+
+  V.api.nvim_buf_set_extmark(data.introBuffer, 1, Y, X, {
+    id = 99,
+
+    virt_text = textNow,
+    virt_text_pos = "overlay"
+  })
+  -- Funcs
+end
+
 
 return T;

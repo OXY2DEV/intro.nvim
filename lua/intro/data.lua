@@ -7,6 +7,7 @@ data.introBuffer = 0;
 data.whiteSpaces = 0;
 
 data.cachedConfig = {};
+data.cachedLines = {};
 
 data.anchors = {};
 
