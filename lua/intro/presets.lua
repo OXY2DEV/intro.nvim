@@ -968,4 +968,257 @@ P.cats = {
   },
 }
 
+P.hydra = {
+  default = {
+    components = {
+      {
+        lines = A.hydra
+      },
+    },
+  },
+
+  animated = {
+    components = {
+      action = "overwrite",
+      value = {
+        {
+          lines = { "", "", "", "", "", "", "", "", "", "", "" }
+        }
+      }
+    },
+    
+    animations = {
+      action = "append",
+      value = {
+        delay = 500,
+        updateDelay = 25,
+  
+        textBased = {
+          {
+            mode = "line",
+            position = "relative",
+            y = 10,
+
+            startDelay = 0,
+            updateCache = true,
+            colors = "Comment",
+  
+            values = {
+              "                ⣿                ",
+              "               ⣿⣿⣿               ",
+              "             ⣾⣿⣿⣿⣿⣿⣿             ",
+              "           ⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿           ",
+              "         ⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀         ",
+              "       ⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤       ",
+              "      ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿     ",
+              "      ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃    ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 9,
+  
+            startDelay = 1,
+            updateCache = true,
+            colors = "Comment",
+  
+            values = {
+              "                ⣿                ",
+              "              ⣿⣿⣿⣷⣿              ",
+              "            ⠈⠻⣿⣿⣿⣷⣿⣿⣿            ",
+              "            ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿          ",
+              "        ⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟         ",
+              "      ⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿      ",
+              "     ⢻⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿⣿⡆    ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 8,
+  
+            startDelay = 2,
+            updateCache = true,
+            colors = "Comment",
+  
+            values = {
+              "                ⡇                ",
+              "               ⣌⡇⠻⣿              ",
+              "             ⣿⣦⣌⡇⠻⣿⣿⣷            ",
+              "           ⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿          ",
+              "          ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿         ",
+              "     ⣼ ⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿      ",
+              "     ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇     ",
+              "     ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇ ⠛⠻  ",
+              "⠙⠃   ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇ ⠛⠻⢷⣄",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 7,
+  
+            startDelay = 3,
+            updateCache = true,
+            colors = "Comment",
+  
+            values = {
+              "                ⢿                ",
+              "               ⢸⢿⣿⣿              ",
+              "             ⡀ ⢸⢿⣿⣿⣄             ",
+              "           ⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿          ",
+              "         ⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇        ",
+              "       ⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿      ",
+              "     ⢀⣿⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿⡿⠿    ",
+              "   ⠛ ⢀⣿⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿⡿⠿⣿⣷  ",
+              "⣠⣿⠿⠛ ⢀⣿⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿⡿⠿⣿⣷⡄ ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 6,
+  
+            startDelay = 4,
+            updateCache = true,
+            colors = "Comment",
+  
+            values = {
+              "                ⣿                ",
+              "               ⢊⣿⣿⡏              ",
+              "           ⣷   ⢊⣿⣿⡏              ",
+              "         ⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿          ",
+              "       ⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇        ",
+              "     ⠻⣿⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇ ⢀⣠     ",
+              "   ⣿⠛⠻⣿⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇ ⢀⣠⣄    ",
+              " ⣰⣿⣿⠛⠻⣿⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇ ⢀⣠⣄⣾⠄  ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 5,
+  
+            startDelay = 5,
+            updateCache = true,
+            colors = "Comment",
+  
+            values = {
+              "                ⣴                ",
+              "               ⢀⣴⣿⣿              ",
+              "            ⠘  ⢀⣴⣿⣿⡿⠛            ",
+              "          ⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿          ",
+              "         ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈        ",
+              "      ⡤⢄ ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿      ",
+              "    ⣶⣥⡤⢄ ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿⠟⠛    ",
+              "  ⢠⣧⣶⣥⡤⢄ ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿⠟⠛⠻⠿  ",
+              "  ⢠⣧⣶⣥⡤⢄ ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿⠟⠛⠻⠿⠄ ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 4,
+  
+            startDelay = 6,
+            updateCache = true,
+            colors = "Comment",
+  
+            values = {
+              "                                 ",
+              "                  ⣻              ",
+              "            ⣿⠈    ⣻⣿⣿            ",
+              "          ⣿⣿⣿⠈    ⣻⣿⣿⣿⣿          ",
+              "         ⢠⣿⣿⣿⠈    ⣻⣿⣿⣿⣿⣿⣿        ",
+              "         ⢠⣿⣿⣿⠈    ⣻⣿⣿⣿⣿⣿⣿⣿⣛      ",
+              "         ⢠⣿⣿⣿⠈    ⣻⣿⣿⣿⣿⣿⣿⣿⣛⣳⣤    ",
+              "         ⢠⣿⣿⣿⠈    ⣻⣿⣿⣿⣿⣿⣿⣿⣛⣳⣤⣀⣀  ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 3,
+  
+            startDelay = 7,
+            updateCache = true,
+            colors = "Comment",
+  
+            values = {
+              "                ⠻                ",
+              "               ⢻⠻⣿⣿              ",
+              "             ⢧ ⢻⠻⣿⣿⣷⣄            ",
+              "           ⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄          ",
+              "          ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀        ",
+              "          ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀⡀⠈      ",
+              "          ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀⡀⠈⠙⠿    ",
+              "          ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀⡀⠈⠙⠿⠄   ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 2,
+  
+            startDelay = 8,
+            updateCache = true,
+            colors = "Comment",
+  
+            values = {
+              "                ⣿                ",
+              "               ⣾⣿⣿⣷              ",
+              "            ⣟⠦ ⣾⣿⣿⣷              ",
+              "          ⢿⣿⣟⠦ ⣾⣿⣿⣷              ",
+              "         ⠈⢿⣿⣟⠦ ⣾⣿⣿⣷    ⠻⠿        ",
+              "         ⠈⢿⣿⣟⠦ ⣾⣿⣿⣷    ⠻⠿⢿⣿      ",
+              "         ⠈⢿⣿⣟⠦ ⣾⣿⣿⣷    ⠻⠿⢿⣿⣧⣄    ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 1,
+  
+            startDelay = 9,
+            updateCache = true,
+            colors = "Comment",
+  
+            values = {
+              "                ⣿                ",
+              "              ⡠⢾⣿⣿⡿              ",
+              "            ⠤⠄⡠⢾⣿⣿⡿⠋⠉            ",
+              "          ⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻          ",
+              "        ⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿        ",
+              "      ⣿⠿⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿⡛⣦      ",
+              "    ⠻⢿⣿⠿⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿⡛⣦      ",
+              "   ⠉⠻⢿⣿⠿⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿⡛⣦      ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 0,
+  
+            startDelay = 10,
+            updateCache = true,
+            colors = "Comment",
+  
+            values = {
+              "                ⣈                ",
+              "                ⣈⣭⣿              ",
+              "                ⣈⣭⣿⣶⣿            ",
+              "         ⣤⠆     ⣈⣭⣿⣶⣿⣦⣼          ",
+              "       ⣤⣀⣤⠆     ⣈⣭⣿⣶⣿⣦⣼⣆         ",
+              "     ⡤⠦⣤⣀⣤⠆     ⣈⣭⣿⣶⣿⣦⣼⣆         ",
+              "   ⣶⣤⡤⠦⣤⣀⣤⠆     ⣈⣭⣿⣶⣿⣦⣼⣆         ",
+              "  ⣴⣶⣤⡤⠦⣤⣀⣤⠆     ⣈⣭⣿⣶⣿⣦⣼⣆         ",
+            }
+          }
+        },
+      }
+    }
+  }
+}
+
 return P;

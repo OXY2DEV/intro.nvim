@@ -272,6 +272,7 @@ A.animationWorker = function (animations)
       end
 
       ::noTextAnim::
+
       if A.frameCount < maxFrames then
         A.frameCount = A.frameCount + 1;
       end

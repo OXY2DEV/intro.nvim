@@ -920,8 +920,8 @@ T.lineUpdater = function (animationElement)
     linePosition = data.whiteSpaces + animationElement.y;
   end
 
-  -- adding the line
-  V.api.nvim_buf_set_text(data.introBuffer, linePosition, 0, linePosition, data.width, { padLeft .. addedText .. padRight });
+  -- BUG: setting lines using Lua doesn't work properly
+  vim.fn.setbufline(data.introBuffer, linePosition + 1, padLeft .. addedText .. padRight)
 
   -- coloring the line
   if colNow == nil then
@@ -929,7 +929,7 @@ T.lineUpdater = function (animationElement)
   end
 
   if type(colNow) == "string" then
-    hl.checkHl(colNow, linePosition, padSize, padSize + textWidth)
+    hl.checkHl(colNow, linePosition, padSize, padSize + #addedText)
   elseif type(colNow) == "table" then
     local colorIndex = 1;
 
@@ -1037,7 +1037,6 @@ T.virtualTextRenderer = function (animationElement)
     virt_text = textNow,
     virt_text_pos = "overlay"
   })
-  -- Funcs
 end
 
 
