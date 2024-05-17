@@ -791,6 +791,8 @@ T.textRenderer = function(line, lineIndex)
 
   if type(line.width) == "number" and line.width < 1 then
     width = line.width * data.width;
+  elseif type(line.width) == "number" and line.width >= 1 then
+    width = line.width;
   elseif line.width == "auto" then
     width = nil;
   end
