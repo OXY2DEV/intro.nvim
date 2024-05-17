@@ -4,6 +4,14 @@ Created on: 17 May, 2024
 TOC doesn't work. Don't even try using it.
 ===
 •••••••••••••••••••••••••••••••••••••••••
+===
+💻 Installation
+===
+📡 Setup options
+===
+✨ Presets
+
+You shouldn't see this part.
 
 
 `╭╌──────────────────────────────────────────────────────────` *intro.nvim-usage* `╌╮`
@@ -30,6 +38,7 @@ customisation options(and more will be added in the future).
 `│`
 `├──` 💻 Installation                                        |intro.nvim-ue-install|
 `├──` 📡 Setup options                                         |intro.nvim-ue-setup|
+`╰──` ✨ Presets                                             |intro.nvim-ue-presets|
 
 `╭──────────────────────────────────────────────────────` *intro.nvim-ue-install* `─╮`
 `│` 💻 Installation                                                              `│`
@@ -39,7 +48,7 @@ This plugin relies on the experimental `Lua API`. So, there are some minimal
 requirements for it.
 
 `╭──────────────────────────────────────────────────────────────────────────────╮`
-`│` ☄️ Minimal requirements                                                       `│`
+`│` ☄️ Minimum requirements                                                       `│`
 `╰──────────────────────────────────────────────────────────────────────────────╯`
 
 `Neovim version`    : 0.9.5(will be changed to 0.10.0 in a later update).
@@ -517,6 +526,44 @@ Example usage.
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
+
+`╭──────────────────────────────────────────────────────` *intro.nvim-ue-presets* `─╮`
+`│` ✨ Presets                                                                   `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+Presets are an easy way to set up a `start screen`. They allow you to add
+complex animations, gradients, text arts etc. with minimum lines of code.
+
+Currently the plugin provides the following presets.
+  - nvim
+    { animated }
+  - nvim_mini
+    { dark_alt, animated, dark_alt_animated }
+  - startify
+    { 
+	  green, red, pink, flamingo,
+	  gradient_blue_green, gradient_endless_river, gradient_friday,
+	  recent_files, recent_files_in_current_dir,
+	  list_shade
+	}
+  - cats
+    {
+	  c1x2, c1x3, c1x4, c2x2, c3x3, c3x1,
+	  rosewater, mauve, green, blue, yellow,
+	  rosewater_alt, mauve_alt, green_alt, blue_alt, yellow_alt,
+	  all_the_colors, all_the_colors_alt
+	}
+  - hydra
+    { animated }
+
+`┃` The names inside {} are the {opta} values of that preset.
+`┃`
+`┃` When you add them to {opts} make sure that they are in the correct order
+`┃` so the values who come first will need to be added fisst in your {opts}.
+
+There are `screenshots` available in the `assets` branch of this plugin. So,
+you can check how all the presets look there.
+
 
 `───────────────────────────────────────────────────────────────────────────────╮`
 vim:tw=80:ts=4:noet:ft=help:norl:

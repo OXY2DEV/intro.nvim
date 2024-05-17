@@ -4,6 +4,7 @@ intro.nvim-faq	intro.txt	/*intro.nvim-faq*
 intro.nvim-hf-decorations	intro.txt	/*intro.nvim-hf-decorations*
 intro.nvim-hf-tags	intro.txt	/*intro.nvim-hf-tags*
 intro.nvim-ue-install	usage.txt	/*intro.nvim-ue-install*
+intro.nvim-ue-presets	usage.txt	/*intro.nvim-ue-presets*
 intro.nvim-ue-setup	usage.txt	/*intro.nvim-ue-setup*
 intro.nvim-usage	usage.txt	/*intro.nvim-usage*
 section-header	intro.txt	/*section-header*
