@@ -833,7 +833,7 @@ It has the following sub-properties.
 
     useIcons = false,           -- Optional, enables/disables file icons
     useAnchors = true,          -- Optional, enables/disables file path preview
-    dir = false,                -- Optional, directory whoose files are shown
+    dir = false,                -- Optional, directory whose files are shown
 
     gap = " ",                  -- Optional, the character used as spaces
 
@@ -849,8 +849,8 @@ It has the following sub-properties.
     anchorStyle = {
         corner = nil,           -- Optional, character to use as the anchor's corner
 
-        textGroup = nil,        -- Optional, highlight group for the anchor text
-        cornerGroup = nil       -- Optioanl, highlight group for the corner
+        textStyle = nil,        -- Optional, highlight group for the anchor text
+        cornerStyle = nil       -- Optioanl, highlight group for the corner
     },
 
     keymapPrefix = "<leader>"   -- Optional, the prefix key for opening files on the list
@@ -883,7 +883,7 @@ require("intro").setup({
 })
 ```
 
->list_path
+>list_paths
 > ![list_path showcase](https://private-user-images.githubusercontent.com/122956967/329949478-f89ed3bb-f7cb-423f-8872-75ab0980f76a.jpg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTU1ODMxNDIsIm5iZiI6MTcxNTU4Mjg0MiwicGF0aCI6Ii8xMjI5NTY5NjcvMzI5OTQ5NDc4LWY4OWVkM2JiLWY3Y2ItNDIzZi04ODcyLTc1YWIwOTgwZjc2YS5qcGc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNTEzJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDUxM1QwNjQ3MjJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1kM2I0YjUzMmFjYTBhNDhlMzQ0OWRmYjI1NGM2ZGMxYjRiZjVlYjdmNmQwZGYwMjU4OTYzMDc4MjBkZjAyNmFjJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.aBC5wepA4CxWrqzhgFUrkiX-Y6IwYVR2rZ4c6WhkCCY)
 
 ```lua

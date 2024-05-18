@@ -87,15 +87,15 @@ This component provides the following options.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  components = {
-		  {
-			  lines = { "Hello World" },
+	components = {
+	  {
+		lines = { "Hello World" },
 			  
-			  -- This will make the text behave like it has 20 characters
-			  width = 20
-		  }
+		-- This will make the text behave like it has 20 characters
+		width = 20
 	  }
-  })
+	}
+  });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
 
@@ -125,20 +125,20 @@ This component provides the following options.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  components = {
-		  {
-			  lines = {
-				 { "Version: ", "ver" }
-			  },
+	components = {
+	  {
+		lines = {
+		  { "Version: ", "ver" }
+		},
 
-			  functions = {
-				 ver = function()
-				   return vim.version();
-				 end
-			  }
-		  }
+		functions = {
+		  ver = function()
+			return vim.version();
+		  end
+		}
 	  }
-  })
+	}
+  });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
 
@@ -150,16 +150,16 @@ This component provides the following options.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  components = {
-		  {
-			  lines = {
-				 "A string",
-				 { "A", " string", "as", " a ", "table" }
-			  },
+	components = {
+	  {
+	    lines = {
+		  "A string",
+		  { "A", " string", "as", " a ", "table" }
+	    },
 
-			  colors = "Comment"
-		  }
+	    colors = "Comment"
 	  }
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -171,22 +171,22 @@ This component provides the following options.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  components = {
-		  {
-			  lines = {
-				 "A string",
-				 { "A", " string", "as", " a ", "table" }
-			  },
+	components = {
+	  {
+	    lines = {
+		  "A string",
+		  { "A", " string", "as", " a ", "table" }
+	    },
 
-			  -- This creates a vertical gradient
-			  colors = { "Conditional", "Function", "Comment" },
+	    -- This creates a vertical gradient
+	    colors = { "Conditional", "Function", "Comment" },
 
-			  -- This creates a horizontal gradient
-			  colors = {
-				 { "Conditional", "Function", "Comment" }
-              },
-		  }
+	    -- This creates a horizontal gradient
+	    colors = {
+		  { "Conditional", "Function", "Comment" }
+        },
 	  }
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -199,23 +199,23 @@ This component provides the following options.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  components = {
-		  {
-			  lines = {
-				 "Red | Blue",            -- will have no color
-				 { "Red", " | ", "Blue" } -- will have color
-			  },
+	components = {
+	  {
+	    lines = {
+	  	  "Red | Blue",            -- will have no color
+	  	  { "Red", " | ", "Blue" } -- will have color
+	    },
 
-			  secondaryColors = {
-				 { "rd", nil, "bl" }
-			  }
-		  }
-	  },
-
-	  globalHighlights = {
-        rd = { fg = "red" },
-		bl = { fg = "blue" }
+	    secondaryColors = {
+	  	  { "rd", nil, "bl" }
+	    }
 	  }
+	},
+
+	globalHighlights = {
+      rd = { fg = "red" },
+	  bl = { fg = "blue" }
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -226,19 +226,19 @@ This component provides the following options.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  components = {
-		  {
-			  lines = {
-				 { "Main color", " | ", "Secondary Color" }
-			  },
+	components = {
+	  {
+	    lines = {
+	  	  { "Main color", " | ", "Secondary Color" }
+	    },
 
-			  colors = "Comment",
+	    colors = "Comment",
 
-			  secondaryColors = {
-				 { nil, nil, "Special" }
-			  }
-		  }
+	    secondaryColors = {
+	  	  { nil, nil, "Special" }
+	    }
 	  }
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -248,40 +248,40 @@ You can also use `gradients` in it.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  components = {
-		  {
-			  lines = {
-				 { "Main Gradient ", "Secondary Gradient" }
-			  },
+	components = {
+	  {
+	    lines = {
+	  	  { "Main Gradient ", "Secondary Gradient" }
+	    },
 
-			  -- main gradient
-			  colors = {
-				 { "main_1", "main_2", "main_3", "main_4", "main_5" }
-			  },
+	    -- main gradient
+	    colors = {
+	  	  { "main_1", "main_2", "main_3", "main_4", "main_5" }
+	    },
 
-			  -- secondary gradient
-			  secondaryColors = {
-				 { nil, {  "sec_1", "sec_2", "sec_3", "sec_4", "sec_5" } }
-			  },
+	    -- secondary gradient
+	    secondaryColors = {
+	  	  { nil, {  "sec_1", "sec_2", "sec_3", "sec_4", "sec_5" } }
+	    },
 
-			  -- Optional, set it to see the gradients better
-			  gradientRepeat = true
-		  }
-	  },
-
-	  globalHighlights = {
-        main_1 = { fg = "#89b4fa" },
-        main_2 = { fg = "#90bfe3" },
-        main_3 = { fg = "#97cbcd" },
-        main_4 = { fg = "#9ed7b7" },
-        main_5 = { fg = "#a6e3a1" },
-
-		sec_1 = { fg = "#fab387" },
-		sec_2 = { fg = "#f9be91" },
-		sec_3 = { fg = "#f9ca9b" },
-		sec_4 = { fg = "#f9d6a5" },
-		sec_5 = { fg = "#f9e2af" }
+	    -- Optional, set it to see the gradients better
+	    gradientRepeat = true
 	  }
+	},
+
+	globalHighlights = {
+      main_1 = { fg = "#89b4fa" },
+      main_2 = { fg = "#90bfe3" },
+      main_3 = { fg = "#97cbcd" },
+      main_4 = { fg = "#9ed7b7" },
+      main_5 = { fg = "#a6e3a1" },
+
+	  sec_1 = { fg = "#fab387" },
+	  sec_2 = { fg = "#f9be91" },
+	  sec_3 = { fg = "#f9ca9b" },
+	  sec_4 = { fg = "#f9d6a5" },
+	  sec_5 = { fg = "#f9e2af" }
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -317,32 +317,347 @@ Example usage.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  components = {
-		  {
-			  lines = {
-			    "A gradient colored text"
-			  },
+	components = {
+	  {
+	    lines = {
+	  	  "A gradient colored text"
+	    },
 
-			  -- main gradient
-			  colors = {
-				 { "main_1", "main_2", "main_3", "main_4", "main_5" }
-			  },
+	    -- main gradient
+	    colors = {
+	      { "main_1", "main_2", "main_3", "main_4", "main_5" }
+	    },
 
-			  -- Change this ans see how the gradients get colored
-			  gradientRepeat = true
-		  }
-	  },
-
-	  globalHighlights = {
-        main_1 = { fg = "#89b4fa" },
-        main_2 = { fg = "#90bfe3" },
-        main_3 = { fg = "#97cbcd" },
-        main_4 = { fg = "#9ed7b7" },
-        main_5 = { fg = "#a6e3a1" }
+	    -- Change this ans see how the gradients get colored
+	    gradientRepeat = true
 	  }
+	},
+
+	globalHighlights = {
+	  main_1 = { fg = "#89b4fa" },
+      main_2 = { fg = "#90bfe3" },
+      main_3 = { fg = "#97cbcd" },
+      main_4 = { fg = "#9ed7b7" },
+      main_5 = { fg = "#a6e3a1" }
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
+
+`╭──────────────────────────────────────────────────` *intro.nvim-cm-recentFiles* `─╮`
+`│` 📑 Recent Files                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+A fancy way to show all your recently opened files, with style.
+
+This component provides the following options.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  {
+    type = "recentFiles",       -- Determines the components type
+    style = "list",             -- Optional, changes how the items are shown
+
+    entryCount = 5,             -- Optional, number of items to show
+    width = 0.8,                -- Optional, width of the items
+
+    useIcons = false,           -- Optional, enables/disables file icons
+    useAnchors = true,          -- Optional, enables/disables file path preview
+    dir = false,                -- Optional, directory whose files are shown
+
+    gap = " ",                  -- Optional, the character used as spaces
+
+    colors = {
+      name = {},              -- Optional, color for file names
+      path = {},              -- Optional, color for file paths(without the
+	  	                    -- filename)
+
+      number = {},            -- Optional, color for the item number
+
+      spaces = {}             -- Optional, color for the spaces
+    },
+
+    anchorStyle = {
+      corner = nil,           -- Optional, character to use as the anchor's
+	                          -- corner
+
+      textStyle = nil,        -- Optional, highlight group for the anchor text
+      cornerStyle = nil       -- Optioanl, highlight group for the corner
+    },
+
+    keymapPrefix = "<leader>"   -- Optional, the prefix key for opening files
+	                            -- on the list
+  }
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+`┃ IMPORTANT`
+`┃` Some of the options({gap}, {gradientRepeat}, everything inside {colors})
+`┃` can also take `lists` as value. In which case, the line's index will be
+`┃` used to assign it the value.
+`┃` If a line's has `nil` as it's value the last `non-nil` value will be used.
+
+
+- {type} `string or nil`
+
+  Defines what component a table will be considered. Default is `banner`.
+
+- {style} `string or nil`
+
+  Changes the styling of the component. Possible values are `list`, `list_path`.
+  The default is `list`.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    -- change it to "list_path" to see the diffeeence
+	    style = "list"
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {entryCount} `number or nil`
+
+  The number of entries to include. Default is 5.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    entryCount = 10
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {width} `number or nil`
+
+  Allows you to change how wide the list will be. If the value is less than 1
+  then it will be considered a % value. So, for example, 0.5 will be 50% of
+  window width.
+  The default value is 0.8.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    -- the list will be 60% of the window size
+	    width = 0.6
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {useIcons} `boolean or nil`
+
+  Used to show file icons in the list. Valid values are `true`, `false`.
+  The default is `false`.
+
+`┃` To use icons you need "nvim-web-devicons" & a `nerd font`.
+
+- {useAnchors} `boolean or nil`
+
+  Allows you to enable/disable the `file path preview`.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    entryCount = 3
+	    
+	    useAnchors = true
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ───────────────────────────────┯──────────────────────────────────────╮`
+`│`                    useAnchors = false `│`                    useAnchors = true `│`
+`│`                                       `│`                                      `│`
+`│`    Test                          1    `│`    Test                          1   `│`
+`│`    intro.txt                     2    `│`    intro.txt                     2   `│`
+`│` █  DOC.md                        3    `│` ░  DOC.md                        3   `│`
+`│`                                       `│`                                      `│`
+`│`                                       `│` ~/.config/nvim/DOC.md                `│`
+`╰───────────────────────────────────────┷──────────────────────────────────────╯`
+
+- {dir} `boolean or string or nil`
+
+  Used to either list files with a `specific pattern` or to only list filea in
+  the current directory.
+  When set to a `string` it is used to match file names. If set to `true`, it
+  will only list files in the current working directory. You can list all the
+  files by setting it to `false`.
+  The default value is `false`.
+
+`┃` This option uses `string.match()` so patterns can also be used as the value.
+
+
+- {gap} `string or nil`
+
+  The character(s) to use as spacing between the `file name` & the 
+  `item number`.
+  The default is " ".
+
+`┃` This option uses `string.match()` so patterns can also be used as the value.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    entryCount = 1
+	    
+	    gap = "•"
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`        test.lua•••••••••••••••••••••••••••••••••••••••••••••••••••••1        `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+`┃` The value of {gap} can also be multiple characters.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    entryCount = 1
+	    
+	    gap = "• "
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`        test.lua• • • • • • • • • • • • • • • • • • • • • • • • • • •1        `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+- {colors} `table or nil`
+
+  Used for setting colors for various parts of the lists. It has the following
+  options.
+   - {path} `string or table or nil`
+   - {name} `string or table or nil`
+   - {space} `string or table or nil`
+   - {number} `string or table or nil`
+
+   {path} is used for coloring the file paths(only available in "list_path").
+   {name} is used for the file name. {space} is used between {name} & {number}.
+   {number} is used for the item number.
+
+`┃ TIPS`
+`┃` All the options support horizontal & vertical gradients. So you can create
+`┃` shades in the list items
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    entryCount = 3,
+
+	    colors = {
+	      name = { "l1", "l2", "l3" }
+	    }
+	  }
+	},
+
+	globalHighlights = {
+	  l1 = { fg = "#cdd6f4" },
+	  l2 = { fg = "#9298b2" },
+	  l3 = { fg = "#585b70" }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {anchorStyle} `table or nil`
+
+  Allows the customisation of the `file path preview` of a component. It has
+  the following options.
+    - {corner} `string or nil`
+	- {textGroup} `string or nil`
+	- {cornerGroup} `string or nil`
+
+  Thw {corner} option allows you to change the character(s) used as the corner
+  of the preview. On the other hand, {textGroup} & {cornerGroup} allows you to
+  change the style of the file path & the corner respectively.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    entryCount = 1,
+
+		anchorStyle = {
+	      corner = "█▓▒",
+
+		  textStyle = "Normal",
+		  cornerStyle = "Normal"
+	    }
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│` █      test.lua                                                     1        `│`
+`│`                                                                              `│`
+`│` ~/.config/nvim/lua/test.lua█▓▒                                               `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+- {keymapPrefix} `string or nil`
+
+  Prefix of the keymap to quickly open a file in the list. You can use it by
+  adding the `number` after the prefix.
+  The default is "<leader>".
+
+`┃` To open the first file in a list you use the keymap "<leader>1". This
+`┃` allows quickly opening files from multiple `recentFiles` components by
+`┃` setting a different prefix for them.
+
+
+
+
+
 
 
 

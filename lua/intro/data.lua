@@ -135,10 +135,10 @@ data.movements = function(configMain)
         local position = v[1];
         local link = data.pathForamtter(v[2]["path"]);
 
-        local anchorPos = v[2]["position"] ~= nil and v[2]["position"] or config.position
+        local anchorPos = v[2]["position"] ~= nil and v[2]["position"] or config.position;
         local corner = type(v[2]["corner"]) == "string" and v[2]["corner"] or cr;
         local bodyHl = type(v[2]["textStyle"]) == "string" and v[2]["textStyle"] or "Intro_anchor_body";
-        local cornerHl = type(v[2]["cornerStyle"]) == "string" and v[2]["cornerStyle"] or "Intro_anchor_corner"
+        local cornerHl = type(v[2]["cornerStyle"]) == "string" and v[2]["cornerStyle"] or "Intro_anchor_corner";
 
         if (y - data.whiteSpaces) == position then
           if anchorPos == nil or anchorPos == "bottom" then

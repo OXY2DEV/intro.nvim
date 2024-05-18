@@ -226,7 +226,7 @@ T.newRecentsHandler = function (component)
       };
 
       text.anchor.path = thisFile;
-      vim.tbl_deep_extend("force", text.anchor, component.anchorStyle);
+      text.anchor = vim.tbl_deep_extend("force", text.anchor, component.anchorStyle);
     end
 
     -- File Icons
@@ -286,7 +286,7 @@ T.newRecentsHandler = function (component)
           return fileIcon ~= "" and " " or "";
         end
       };
-    elseif component.style == "list_paths" then
+    elseif component.style == "list_path" then
       local fileNameHl = T.listBehaviour(component.colors.name, entry) or "";
       local filePathHl = T.listBehaviour(component.colors.path, entry) or "";
       local fileNumberHl = T.listBehaviour(component.colors.number, entry) or "";
