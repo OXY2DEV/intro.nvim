@@ -1,5 +1,7 @@
 header-top	intro.txt	/*header-top*
 intro.nvim	intro.txt	/*intro.nvim*
+intro.nvim-cm-banner	components.txt	/*intro.nvim-cm-banner*
+intro.nvim-components	components.txt	/*intro.nvim-components*
 intro.nvim-faq	intro.txt	/*intro.nvim-faq*
 intro.nvim-hf-decorations	intro.txt	/*intro.nvim-hf-decorations*
 intro.nvim-hf-tags	intro.txt	/*intro.nvim-hf-tags*

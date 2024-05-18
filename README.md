@@ -126,24 +126,23 @@ Currently available `presets` are,
   9. recent_files_current_dir
   10. list_shade
 - cats(they are in `rows x columns` structure)
-  1. c1x1
-  2. c1x2
-  3. c1x3
-  4. c1x4
-  5. c2x2
-  6. c3x3
-  7. c3x1
-  8. rosewater
-  9. rosewater_alt
-  10. mauve
-  11. mauve_alt
-  12. yellow
-  13. yellow_alt
-  14. green
-  15. green_alt
-  16. blue
-  17. blue_alt
-  18. all_the_colors 
+  1. c1x2
+  2. c1x3
+  3. c1x4
+  4. c2x2
+  5. c3x3
+  6. c3x1
+  7. rosewater
+  8. rosewater_alt
+  9. mauve
+  10. mauve_alt
+  11. yellow
+  12. yellow_alt
+  13. green
+  14. green_alt
+  15. blue
+  16. blue_alt
+  17. all_the_colors 
   19. all_the_colors_alt
 
 More `presets` are going to be added in the future. If you want a specific type of preset you can open an `issue` for it.

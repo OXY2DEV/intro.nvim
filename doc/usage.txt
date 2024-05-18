@@ -278,9 +278,9 @@ Example usage.
   require("intro").setup({
 	  shadavalidate = true,
 
-	  -- a recentfiles component is needed for this option
+	  -- a recentFiles component is needed for this option
 	  components = {
-		{ type = "recentfiles" }
+		{ type = "recentFiles" }
 	  }
   });
 <
@@ -300,7 +300,7 @@ Example usage.
   Changes how `file path previews` are shown. File path previews are shown
   when the cursor is on top of a file name in the `recentFiles` component.
 
-  `┃` This option only works when a `recentfiles` component is present in
+  `┃` This option only works when a `recentFiles` component is present in
   `┃` {components}.
 
   The {anchors} property has 4 options. They are,
@@ -413,7 +413,7 @@ Example of how to properly use {pathModifiers}.
   Keymap for opening files that are under the cursor. The default value is
   "<leader><leader>".
 
-  `┃` This option only works when a `recentfiles` component is present in
+  `┃` This option only works when a `recentFiles` component is present in
   `┃` {components}.
 
 Example usage.

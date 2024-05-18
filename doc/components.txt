@@ -1,0 +1,350 @@
+
+`╭╌─────────────────────────────────────────────────────` *intro.nvim-components* `╌╮`
+`│` 📦 Components                                `Building blocks for your :intro │`
+`╰╌────────────────────────────────────────────────────────────────────────────╌╯`
+
+Components are the bulding blocks of a start screen. They can do various
+things such as align text, color them, list files, show the time etc.
+                                                                                
+                                                                                
+                 `██╗███╗   ██╗████████╗██████╗  ██████╗      `                   
+                 `██║████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗     `                   
+                 `██║██╔██╗ ██║   ██║   ██████╔╝██║   ██║     `                   
+                 `██║██║╚██╗██║   ██║   ██╔══██╗██║   ██║     `                   
+                 `██║██║ ╚████║   ██║   ██║  ██║╚██████╔╝     `                   
+                 `╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝.nvim `                   
+                                                                                
+                                                                                
+There are currently 4 types components. They are,
+  - banner
+  - recentFiles
+  - keymaps
+  - clock
+
+────────────────────────────────────────────────────────────────────────────────
+
+`╭─────────────────────────────────────────────────────────┨` 🧾 Table of contents
+`│`
+`├──` 🎴 Banner                                               |intro.nvim-cm-banner|
+`├──` 📑 Recent Files                                    |intro.nvim-cm-recentFiles|
+`├──` 📑 Keymaps                                             |intro.nvim-cm-keymaps|
+`╰──` ⏰ Clock                                                 |intro.nvim-cm-clock|
+
+`╭───────────────────────────────────────────────────────` *intro.nvim-cm-banner* `─╮`
+`│` 🎴 Banner                                                                    `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+Aligns & colors lines in bulk. Supports gradients.
+
+This component provides the following options.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  {
+    type = "banner",        -- Optional, determines the type of component a
+					        -- table is
+    width = "auto",         -- Optional, defines a custom width for the lines
+    align = "center",       -- Optional, defines the alignment of lines
+
+    lines = {},             -- The lines to add to the buffer
+    functions = {},         -- Optional, functions whose values replaces the
+                            -- function names in lines
+
+    colors = {},            -- Optional, main color for the lines
+    secondaryColors = {},   -- Optional, changed colors in specific parts of
+                            -- the lines
+    gradientRepeat = false  -- Optional, changes how gradients are applied
+  }
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+`┃ IMPORTANT`
+`┃` Some of the options({colors}, {secondaryColors}, {gradientRepeat}, {align})
+`┃` can also take `lists` as value. In which case, the line's index will be
+`┃` used to assign it the value.
+`┃` If a line's has `nil` as it's value the last `non-nil` value will be used.
+
+
+- {type} `string or nil`
+
+  Defines what component a table will be considered. Default is `banner`.
+
+- {width} `number or string or nil`
+
+  Allows the ability to add a cuatom width to the {lines}. Default value is
+  "auto". It's value can either be a number or "auto".
+
+  This should be used when you have characters that take up more space than
+  normal characters(e.g. some arabic characters). However, you don't need to
+  use it if you use `nerd font` characters as they DON'T take more space than
+  a regular character.
+  
+`┃ NOTE`
+`┃` When the value is less then 1, it will be used as a % value. So, for
+`┃` example `width = 0.8` will be 80% of `window width`.
+`┃` The width will also update on resizing the window.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	  components = {
+		  {
+			  lines = { "Hello World" },
+			  
+			  -- This will make the text behave like it has 20 characters
+			  width = 20
+		  }
+	  }
+  })
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {align} `string or nil`
+
+  Changes the alignment of texts. Valid values are "left", "right" & "center".
+  The default value is "center".
+
+- {lines} `table`
+
+  A table containing all the lines that will be added to the buffer. Lines can
+  either be a `string` or a `table`.
+
+`┃ NOTE`
+`┃` Lines should be a `table` if you plan on coloring a part of the text
+`┃` seperately. They should also be a `table` if you have parts of the text that
+`┃` need to be dynamically generated.
+
+- {functions} `table or nil`
+
+  Function declarations. These funxtions replaces their names when used ib a
+  line with a `table` value.
+
+`┃` The main reasob for having this is to prevent ugly & unreadable setup
+`┃` tables due to using functions in lines.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	  components = {
+		  {
+			  lines = {
+				 { "Version: ", "ver" }
+			  },
+
+			  functions = {
+				 ver = function()
+				   return vim.version();
+				 end
+			  }
+		  }
+	  }
+  })
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {colors} `string or table or nil`
+
+  Color(s) for the lines. `Highlight group names` are used for coloring. When
+  set to a `string` usws that color for all the lines.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	  components = {
+		  {
+			  lines = {
+				 "A string",
+				 { "A", " string", "as", " a ", "table" }
+			  },
+
+			  colors = "Comment"
+		  }
+	  }
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+`┃` This option also supports `gradients`. To use a horizontal gradient you can't
+`┃` directly pass it as a list in {colors}.
+`┃` Instead, you have to add the list as a value to thw {colors} table.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	  components = {
+		  {
+			  lines = {
+				 "A string",
+				 { "A", " string", "as", " a ", "table" }
+			  },
+
+			  -- This creates a vertical gradient
+			  colors = { "Conditional", "Function", "Comment" },
+
+			  -- This creates a horizontal gradient
+			  colors = {
+				 { "Conditional", "Function", "Comment" }
+              },
+		  }
+	  }
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {secondaryColors} `table or nil`
+
+  A `table` containing `tables` that assign different colors to different
+  parts of the text. This only works when the line is a `table`.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	  components = {
+		  {
+			  lines = {
+				 "Red | Blue",            -- will have no color
+				 { "Red", " | ", "Blue" } -- will have color
+			  },
+
+			  secondaryColors = {
+				 { "rd", nil, "bl" }
+			  }
+		  }
+	  },
+
+	  globalHighlights = {
+        rd = { fg = "red" },
+		bl = { fg = "blue" }
+	  }
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+`┃` You can also set a part's value to be `nil`. This will not change the
+`┃` color of that part of the text.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	  components = {
+		  {
+			  lines = {
+				 { "Main color", " | ", "Secondary Color" }
+			  },
+
+			  colors = "Comment",
+
+			  secondaryColors = {
+				 { nil, nil, "Special" }
+			  }
+		  }
+	  }
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+You can also use `gradients` in it.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	  components = {
+		  {
+			  lines = {
+				 { "Main Gradient ", "Secondary Gradient" }
+			  },
+
+			  -- main gradient
+			  colors = {
+				 { "main_1", "main_2", "main_3", "main_4", "main_5" }
+			  },
+
+			  -- secondary gradient
+			  secondaryColors = {
+				 { nil, {  "sec_1", "sec_2", "sec_3", "sec_4", "sec_5" } }
+			  },
+
+			  -- Optional, set it to see the gradients better
+			  gradientRepeat = true
+		  }
+	  },
+
+	  globalHighlights = {
+        main_1 = { fg = "#89b4fa" },
+        main_2 = { fg = "#90bfe3" },
+        main_3 = { fg = "#97cbcd" },
+        main_4 = { fg = "#9ed7b7" },
+        main_5 = { fg = "#a6e3a1" },
+
+		sec_1 = { fg = "#fab387" },
+		sec_2 = { fg = "#f9be91" },
+		sec_3 = { fg = "#f9ca9b" },
+		sec_4 = { fg = "#f9d6a5" },
+		sec_5 = { fg = "#f9e2af" }
+	  }
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+`┃ NOTE`
+`┃` If you run `:Inspect` on the "Secondary Gradient" you may notice that
+`┃` there are 2 highlight group(s) on all of it's letters.
+`┃` This is not a bug, but is intended.
+
+`┃ INFORMATION`
+`┃` There is a bug in `nvim_buf_add_highlight()` which causes the order of
+`┃` highlight groups in a specific position not to change. This can lead to
+`┃` colors not showing when a solid color is used as {secondaryColors} and a
+`┃` gradient is used as the {colors}.
+`┃`
+`┃` I am still trying to fix it. So, you should only use {secondaryColors} for
+`┃` the entire text if there are solid colors & gradients present in the same
+`┃` line.
+
+- {gradientRepeat} `boolean or nil`
+
+  Turns normal gradients into `repeating gradients`. Available values are
+  `true` & `false`. The default is `false`.
+
+`┃` By default, if the length of the gradient is less than the length of the
+`┃` line the characters will use the last value in the gradient as color
+`┃` after all the other values in the gradient have been used.
+`┃`
+`┃` By setting this option to `true`, you can make the gradient behave like
+`┃` it's a repeating gradient.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	  components = {
+		  {
+			  lines = {
+			    "A gradient colored text"
+			  },
+
+			  -- main gradient
+			  colors = {
+				 { "main_1", "main_2", "main_3", "main_4", "main_5" }
+			  },
+
+			  -- Change this ans see how the gradients get colored
+			  gradientRepeat = true
+		  }
+	  },
+
+	  globalHighlights = {
+        main_1 = { fg = "#89b4fa" },
+        main_2 = { fg = "#90bfe3" },
+        main_3 = { fg = "#97cbcd" },
+        main_4 = { fg = "#9ed7b7" },
+        main_5 = { fg = "#a6e3a1" }
+	  }
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+
+
+`───────────────────────────────────────────────────────────────────────────────╮`
+vim:tw=80:ts=4:noet:ft=help:norl:
