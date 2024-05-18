@@ -27,7 +27,7 @@ There are currently 4 types components. They are,
 `│`
 `├──` 🎴 Banner                                               |intro.nvim-cm-banner|
 `├──` 📑 Recent Files                                    |intro.nvim-cm-recentFiles|
-`├──` 📑 Keymaps                                             |intro.nvim-cm-keymaps|
+`├──` 🧰 Keymaps                                             |intro.nvim-cm-keymaps|
 `╰──` ⏰ Clock                                                 |intro.nvim-cm-clock|
 
 `╭───────────────────────────────────────────────────────` *intro.nvim-cm-banner* `─╮`
@@ -361,27 +361,29 @@ This component provides the following options.
     width = 0.8,                -- Optional, width of the items
 
     useIcons = false,           -- Optional, enables/disables file icons
-    useAnchors = true,          -- Optional, enables/disables file path preview
+    useAnchors = true,          -- Optional, enables/disables file path
+	                            -- preview
     dir = false,                -- Optional, directory whose files are shown
 
     gap = " ",                  -- Optional, the character used as spaces
 
     colors = {
-      name = {},              -- Optional, color for file names
-      path = {},              -- Optional, color for file paths(without the
-	  	                    -- filename)
-
-      number = {},            -- Optional, color for the item number
-
-      spaces = {}             -- Optional, color for the spaces
-    },
-
-    anchorStyle = {
-      corner = nil,           -- Optional, character to use as the anchor's
-	                          -- corner
-
-      textStyle = nil,        -- Optional, highlight group for the anchor text
-      cornerStyle = nil       -- Optioanl, highlight group for the corner
+      name = {},                -- Optional, color for file names
+      path = {},                -- Optional, color for file paths(without the
+	  	                        -- filename)
+                               
+      number = {},              -- Optional, color for the item number
+                               
+      spaces = {}               -- Optional, color for the spaces
+    },                         
+                               
+    anchorStyle = {            
+      corner = nil,             -- Optional, character to use as the anchor's
+	                            -- corner
+                               
+      textStyle = nil,          -- Optional, highlight group for the anchor
+	                           -- text
+      cornerStyle = nil         -- Optional, highlight group for the corner
     },
 
     keymapPrefix = "<leader>"   -- Optional, the prefix key for opening files
@@ -654,11 +656,306 @@ Example usage.
 `┃` allows quickly opening files from multiple `recentFiles` components by
 `┃` setting a different prefix for them.
 
+`╭──────────────────────────────────────────────────────` *intro.nvim-cm-keymaps* `─╮`
+`│` 🧰 Keymaps                                                                   `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
 
+Sets some keymaps for the `Intro` buffer.
 
+This component has the following options.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  {
+	type = "keymaps",       -- Optional, determines the type of component a
+					        -- table is
+    style = "list",         -- Optional, changes how keymaps are shown
 
+    columnSeparator = " ",  -- Optional, characters added between columns
+    separatorHl = "",       -- Optional, color for the characters between
+	                        -- columns
+    maxcolumns = 4,         -- Optional, max number of columns per line
 
+    lineGaps = 0            -- Optional, number of gaps between each items
+  }
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
 
+- {type} `string or nil`
+
+  Defines what component a table will be considered. Default is `banner`.
+
+- {style} `string or nil`
+
+  Changes the styling of the component. Possible values are `silent`, `list` &
+  `columns`.
+  The default is `list`.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+    components = {
+      {
+        type = "keymaps",
+
+        style = "columns",
+
+        -- Optional
+        columnSeparator = " ║ ",
+        separatorHl = "Comment",
+
+        keymaps = {
+          {
+            text = { "  ", "M", "inimap" },
+            colors = { "sky", "sky_1", "sky" },
+
+            keyCombination = "M",
+            keyAction = ":lua require('mini.map').toggle()<CR>",
+          },
+          {
+            text = { "  ", "T", "elescope" },
+            colors = { "comp", "comp_1", "comp" },
+
+            keyCombination = "T",
+            keyAction = ":Telescope<CR>",
+          }
+        }
+      }
+    },
+
+    globalHighlights = {
+      sky = { fg = "#89B4FA" },
+      sky_1 = { fg = "#89B4FA", underline = true },
+      comp = { fg = "#F9E2AF" },
+      comp_1 = { fg = "#F9E2AF", underline = true }
+    }
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {columnSeparator} `string or nil`
+
+  The character(s) to add between the `columns` in the `columns` style. The
+  default value is " ".
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+    components = {
+      {
+        type = "keymaps",
+        style = "columns",
+
+		-- change this to something else & see the diffeeence
+        columnSeparator = " ║ ",
+        separatorHl = "Comment",
+
+        keymaps = {
+          {
+            text = "  Minimap",
+
+            keyCombination = "M",
+            keyAction = ":lua require('mini.map').toggle()<CR>",
+          },
+          {
+            text = "  Telescope",
+
+            keyCombination = "T",
+            keyAction = ":Telescope<CR>",
+          }
+        }
+      }
+    }
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                            MiniMap ║   Telescope                           `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+- {separatorHl} `string or table or nil`
+
+  Chnages the coloring of the {gap}. Also supports `horizontal` gradients.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+    components = {
+      {
+        type = "keymaps",
+        style = "columns",
+
+		-- change this to something else & see the diffeeence
+        columnSeparator = " ║ ",
+        separatorHl = { "Comment", "Function", "Conditional" },
+
+        keymaps = {
+          {
+            text = "  Minimap",
+
+            keyCombination = "M",
+            keyAction = ":lua require('mini.map').toggle()<CR>",
+          },
+          {
+            text = "  Telescope",
+
+            keyCombination = "T",
+            keyAction = ":Telescope<CR>",
+          }
+        }
+      }
+    }
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {maxColumns} `number or nil`
+
+  Maximum number of columns in a line for the `columns` style. Default value
+  is 4.
+
+- {lineGaps} `number or nil`
+
+  Number of lines between each keymaps in the `list` style. Default value is 0.
+
+`╭────────────────────────────────────────────────────────` *intro.nvim-cm-clock* `─╮`
+`│` ⏰ Clock                                                                     `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+A fancy way to show the time. Doesn't update in realtime(but can be made to	
+update in realtime).
+
+This component has the following options.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  {
+	type = "clock",           -- Optional, determines the type of component a
+					          -- table is
+    style = {
+      clockStyle = "basic",   -- Optional, style for the component
+      textStyle = "filled",   -- Optional, style for the texts in the component
+
+      clockParts = {          -- Optional, parts for the borders
+        "╭", "─", "╮",
+        "│", " ", "│",
+        "╰", "─", "╯"
+      },
+      colon = "•"             -- Optional, character used as : in the clock
+    }
+
+    colors = {
+      spaces = "",            -- Optional, color for the empty spaces
+      colon = "",             -- Optional, color for the colon
+      border = "",            -- Optional, color for the borders
+                              
+      hour = "",              -- Optional, color for the hour part
+      minute = "",            -- Optional, color for the minute part
+      second = "",            -- Optional, color for the second part
+      dayNight = "",          -- Optional, color for "am" or "pm" text
+                              
+      day = "",               -- Optional, color for the day of the week
+      date = "",              -- Optional, color for the date
+      month = "",             -- Optional, color for the month name
+      year = ""               -- Optional, color for the year
+    }
+  }
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {type} `string or nil`
+
+  Defines what component a table will be considered. Default is `banner`.
+
+- {style} `table or nil`
+
+  Changes the styling of the component. It has these options.
+    - {clockStyle} `string or nil`
+	- {textStyle} `string or nil`
+	- {clockParts} `table or nil`
+	- {colon} `string or nil`
+
+  {clockStyle} will change how the clock itself looks. On the other hand,
+  {textStyle} will chnage how the Numbers are shown.
+
+  The {clockParts} have various parts that will create the clock. It has
+  the following format,
+  
+    "border-topLeft",    "border-top",    "border-topRight",
+	"border-left",       "whitespace",    "border-right",
+	"border-bottomLeft", "border-bottom", "border-bottomRight"
+
+  And lastly, {colon} will be used between the `hour`, `minute` & `second` in
+  the `basic` {clockStyle}.
+
+  The available values for {clockStyle} are `basic`(default) & `compact`.
+  The available values for {textStyle} are `rounded`, `blocky`, `dotted` &
+  `filled`(default).
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+    components = {
+      {
+        type = "clock",
+
+        style = {
+		  clockStyle = "basic",
+		  textStyle = "dotted"
+        }
+      }
+    },
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                  ╭───────────────────────────────────────────╮               `│`
+`│`                  │                                           │               `│`
+`│`                  │   ⣾⠛⣷ ⠛⠛⣷   ⣿ ⣿ ⠛⠛⣷   ⣾⠛⣷ ⣾⠛⠛   ⣾⠛⣷ ⣷⣀⣾   │               `│`
+`│`                  │   ⣿ ⣿ ⠶⠶⣿ • ⠙⠛⣿ ⠶⠶⣿ • ⣿ ⣿ ⠙⠶⣄   ⣿⠶⠟ ⣿⠉⣿   │               `│`
+`│`                  │   ⢿⣤⡿ ⣤⣤⡿     ⣿ ⣤⣤⡿   ⢿⣤⡿ ⣤⣤⡿   ⣿   ⣿ ⣿   │               `│`
+`│`                  │                                           │               `│`
+`│`                  ╰───────────────────────────────────────────╯               `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+- {colors} `table or nil`
+
+  Coloring for various parts of the component. It has thw following options.
+    - {spaces}
+	- {border}
+    - {hour}
+	- {minute}
+	- {dayNight}
+
+	Only available in the `basic` {clockStyle}
+	- {second}
+
+	Only available in the `compact` {clockStyle}
+	- {day}
+	- {date}
+	- {month}
+	- {year}
+
+`┃` {dayNight} is used to color the AM/PM part.
+
+`┃ TIP`
+`┃` If you want the clock to update automatically, you can set up a timer that
+`┃` will run the `:Refresh` command on a specific delay.
+`┃`
+`┃` This feature may be added in the future.
 
 
 `───────────────────────────────────────────────────────────────────────────────╮`

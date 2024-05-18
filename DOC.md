@@ -1090,10 +1090,10 @@ It has the following sub-properties.
     style = "list",         -- Optional, changes how keymaps are shown
 
     columnSeparator = " ",  -- Optional, characters added between columns
-    separatorHl = "",      -- Optional, color for the characters between columns
+    separatorHl = "",       -- Optional, color for the characters between columns
     maxcolumns = 4,         -- Optional, max number of columns per line
 
-    lineGaps = 0            -- Optioanl, number of gaps between each items
+    lineGaps = 0            -- Optional, number of gaps between each items
 }
 ```
 
@@ -1178,22 +1178,20 @@ This component has the following sub-properties.
 {
     style = {
         clockStyle = "basic",       -- Optional, style for the component
-        textStyle = "fill",         -- Optional, style for the texts in the component
+        textStyle = "filled",       -- Optional, style for the texts in the component
 
         clockParts = {              -- Optioanl, parts for the borders
             "╭", "─", "╮",
             "│", " ", "│",
             "╰", "─", "╯"
         },
-        colon = "•"                 -- Optioanl, character used as : in the clock
+        colon = " • "               -- Optioanl, character used as : in the clock
     }
 
     colors = {
         spaces = "",                -- Optional, color for the empty spaces
         colon = "",                 -- Optional, color for the colon
         border = "",                -- Optional, color for the borders
-                                    
-        clock = "",                 -- Optioanl, color for the digits
                                     
         hour = "",                  -- Optional, color for the hour part
         minute = "",                -- Optional, color for the minute part
@@ -1217,9 +1215,9 @@ This component has the following sub-properties.
 
     - textStyle `string or nil`
 
-      Chnages how the Numbers/digits are shown. Currently available values are `round`, `corner`, `dots` & `fill`.
+      Chnages how the Numbers/digits are shown. Currently available values are `rounded`, `blocky`, `dotted` & `filled`.
 
-      The default is `fill`.
+      The default is `filled`.
 
     - clockParts `table or nil`
 

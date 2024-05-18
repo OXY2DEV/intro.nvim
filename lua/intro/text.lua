@@ -76,8 +76,6 @@ T.setDefaults = function (component)
         colon = "",
         border = "",
 
-        clock = "",
-
         hour = "",
         minute = "",
         second = "",
@@ -90,14 +88,14 @@ T.setDefaults = function (component)
       },
       style = {
         clockStyle = "basic",
-        textStyle = "fill",
+        textStyle = "filled",
 
         clockParts = {
           "╭", "─", "╮",
           "│", " ", "│",
           "╰", "─", "╯"
         },
-        colon = "•"
+        colon = " • "
       }
     })
   end
@@ -337,7 +335,10 @@ T.newKeymapsHandler = function (component)
 
       if V.tbl_islist(keyOpts.text) == true then
         V.list_extend(stacks.texts, keyOpts.text);
-        V.list_extend(stacks.highlights, keyOpts.colors);
+
+        if V.tbl_islist(keyOpts.colors) == true then
+          V.list_extend(stacks.highlights, keyOpts.colors);
+        end
       else
         table.insert(stacks.texts, keyOpts.text);
         table.insert(stacks.highlights, keyOpts.colors);
