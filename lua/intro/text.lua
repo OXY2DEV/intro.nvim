@@ -3,6 +3,8 @@ local data = require("intro.data");
 local hl = require("intro.highlights");
 
 local T = {};
+
+---@diagnostic disable-next-line
 local V = vim;
 
 T.setDefaults = function (component)
@@ -103,6 +105,15 @@ T.setDefaults = function (component)
   return component;
 end
 
+--- A function to handle lists and exceptions when the values aren't lists
+---@param list (string | number | boolean | table)[]
+---@param index number
+---@param exception string | nil
+---@return any
+---@overload fun(list: string, index: number, exception: any): string
+---@overload fun(list: string[], index: number, exception: any): string | string[]
+---@overload fun(list: number, index: number, exception: any): number
+---@overload fun(list: number[], index: number, exception: any): number | number[]
 T.listBehaviour = function (list, index, exception)
   local exceptionString = exception or "skip";
 
@@ -190,7 +201,7 @@ T.newRecentsHandler = function (component)
     local thisFile = file_list[entry] or "Empty";
     local fileName = V.fn.fnamemodify(thisFile, ":t");
     local fileExtension = V.filetype.match({ filename = fileName });
-    local filePath = vim.fn.fnamemodify(thisFile, ":~:h") .. "/";
+    local filePath = V.fn.fnamemodify(thisFile, ":~:h") .. "/";
     local gap = T.listBehaviour(component.gap, entry)
 
 
@@ -213,7 +224,7 @@ T.newRecentsHandler = function (component)
 
     -- No file found
     if thisFile ~= "Empty" then
-      vim.api.nvim_buf_set_keymap(data.introBuffer, "n", component.keymapPrefix .. entry, ":e" .. thisFile .. "<CR>", { silent = true })
+      V.api.nvim_buf_set_keymap(data.introBuffer, "n", component.keymapPrefix .. entry, ":e" .. thisFile .. "<CR>", { silent = true })
 
       text.anchor = {
         path = "",
@@ -224,7 +235,7 @@ T.newRecentsHandler = function (component)
       };
 
       text.anchor.path = thisFile;
-      text.anchor = vim.tbl_deep_extend("force", text.anchor, component.anchorStyle);
+      text.anchor = V.tbl_deep_extend("force", text.anchor, component.anchorStyle);
     end
 
     -- File Icons
@@ -247,9 +258,9 @@ T.newRecentsHandler = function (component)
       };
       text.functions = {
         fileSpaces = function ()
-          local totalSize = component.width < 1 and math.floor(data.width * component.width) or math.floor(component.width);
+          local totalSize = component.width <= 1 and math.floor(data.width * component.width) or math.floor(component.width);
           local spcSize = 0;
-          local gapSize = vim.fn.strchars(gap);
+          local gapSize = V.fn.strchars(gap);
           local addSpaces = 0;
           local reminder = 0;
 
@@ -274,7 +285,7 @@ T.newRecentsHandler = function (component)
             str =  string.rep(component.gap, addSpaces);
           else
             -- This needs more investigation
-            str = string.rep(component.gap, addSpaces) .. vim.fn.strcharpart(gap, 0, reminder)
+            str = string.rep(component.gap, addSpaces) .. V.fn.strcharpart(gap, 0, reminder)
           end
 
           return str;
@@ -296,7 +307,7 @@ T.newRecentsHandler = function (component)
       };
       text.functions = {
         fileSpaces = function ()
-          local totalSize = component.width < 1 and math.floor(data.width * component.width) or math.floor(component.width);
+          local totalSize = component.width <= 1 and math.floor(data.width * component.width) or math.floor(component.width);
 
           local str =  string.rep(component.gap, fileIcon ~= "" and totalSize - V.fn.strchars(fileIcon .. filePath .. fileName .. tostring(entry)) or  totalSize - V.fn.strchars(fileIcon .. filePath .. fileName .. tostring(entry)) + 1);
           return str;
@@ -790,7 +801,7 @@ T.textRenderer = function(line, lineIndex)
 
   local txt = line.text;
 
-  if type(line.width) == "number" and line.width < 1 then
+  if type(line.width) == "number" and line.width <= 1 then
     width = line.width * data.width;
   elseif type(line.width) == "number" and line.width >= 1 then
     width = line.width;
@@ -863,7 +874,7 @@ T.lineUpdater = function (animationElement)
   local padLeft, padRight, padSize = "", "", 0;
 
   -- set some default options
-  animationElement = vim.tbl_deep_extend("keep", animationElement, {
+  animationElement = V.tbl_deep_extend("keep", animationElement, {
     y = 0,
 
     align = "center",
@@ -924,7 +935,7 @@ T.lineUpdater = function (animationElement)
   end
 
   -- BUG: setting lines using Lua doesn't work properly
-  vim.fn.setbufline(data.introBuffer, linePosition + 1, padLeft .. addedText .. padRight)
+  V.fn.setbufline(data.introBuffer, linePosition + 1, padLeft .. addedText .. padRight)
 
   -- coloring the line
   if colNow == nil then
@@ -992,52 +1003,71 @@ T.lineUpdater = function (animationElement)
 end
 
 T.virtualTextRenderer = function (animationElement)
+  ---@class animationElement
+  ---@field x number | number[]
+  ---@field y number | number[]
+  ---@field __thisFrameIndex number
+  ---@field values (string | table)[]
+  ---@field colors (string | table)[] | nil
+  ---@field secondaryColors (string | table)[] | nil
   animationElement = V.tbl_deep_extend("keep", animationElement, {
     x = 0, y = 0,
 
-    colors = {},
+    values = {},
+    colors = "Normal",
   });
 
   local X;
   local Y;
+
   local textNow = T.listBehaviour(animationElement.values, animationElement.__thisFrameIndex);
   local colNow = T.listBehaviour(animationElement.colors, animationElement.__thisFrameIndex);
 
+  if V.fn.hlexists(colNow) == 0 then
+    colNow = "Intro_" .. colNow
+  end
+
   if type(T.listBehaviour(animationElement.x, animationElement.__thisFrameIndex)) == "number" then
+    --- The return value of X will always be a number
+    ---@type number
     X = T.listBehaviour(animationElement.x, animationElement.__thisFrameIndex);
 
-    if X < 1 then
+    if X <= 1 then
       X = math.floor(X * data.width);
+    else
+      X = math.floor(X);
     end
   end
 
   if type(T.listBehaviour(animationElement.y, animationElement.__thisFrameIndex)) == "number" then
+    --- The return value of Y will always be a number
+    ---@type number
     Y = T.listBehaviour(animationElement.y, animationElement.__thisFrameIndex);
 
-    if Y < 1 then
+    if Y <= 1 then
       Y = math.floor(Y * data.height);
+    else
+      Y = math.floor(Y);
     end
   end
 
+  ---@type table
+  local virtText = {}
+
   if type(textNow) == "string" then
-    textNow = {
+    virtText = {
       { textNow, colNow }
     };
   elseif V.tbl_islist(textNow) == true then
-    local tmp = {};
-
-    for index, line in ipairs(textNow) do
-      table.insert(tmp, { line, T.listBehaviour(colNow, index) });
+    for index, line in ipairs(textNow) do --[[@as table ]]
+      table.insert(virtText, { line, T.listBehaviour(colNow, index) });
     end
-
-    --vim.print(tmp)
-    textNow = tmp;
   end
 
   V.api.nvim_buf_set_extmark(data.introBuffer, 1, Y, X, {
     id = 99,
 
-    virt_text = textNow,
+    virt_text = virtText,
     virt_text_pos = "overlay"
   })
 end

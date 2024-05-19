@@ -1,15 +1,17 @@
-Created on: 17 May, 2024
+Created on: 17 May, 2024                             Last updated: 20 May, 2024
 `───────────────────────────────────────────────────────────────────────────────╯`
 ===
 TOC doesn't work. Don't even try using it.
 ===
 •••••••••••••••••••••••••••••••••••••••••
 ===
-💻 Installation
+🌅 Intro.nvim usage
 ===
-📡 Setup options
+- 💻 Installation
 ===
-✨ Presets
+- 📡 Setup options
+===
+- ✨ Presets
 
 You shouldn't see this part.
 
@@ -248,10 +250,10 @@ Example usage.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  showStatusline = true,
+	showStatusline = true,
 
-	  -- The plugin will not work if the components table is nil
-	  components = {}
+	-- The plugin will not work if the components table is nil
+	components = {}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -276,12 +278,12 @@ Example usage.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  shadavalidate = true,
+	shadavalidate = true,
 
-	  -- a recentFiles component is needed for this option
-	  components = {
-		{ type = "recentFiles" }
-	  }
+	-- a recentFiles component is needed for this option
+	components = {
+	  { type = "recentFiles" }
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -328,18 +330,18 @@ Example usage.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  anchors = {
-		position = "bottom",
+	anchors = {
+	  position = "bottom",
 
-		corner = "",
-		textStyle = {},
-		cornerStyle = {}
-	  },
+	  corner = "",
+	  textStyle = {},
+	  cornerStyle = {}
+	},
 
-	  -- A recentFiles component is needed for this option
-	  components = {
-		{ type = "recentFiles", entryCount = 1 }
-	  }
+	-- A recentFiles component is needed for this option
+	components = {
+	  { type = "recentFiles", entryCount = 1 }
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -361,14 +363,14 @@ Example usage.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  pathModifiers = {
-		{ "~/.config/nvim/", "Nvim/" }
-	  },
+	pathModifiers = {
+	  { "~/.config/nvim/", "Nvim/" }
+	},
 
-	  -- A recentFiles component is needed for this option
-	  components = {
-		{ type = "recentFiles", entryCount = 1 }
-	  }
+	-- A recentFiles component is needed for this option
+	components = {
+	  { type = "recentFiles", entryCount = 1 }
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -388,22 +390,22 @@ Example of how to properly use {pathModifiers}.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  -- This is incorrect
-	  pathModifiers = {
-		{ "~/.config/", "Config/" },
-		{ "~/.config/nvim/", "nvim/" }
-	  },
+	-- This is incorrect
+	pathModifiers = {
+	  { "~/.config/", "Config/" },
+	  { "~/.config/nvim/", "nvim/" }
+	},
 
-	  -- This is correct
-	  pathModifiers = {
-		{ "~/.config/nvim/", "nvim/" },
-		{ "~/.config/", "Config/" }
-	  }
+	-- This is correct
+	pathModifiers = {
+	  { "~/.config/nvim/", "nvim/" },
+	  { "~/.config/", "Config/" }
+	}
 
-	  -- A recentFiles component is needed for this option
-	  components = {
-		{ type = "recentFiles" }
-	  }
+	-- A recentFiles component is needed for this option
+	components = {
+	  { type = "recentFiles" }
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -420,12 +422,12 @@ Example usage.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  openFileUnderCursor = "oo",
+	openFileUnderCursor = "oo",
 
-	  -- A recentFiles component is needed for this option
-	  components = {
-		{ type = "recentFiles" }
-	  }
+	-- A recentFiles component is needed for this option
+	components = {
+	  { type = "recentFiles" }
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -443,9 +445,9 @@ Example usage.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  components = {
-		"Hello Neovim"
-	  }
+	components = {
+	  "Hello Neovim"
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -470,18 +472,18 @@ Example usage.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  components = {
-		-- This will first check if a highlight group named red exists or not
+	components = {
+	  -- This will first check if a highlight group named red exists or not
 
-		-- If it doesn't it will add the "Intro_red" highlight group to the
-		-- text
-		{ lines = { "Hello Neovim" }, colors = "red" }
-	  },
-	  
-	  globalHighlights = {
-		-- This will create a highlight group named "Intro_red"
-		red = { fg = "#F38BA8" }
-	  }
+	  -- If it doesn't it will add the "Intro_red" highlight group to the
+	  -- text
+	  { lines = { "Hello Neovim" }, colors = "red" }
+	},
+	
+	globalHighlights = {
+	  -- This will create a highlight group named "Intro_red"
+	  red = { fg = "#F38BA8" }
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -497,32 +499,32 @@ Example usage.
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
 >lua
   require("intro").setup({
-	  components = {
-		-- Text used to show the animation
-		{ lines = { "Hello Neovim" }, colors = "red" }
-	  },
-	  
-	  globalHighlights = {
-		-- Custom highlight group setup
-		red = { fg = "#F38BA8" }
-	  },
+	components = {
+	  -- Text used to show the animation
+	  { lines = { "Hello Neovim" }, colors = "red" }
+	},
+	
+	globalHighlights = {
+	  -- Custom highlight group setup
+	  red = { fg = "#F38BA8" }
+	},
 
-	  animations = {
-		-- Slightly changed settings for smoother animations		
-		delay = 100, updateDelay = 50,
+	animations = {
+	  -- Slightly changed settings for smoother animations		
+	  delay = 100, updateDelay = 50,
 
-		-- Container for color related animations
-		highlightBased = {
-		  {
-			values = {
-			  { fg = "#f38ba8" }, { fg = "#e78fb1" }, { fg = "#db94ba" },
-			  { fg = "#cf98c3" }, { fg = "#c39dcc" }, { fg = "#b8a1d5" },
-			  { fg = "#aca6de" }, { fg = "#a0aae7" }, { fg = "#94aff0" },
-			  { fg = "#89b4fa" }, 
-			}
-		  }
-		}
+	  -- Container for color related animations
+	  highlightBased = {
+	    {
+	  	  values = {
+	  	    { fg = "#f38ba8" }, { fg = "#e78fb1" }, { fg = "#db94ba" },
+	  	    { fg = "#cf98c3" }, { fg = "#c39dcc" }, { fg = "#b8a1d5" },
+	  	    { fg = "#aca6de" }, { fg = "#a0aae7" }, { fg = "#94aff0" },
+	  	    { fg = "#89b4fa" }, 
+	  	  }
+	    }
 	  }
+	}
   });
 <
 ╰──────────────────────────────────────────────────────────────────────────────╯

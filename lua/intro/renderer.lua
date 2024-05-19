@@ -34,7 +34,7 @@ R.setBuffer = function(showStatusline)
   V.cmd("setlocal nonumber norelativenumber signcolumn=no foldcolumn=0 nospell");
 
   if showStatusline ~= true then
-    data.lastStatus = vim.o.laststatus;
+    data.lastStatus = V.o.laststatus;
     V.cmd("set laststatus=0");
   end
 end
@@ -58,11 +58,11 @@ R.handleConfig = function (config, isResizing)
     V.bo.modifiable = true;
     V.api.nvim_buf_set_lines(data.introBuffer, R.height, R.height * 2, false, { "" });
 
-    vim.api.nvim_win_set_cursor(0, { 1, 1 })
+    V.api.nvim_win_set_cursor(0, { 1, 1 })
     V.api.nvim_buf_set_lines(0, 0, -1, false, {});
 
     -- Start adding things
-    vim.bo.modifiable = true;
+    V.bo.modifiable = true;
 
     local paddingTop = (#data.cachedLines <= R.availableHeight) and math.ceil((R.availableHeight - #data.cachedLines) / 2) or 0;
     local paddingBottom = (#data.cachedLines <= R.availableHeight) and math.floor((R.availableHeight - #data.cachedLines) / 2) or 0;
@@ -70,7 +70,7 @@ R.handleConfig = function (config, isResizing)
     data.whiteSpaces = paddingTop;
 
     for sp = 1, paddingTop do
-      vim.api.nvim_buf_set_lines(data.introBuffer, sp - 1, sp - 1, false, { string.rep(" ", R.width) } )
+      V.api.nvim_buf_set_lines(data.introBuffer, sp - 1, sp - 1, false, { string.rep(" ", R.width) } )
     end
 
     for l, line in ipairs(data.cachedLines) do
@@ -92,21 +92,21 @@ R.handleConfig = function (config, isResizing)
     end
 
 
-    for spE = 1, paddingBottom do
+    for spE = 0, paddingBottom do
       local actualIndex = paddingTop + #data.cachedLines + spE;
 
-      vim.api.nvim_buf_set_lines(data.introBuffer, actualIndex - 1, actualIndex -1, false, { string.rep(" ", R.width) } )
+      V.api.nvim_buf_set_lines(data.introBuffer, actualIndex - 1, actualIndex -1, false, { string.rep(" ", R.width) } )
     end
 
     -- BUG: Incorrect number of empty lines are added when statusline is present
     -- cause: Unknown
     if config.showStatusline == true then
-      vim.api.nvim_buf_set_lines(data.introBuffer, paddingTop + #data.cachedLines + paddingBottom, paddingTop + #data.cachedLines + paddingBottom, false, { string.rep(" ", R.width) } )
+      V.api.nvim_buf_set_lines(data.introBuffer, paddingTop + #data.cachedLines + paddingBottom, paddingTop + #data.cachedLines + paddingBottom, false, { string.rep(" ", R.width) } )
     end
 
     -- Don't let the user modify the buffer
     V.bo.modifiable = false;
-    vim.api.nvim_win_set_cursor(0, { 1, 1 })
+    V.api.nvim_win_set_cursor(0, { 1, 1 })
   else
     -- Set the buffer and store it's information
     R.setBuffer(config.showStatusline);
@@ -123,7 +123,7 @@ R.handleConfig = function (config, isResizing)
     end
 
     -- Start adding things
-    vim.bo.modifiable = true;
+    V.bo.modifiable = true;
 
     local paddingTop = (#data.cachedLines <= R.availableHeight) and math.ceil((R.availableHeight - #data.cachedLines) / 2) or 0;
     local paddingBottom = (#data.cachedLines <= R.availableHeight) and math.floor((R.availableHeight - #data.cachedLines) / 2) or 0;
@@ -131,7 +131,7 @@ R.handleConfig = function (config, isResizing)
     data.whiteSpaces = paddingTop;
 
     for sp = 1, paddingTop do
-      vim.api.nvim_buf_set_lines(data.introBuffer, sp - 1, sp - 1, false, { string.rep(" ", R.width) } )
+      V.api.nvim_buf_set_lines(data.introBuffer, sp - 1, sp - 1, false, { string.rep(" ", R.width) } )
     end
 
     for l, line in ipairs(data.cachedLines) do
@@ -153,15 +153,15 @@ R.handleConfig = function (config, isResizing)
     end
 
 
-    for spE = 1, paddingBottom do
+    for spE = 0, paddingBottom do
       local actualIndex = paddingTop + #data.cachedLines + spE;
 
-      vim.api.nvim_buf_set_lines(data.introBuffer, actualIndex - 1, actualIndex -1, false, { string.rep(" ", R.width) } )
+      V.api.nvim_buf_set_lines(data.introBuffer, actualIndex - 1, actualIndex -1, false, { string.rep(" ", R.width) } )
     end
 
     -- Don't let the user modify the buffer
     V.bo.modifiable = false;
-    vim.api.nvim_win_set_cursor(0, { 1, 1 })
+    V.api.nvim_win_set_cursor(0, { 1, 1 })
 
 
     -- Set resize autocommand
@@ -186,7 +186,7 @@ R.handleConfig = function (config, isResizing)
     V.api.nvim_create_autocmd("BufDelete", {
       pattern = { "<buffer>" },
       callback = function()
-        vim.cmd("set laststatus=" .. data.lastStatus)
+        V.cmd("set laststatus=" .. data.lastStatus)
       end
     })
   end

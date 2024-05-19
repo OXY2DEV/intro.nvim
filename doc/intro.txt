@@ -142,13 +142,48 @@ of what they are for.
 
 |intro.nvim|				  Short description of the plugin and guide for
 							  using the help files.
-							  
+
+|intro.nvim-an-hl|			  Information related to `color` animations.
+							  Also has an `example` usage.
+
+|intro.nvim-an-info|		  Explantion on how the plugin's animations work
+							  & the `limitations` of it.
+							  Also contains information on the structure of an
+							  animation.
+
+|intro.nvim-an-txt|			  Information related to `text` animations. Also
+							  contains multiple `example` usages.
+
+|intro.nvim-animations|		  Contains all the information on `aninations` &
+							  their various usages.
+
+|intro.nvim-cm-banner|		  `Banner` component options, uaage & example.
+
+|intro.nvim-cm-clock|		  `Clock` component options, usage & example.
+
+|intro.nvim-cm-keymaps|		  `Keymaps` component options, usage & example.
+
+|intro.nvim-cm-recentFiles|	  `Recent files` component options, usage &
+							  example.
+
+|intro.nvim-components|		  Contains information on the various `components`
+							  & their usage.
+
+|intro.nvim-faq|			  Answer to some question related to the plugin.
+
 |intro.nvim-hf-decorations|	  Information on the various `text decorations`
 							  used in the help files.
 							  
 |into.nvim-hf-tags|			  List of all the help file tags
 
-|intro.nvim-faq|			  Answer to some question related to the plugin.
+|intro.nvim-ue-install|		  Installation instructions for different
+							  `plugin managers` & `minimum requirements`.
+
+|intro.nvim-ue-presets|		  `Presets`, their `options` & `usage` related
+							  help file.
+
+|intro.nvim-ue-setup|		  Explains the various options of the `setup`
+							  function and how to use them.
 
 |intro.nvim-usage|			  Plugin installation & usage guide
 

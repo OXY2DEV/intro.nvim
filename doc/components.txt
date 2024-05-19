@@ -1,3 +1,22 @@
+Created on: 18 May, 2024                             Last updated: 20 May, 2024
+`───────────────────────────────────────────────────────────────────────────────╯`
+===
+TOC doesn't work. Don't even try using it.
+===
+•••••••••••••••••••••••••••••••••••••••••
+===
+📦 Components
+===
+- 🎴 Banner
+===
+- 📑 Recent Files
+===
+- 🧰 Keymaps
+===
+- ⏰ Clock
+
+You shouldn't see this part.
+
 
 `╭╌─────────────────────────────────────────────────────` *intro.nvim-components* `╌╮`
 `│` 📦 Components                                `Building blocks for your :intro │`
@@ -119,7 +138,7 @@ This component provides the following options.
   Function declarations. These funxtions replaces their names when used ib a
   line with a `table` value.
 
-`┃` The main reasob for having this is to prevent ugly & unreadable setup
+`┃` The main reason for having this is to prevent ugly & unreadable setup
 `┃` tables due to using functions in lines.
 
 ╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮

@@ -113,7 +113,7 @@ A.hlExists = function(name, value)
 end
 
 A.textChanger = function(element)
-  if element.mode == "line" then
+  if element.mode == "line" or element.mode == nil then
     V.bo.modifiable = true;
 
     txt.lineUpdater(element);
