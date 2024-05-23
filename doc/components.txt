@@ -978,4 +978,4 @@ This component has the following options.
 
 
 `───────────────────────────────────────────────────────────────────────────────╮`
-vim:tw=80:ts=4:noet:ft=help:norl:
+vim:tw=80:ts=2:noet:ft=help:norl:

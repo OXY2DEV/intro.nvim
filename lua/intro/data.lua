@@ -113,8 +113,9 @@ data.movements = function(configMain)
           local lnk = v[2]["path"];
 
           if (y - data.whiteSpaces) == pos then
+            V.api.nvim_buf_delete(0, { force = true });
             V.cmd("e" .. lnk);
-            V.cmd("set laststatus=2")
+            V.cmd("set laststatus=" .. data.lastStatus)
           end
         end
       end

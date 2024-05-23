@@ -224,7 +224,15 @@ T.newRecentsHandler = function (component)
 
     -- No file found
     if thisFile ~= "Empty" then
-      V.api.nvim_buf_set_keymap(data.introBuffer, "n", component.keymapPrefix .. entry, ":e" .. thisFile .. "<CR>", { silent = true })
+      V.api.nvim_buf_set_keymap(data.introBuffer, "n", component.keymapPrefix .. entry, "", {
+        silent = true,
+
+        callback = function ()
+          V.api.nvim_buf_delete(0, { force = true });
+          V.cmd("e" .. thisFile);
+          V.cmd("set laststatus=" .. data.lastStatus)
+        end
+      })
 
       text.anchor = {
         path = "",

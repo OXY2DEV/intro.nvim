@@ -144,6 +144,8 @@ Currently available `presets` are,
   16. blue_alt
   17. all_the_colors 
   19. all_the_colors_alt
+- hydra(based on the "Evil" theme of `startup.nvim`)
+  1. animated
 
 More `presets` are going to be added in the future. If you want a specific type of preset you can open an `issue` for it.
 

@@ -65,12 +65,12 @@ R.handleConfig = function (config, isResizing)
     V.bo.modifiable = true;
 
     local paddingTop = (#data.cachedLines <= R.availableHeight) and math.ceil((R.availableHeight - #data.cachedLines) / 2) or 0;
-    local paddingBottom = (#data.cachedLines <= R.availableHeight) and math.floor((R.availableHeight - #data.cachedLines) / 2) or 0;
+    local paddingBottom = (#data.cachedLines <= R.availableHeight) and math.floor((R.availableHeight - #data.cachedLines) / 2) + 1 or 1;
 
     data.whiteSpaces = paddingTop;
 
     for sp = 1, paddingTop do
-      V.api.nvim_buf_set_lines(data.introBuffer, sp - 1, sp - 1, false, { string.rep(" ", R.width) } )
+      vim.fn.setbufline(data.introBuffer, sp, string.rep(" ", R.width))
     end
 
     for l, line in ipairs(data.cachedLines) do
@@ -92,17 +92,17 @@ R.handleConfig = function (config, isResizing)
     end
 
 
-    for spE = 0, paddingBottom do
+    for spE = 1, paddingBottom do
       local actualIndex = paddingTop + #data.cachedLines + spE;
 
-      V.api.nvim_buf_set_lines(data.introBuffer, actualIndex - 1, actualIndex -1, false, { string.rep(" ", R.width) } )
+      vim.fn.setbufline(data.introBuffer, actualIndex, string.rep(" ", R.width))
     end
 
     -- BUG: Incorrect number of empty lines are added when statusline is present
     -- cause: Unknown
-    if config.showStatusline == true then
-      V.api.nvim_buf_set_lines(data.introBuffer, paddingTop + #data.cachedLines + paddingBottom, paddingTop + #data.cachedLines + paddingBottom, false, { string.rep(" ", R.width) } )
-    end
+    --if config.showStatusline == true then
+      --V.api.nvim_buf_set_lines(data.introBuffer, paddingTop + #data.cachedLines + paddingBottom, paddingTop + #data.cachedLines + paddingBottom, false, { string.rep(" ", R.width) } )
+    --end
 
     -- Don't let the user modify the buffer
     V.bo.modifiable = false;
@@ -126,12 +126,12 @@ R.handleConfig = function (config, isResizing)
     V.bo.modifiable = true;
 
     local paddingTop = (#data.cachedLines <= R.availableHeight) and math.ceil((R.availableHeight - #data.cachedLines) / 2) or 0;
-    local paddingBottom = (#data.cachedLines <= R.availableHeight) and math.floor((R.availableHeight - #data.cachedLines) / 2) or 0;
+    local paddingBottom = (#data.cachedLines <= R.availableHeight) and math.floor((R.availableHeight - #data.cachedLines) / 2) + 1 or 1;
 
     data.whiteSpaces = paddingTop;
 
     for sp = 1, paddingTop do
-      V.api.nvim_buf_set_lines(data.introBuffer, sp - 1, sp - 1, false, { string.rep(" ", R.width) } )
+      vim.fn.setbufline(data.introBuffer, sp, string.rep(" ", R.width))
     end
 
     for l, line in ipairs(data.cachedLines) do
@@ -153,10 +153,10 @@ R.handleConfig = function (config, isResizing)
     end
 
 
-    for spE = 0, paddingBottom do
+    for spE = 1, paddingBottom do
       local actualIndex = paddingTop + #data.cachedLines + spE;
 
-      V.api.nvim_buf_set_lines(data.introBuffer, actualIndex - 1, actualIndex -1, false, { string.rep(" ", R.width) } )
+      vim.fn.setbufline(data.introBuffer, actualIndex, string.rep(" ", R.width))
     end
 
     -- Don't let the user modify the buffer
@@ -183,10 +183,11 @@ R.handleConfig = function (config, isResizing)
       return;
     end
 
-    V.api.nvim_create_autocmd("BufDelete", {
+    -- I need to work on this
+    V.api.nvim_create_autocmd({ "BufHidden" }, {
       pattern = { "<buffer>" },
       callback = function()
-        V.cmd("set laststatus=" .. data.lastStatus)
+        V.cmd("set laststatus=" .. data.lastStatus);
       end
     })
   end

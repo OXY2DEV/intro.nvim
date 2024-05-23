@@ -56,7 +56,7 @@ AR.N = {
   "lllllllc        ,loooooool,:ol",
   " 'cllllc         .:oooooooo;. ",
   "   .;llc           .loooo:.   ",
-  "      ,;             ;l;      ",
+  "      ,;             ;l;      "
 }
 
 -- As this uses non-English characters

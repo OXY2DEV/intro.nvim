@@ -1555,7 +1555,8 @@ Text related animations have the following structure.
   Works exactly like in [banners](#banners)
 
 
-
+>[!IMPORTANT]
+> A more in depth guide available in the `intro.nvim-animations` help file.
 
 
 
