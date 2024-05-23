@@ -1,1332 +1,981 @@
-╭───────────────────────────────────────────────────── *intro.nvim-components* ╮
-│ 🌃 Components                        `The building blocks of a start screen` │
-╰────────────────────────────────────────────────────────────────────────────╯
+Created on: 18 May, 2024                             Last updated: 20 May, 2024
+`───────────────────────────────────────────────────────────────────────────────╯`
+===
+TOC doesn't work. Don't even try using it.
+===
+•••••••••••••••••••••••••••••••••••••••••
+===
+📦 Components
+===
+- 🎴 Banner
+===
+- 📑 Recent Files
+===
+- 🧰 Keymaps
+===
+- ⏰ Clock
 
-               ██████▒▒░░      ⠛⣿⠛ ⣿⣄  ⣿ ⠛⠛⣿⠛⠛ ⣾⠛⠛⣷ ⣾⠛⠛⣷
-               ██░░▒▒██▒▒░░     ⣿  ⣿ ⣿ ⣿   ⣿   ⣿⠶⠶⠟ ⣿  ⣿
-               ██░░▒▒████▒▒░░   ⣿  ⣿ ⣿ ⣿   ⣿   ⣿⠷   ⣿  ⣿
-               ██▒▒▒▒░░▒▒▒▒░░  ⣤⣿⣤ ⣿  ⠙⣿   ⣿   ⣿ ⢷  ⢿⣤⣤⡿.nvim
-               ██████▒▒▒▒░░    
-               ▒▒▒▒▒▒▒▒░░      `Yet another start screen plugin`
+You shouldn't see this part.
 
-Comoonents help you create complex `start screen` without needing to worry
-about things like `line spacing`, `alignments`, `coloring` etc.
 
-`╭──────────────────────────────────────────────────────────┤` Table of contents
+`╭╌─────────────────────────────────────────────────────` *intro.nvim-components* `╌╮`
+`│` 📦 Components                                `Building blocks for your :intro │`
+`╰╌────────────────────────────────────────────────────────────────────────────╌╯`
+
+Components are the bulding blocks of a start screen. They can do various
+things such as align text, color them, list files, show the time etc.
+                                                                                
+                                                                                
+                 `██╗███╗   ██╗████████╗██████╗  ██████╗      `                   
+                 `██║████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗     `                   
+                 `██║██╔██╗ ██║   ██║   ██████╔╝██║   ██║     `                   
+                 `██║██║╚██╗██║   ██║   ██╔══██╗██║   ██║     `                   
+                 `██║██║ ╚████║   ██║   ██║  ██║╚██████╔╝     `                   
+                 `╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝.nvim `                   
+                                                                                
+                                                                                
+There are currently 4 types components. They are,
+  - banner
+  - recentFiles
+  - keymaps
+  - clock
+
+────────────────────────────────────────────────────────────────────────────────
+
+`╭─────────────────────────────────────────────────────────┨` 🧾 Table of contents
 `│`
-`├──` Component list                                   |intro.nvim-component-list|
-`├──` Banner                                                 |intro.nvim-c-banner|
-`├──` Recents                                               |intro.nvim-c-recents|
-`╰──` Keymaps                                               |intro.nvim-c-keymaps|
+`├──` 🎴 Banner                                               |intro.nvim-cm-banner|
+`├──` 📑 Recent Files                                    |intro.nvim-cm-recentFiles|
+`├──` 🧰 Keymaps                                             |intro.nvim-cm-keymaps|
+`╰──` ⏰ Clock                                                 |intro.nvim-cm-clock|
 
-`╭─────────────────────────────────────────────────` *intro.nvim-component-list* `╮`
-`│` 🌄 Component list                                               `⬜⬛⬜⬛⬜ │`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-Here is a list of all the available components and what they do,
-     1. Banner           `Render line(s) with alignments & colors`
-     2. Recents          `Show recently opened files`
-     3. Keymaps          `Show some keympas`
+`╭───────────────────────────────────────────────────────` *intro.nvim-cm-banner* `─╮`
+`│` 🎴 Banner                                                                    `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
 
-`╭───────────────────────────────────────────────────────` *intro.nvim-c-banner* `╮`
-`│` 🎴 Component: Banner                                                  `🧧🎴 │`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-This Component was created for holding `text arts` like a banner. But you can
-use it for other purposes too.
+Aligns & colors lines in bulk. Supports gradients.
 
-This components has the following `sub options`,
-  {lines}               `List of lines to render`
-	{functions}           `Text functions that can be used in a line`
-  {colors}              `Color to use`
-  {secondaryColors}     `Controlling the coloring of specific parts of a line`
-  {gradientRepeat}      `Gradient repeat related options`
-  {align}               `Alignment of the lines`
-  {width}               `Custom width of the lines`
+This component provides the following options.
 
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-			  type = "banner",  -- Optional
-				lines = {
-					"Hello World"
-				}
-			}
-    }
-  })
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  {
+    type = "banner",        -- Optional, determines the type of component a
+					        -- table is
+    width = "auto",         -- Optional, defines a custom width for the lines
+    align = "center",       -- Optional, defines the alignment of lines
+
+    lines = {},             -- The lines to add to the buffer
+    functions = {},         -- Optional, functions whose values replaces the
+                            -- function names in lines
+
+    colors = {},            -- Optional, main color for the lines
+    secondaryColors = {},   -- Optional, changed colors in specific parts of
+                            -- the lines
+    gradientRepeat = false  -- Optional, changes how gradients are applied
+  }
 <
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│                                                                            │`
-`│                                                                            │`
-`│`Hello World                                                                 `│`
-`│                                                                            │`
-`│                                                                            │`
-`╰────────────────────────────────────────────────────────────────────────────╯`
+╰──────────────────────────────────────────────────────────────────────────────╯
 
-Properties ~
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {lines}                                                              table `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
+`┃ IMPORTANT`
+`┃` Some of the options({colors}, {secondaryColors}, {gradientRepeat}, {align})
+`┃` can also take `lists` as value. In which case, the line's index will be
+`┃` used to assign it the value.
+`┃` If a line's has `nil` as it's value the last `non-nil` value will be used.
 
-A `list-like` table containing all the lines of a component. Lines can be either
-strings or `list-like` tables themselves.
 
-Usage	~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
+- {type} `string or nil`
+
+  Defines what component a table will be considered. Default is `banner`.
+
+- {width} `number or string or nil`
+
+  Allows the ability to add a cuatom width to the {lines}. Default value is
+  "auto". It's value can either be a number or "auto".
+
+  This should be used when you have characters that take up more space than
+  normal characters(e.g. some arabic characters). However, you don't need to
+  use it if you use `nerd font` characters as they DON'T take more space than
+  a regular character.
+  
+`┃ NOTE`
+`┃` When the value is less then 1, it will be used as a % value. So, for
+`┃` example `width = 0.8` will be 80% of `window width`.
+`┃` The width will also update on resizing the window.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
   require("intro").setup({
-    components = {
-			{
-				lines = {
-					"Hello World",
-					{ "Hi", "Mom" }
-				}
-			}
-    }
-  })
+	components = {
+	  {
+		lines = { "Hello World" },
+			  
+		-- This will make the text behave like it has 20 characters
+		width = 20
+	  }
+	}
+  });
 <
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│                                                                            │`
-`│                                                                            │`
-`│`                                Hello World                                 `│`
-`│`                                   Hi Mom                                   `│`
-`│                                                                            │`
-`│                                                                            │`
-`╰────────────────────────────────────────────────────────────────────────────╯`
+╰──────────────────────────────────────────────────────────────────────────────╯
 
-When it comes to rendering the lines both `string` & `table` type lines will
-be rendered the same way. Only the coloring method is different.
+- {align} `string or nil`
 
-`╭` When to use each strings or tables `────────────────────────────────────────╮`
-`│` If you are going to use a single color on the entire line then it is       `│` 
-`│` better to use a `string`.                                                    `│`
-`│`                                                                            `│`
-`│` But if you want to color a part of the text  differently then a `table` is   `│`
-`│` better since you don't have to deal with the knowing the postion of a      `│`
-`│` specific character.                                                        `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
+  Changes the alignment of texts. Valid values are "left", "right" & "center".
+  The default value is "center".
 
-Another reason for having `list-like` tables is that they can also be function
-names. This makes it look much cleaner as all the functions themselves can be
-in a different table.
+- {lines} `table`
 
-Scenario ~
-Let's say for example you have 2 letters and you want to add spaces between
-them so that the total number of characters is equal to 80% of the total
-window width.
+  A table containing all the lines that will be added to the buffer. Lines can
+  either be a `string` or a `table`.
 
-You can manually do this. However, on window resize the number of spaces
-aren't going to change. For this type of scenarios this feature exists.
+`┃ NOTE`
+`┃` Lines should be a `table` if you plan on coloring a part of the text
+`┃` seperately. They should also be a `table` if you have parts of the text that
+`┃` need to be dynamically generated.
 
-Demonstration ~
-`╭` Neovim `────────────┯────────────────────────────────────────┯──────────────╮`
-`│`                    `│`                                        `│`              `│`
-`│`                    `│`                                        `│`              `│`
-`│`  1              2  `│`    1                              2    `│` 1          2 `│`
-`│`                    `│`                                        `│`              `│`
-`│`                    `│`                                        `│`              `│`
-`╰────────────────────┷────────────────────────────────────────┷──────────────╯`
+- {functions} `table or nil`
 
-Code ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
+  Function declarations. These funxtions replaces their names when used ib a
+  line with a `table` value.
+
+`┃` The main reason for having this is to prevent ugly & unreadable setup
+`┃` tables due to using functions in lines.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
   require("intro").setup({
-    components = {
-			{
-				lines = {
-					{ "1", "SP", "2" }
-				},
-				functions = {
-					sp = function()
-						local W = vim.api.nvim_win_get_width(0);
-
-						-- Total characters = number of spaces + 2 characters
-						return string.rep(" ", (W * 0.8) - 2);
-					end
-				}
-			}
-    }
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {functions}                                                   table or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-A list-like table containing functions that can be used in any of the lines.
-They are `component-specific` so you can only use them in the component they
-are defined in.
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-				lines = {
-					"fn",                -- Lines can't be a function name
-					{ "Hello ", "fn" }
-				},
-				functions = {
-				  fn = function()
-						return "User";
-					end
-				}
-			},
-			{
-				lines = {
-					{ "fn" }             -- Can't be used in a different component
-				}
-			}
-    }
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│                                                                            │`
-`│                                                                            │`
-`│`                                     fn                                     `│`
-`│`                                 Hello User                                 `│`
-`│`                                     fn                                     `│`
-`│                                                                            │`
-`│                                                                            │`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-Functions `must` return a string or else the plugin won't render anything and
-throw an error message.
-
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {colors}                                            string or table or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-List or string containing `highlight group` names to add to the text. Uighlight
-groups are added to the text themselves and not to the spaces around the
-text.
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-				lines = {
-					"line 1",
-					{ "line ", "2" }
-				},
-				colors = "FILL"
-			},
-			{
-				lines = {
-					"line 3",
-					"line 4"
-				},
-
-				colors = {
-					"FILL",
-					"Comment"
-				}
-			}
-    },
-
-		globalHighlights = {
-			FILL = { bg = "#FFFFFF", fg = "#FFFFFF" },
-		}
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│                                                                            │`
-`│                                                                            │`
-`│`                                  ██████                                    `│`
-`│`                                  ██████                                    `│`
-`│`                                  ██████                                    `│`
-`│                                  line 4                                    │`
-`│                                                                            │`
-`│                                                                            │`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-If a value is `nil` the last value in the `list` is going to be used. However,
-if you would prefer to not color a specific line you can just use an empty
-string instead.
-
-Gradients ~
-Colors can be a gradient too. To use a gradient a line must have a `list-like`
-table as it's color value.
-
-Example ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-		components = {
-			{
-				lines = { "A long text" },
-				colors = { { "Normal", "FILL" } }
-			}
+	components = {
+	  {
+		lines = {
+		  { "Version: ", "ver" }
 		},
 
-		globalHighlights = {
-			FILL = { bg = "#FFFFFF", fg = "#FFFFFF" },
+		functions = {
+		  ver = function()
+			return vim.version();
+		  end
 		}
-	})
+	  }
+	}
+  });
 <
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `─────────────────────────────┯──────────────────────────────────────╮`
-`│               gradientRepeat = true │               gradientRepeat = false │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│`            A█l█n█ █e█t              `│`             A██████████              `│`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`╰─────────────────────────────────────┷──────────────────────────────────────╯`
+╰──────────────────────────────────────────────────────────────────────────────╯
 
+- {colors} `string or table or nil`
 
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {secondaryColors}                                             table or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
+  Color(s) for the lines. `Highlight group names` are used for coloring. When
+  set to a `string` usws that color for all the lines.
 
-List containing `strings` or `tables` specifying where to change the highlight
-group.
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
   require("intro").setup({
-    components = {
-			{
-				lines = {
-					{ "Solid", " Normal ", "Gradient" },
-				},
-				secondaryColors = {
-					{ "FILL", "", { "Normal", "FILL" } }
-				}
-			},
+	components = {
+	  {
+	    lines = {
+		  "A string",
+		  { "A", " string", "as", " a ", "table" }
+	    },
+
+	    colors = "Comment"
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+`┃` This option also supports `gradients`. To use a horizontal gradient you can't
+`┃` directly pass it as a list in {colors}.
+`┃` Instead, you have to add the list as a value to thw {colors} table.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    lines = {
+		  "A string",
+		  { "A", " string", "as", " a ", "table" }
+	    },
+
+	    -- This creates a vertical gradient
+	    colors = { "Conditional", "Function", "Comment" },
+
+	    -- This creates a horizontal gradient
+	    colors = {
+		  { "Conditional", "Function", "Comment" }
+        },
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {secondaryColors} `table or nil`
+
+  A `table` containing `tables` that assign different colors to different
+  parts of the text. This only works when the line is a `table`.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    lines = {
+	  	  "Red | Blue",            -- will have no color
+	  	  { "Red", " | ", "Blue" } -- will have color
+	    },
+
+	    secondaryColors = {
+	  	  { "rd", nil, "bl" }
+	    }
+	  }
+	},
+
+	globalHighlights = {
+      rd = { fg = "red" },
+	  bl = { fg = "blue" }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+`┃` You can also set a part's value to be `nil`. This will not change the
+`┃` color of that part of the text.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    lines = {
+	  	  { "Main color", " | ", "Secondary Color" }
+	    },
+
+	    colors = "Comment",
+
+	    secondaryColors = {
+	  	  { nil, nil, "Special" }
+	    }
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+You can also use `gradients` in it.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    lines = {
+	  	  { "Main Gradient ", "Secondary Gradient" }
+	    },
+
+	    -- main gradient
+	    colors = {
+	  	  { "main_1", "main_2", "main_3", "main_4", "main_5" }
+	    },
+
+	    -- secondary gradient
+	    secondaryColors = {
+	  	  { nil, {  "sec_1", "sec_2", "sec_3", "sec_4", "sec_5" } }
+	    },
+
+	    -- Optional, set it to see the gradients better
+	    gradientRepeat = true
+	  }
+	},
+
+	globalHighlights = {
+      main_1 = { fg = "#89b4fa" },
+      main_2 = { fg = "#90bfe3" },
+      main_3 = { fg = "#97cbcd" },
+      main_4 = { fg = "#9ed7b7" },
+      main_5 = { fg = "#a6e3a1" },
+
+	  sec_1 = { fg = "#fab387" },
+	  sec_2 = { fg = "#f9be91" },
+	  sec_3 = { fg = "#f9ca9b" },
+	  sec_4 = { fg = "#f9d6a5" },
+	  sec_5 = { fg = "#f9e2af" }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+`┃ NOTE`
+`┃` If you run `:Inspect` on the "Secondary Gradient" you may notice that
+`┃` there are 2 highlight group(s) on all of it's letters.
+`┃` This is not a bug, but is intended.
+
+`┃ INFORMATION`
+`┃` There is a bug in `nvim_buf_add_highlight()` which causes the order of
+`┃` highlight groups in a specific position not to change. This can lead to
+`┃` colors not showing when a solid color is used as {secondaryColors} and a
+`┃` gradient is used as the {colors}.
+`┃`
+`┃` I am still trying to fix it. So, you should only use {secondaryColors} for
+`┃` the entire text if there are solid colors & gradients present in the same
+`┃` line.
+
+- {gradientRepeat} `boolean or nil`
+
+  Turns normal gradients into `repeating gradients`. Available values are
+  `true` & `false`. The default is `false`.
+
+`┃` By default, if the length of the gradient is less than the length of the
+`┃` line the characters will use the last value in the gradient as color
+`┃` after all the other values in the gradient have been used.
+`┃`
+`┃` By setting this option to `true`, you can make the gradient behave like
+`┃` it's a repeating gradient.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    lines = {
+	  	  "A gradient colored text"
+	    },
+
+	    -- main gradient
+	    colors = {
+	      { "main_1", "main_2", "main_3", "main_4", "main_5" }
+	    },
+
+	    -- Change this ans see how the gradients get colored
+	    gradientRepeat = true
+	  }
+	},
+
+	globalHighlights = {
+	  main_1 = { fg = "#89b4fa" },
+      main_2 = { fg = "#90bfe3" },
+      main_3 = { fg = "#97cbcd" },
+      main_4 = { fg = "#9ed7b7" },
+      main_5 = { fg = "#a6e3a1" }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+`╭──────────────────────────────────────────────────` *intro.nvim-cm-recentFiles* `─╮`
+`│` 📑 Recent Files                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+A fancy way to show all your recently opened files, with style.
+
+This component provides the following options.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  {
+    type = "recentFiles",       -- Determines the components type
+    style = "list",             -- Optional, changes how the items are shown
+
+    entryCount = 5,             -- Optional, number of items to show
+    width = 0.8,                -- Optional, width of the items
+
+    useIcons = false,           -- Optional, enables/disables file icons
+    useAnchors = true,          -- Optional, enables/disables file path
+	                            -- preview
+    dir = false,                -- Optional, directory whose files are shown
+
+    gap = " ",                  -- Optional, the character used as spaces
+
+    colors = {
+      name = {},                -- Optional, color for file names
+      path = {},                -- Optional, color for file paths(without the
+	  	                        -- filename)
+                               
+      number = {},              -- Optional, color for the item number
+                               
+      spaces = {}               -- Optional, color for the spaces
+    },                         
+                               
+    anchorStyle = {            
+      corner = nil,             -- Optional, character to use as the anchor's
+	                            -- corner
+                               
+      textStyle = nil,          -- Optional, highlight group for the anchor
+	                           -- text
+      cornerStyle = nil         -- Optional, highlight group for the corner
     },
 
-		globalHighlights = {
-			FILL = { bg = "#FFFFFF", fg = "#FFFFFF" },
-		}
-  })
+    keymapPrefix = "<leader>"   -- Optional, the prefix key for opening files
+	                            -- on the list
+  }
 <
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `─────────────────────────────┯──────────────────────────────────────╮`
-`│               gradientRepeat = true │               gradientRepeat = false │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│`        █████ Normal G█a█i█n█        `│`         █████ Normal G███████        `│`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`╰─────────────────────────────────────┷──────────────────────────────────────╯`
+╰──────────────────────────────────────────────────────────────────────────────╯
 
-The value of {secondaryColors} can be of 2 types,
-		1. Position specific.
-		2. Part specific.
+`┃ IMPORTANT`
+`┃` Some of the options({gap}, {gradientRepeat}, everything inside {colors})
+`┃` can also take `lists` as value. In which case, the line's index will be
+`┃` used to assign it the value.
+`┃` If a line's has `nil` as it's value the last `non-nil` value will be used.
 
-Position specific ~
-Use {from} and {to} define a range of characters to apply a color. Character
-range is 0-based so the first character's position is 0. Useful when the line
-can't be turned into a list or when a line is provided by some other plugin.
 
-Gradients are also supported.
+- {type} `string or nil`
 
-`╭` NOTE `──────────────────────────────────────────────────────────────────────╮`
-`│` This method is a bit `bugged` so I suggest you don't use it unless you       `│`
-`│` absolutely need it.                                                        `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
+  Defines what component a table will be considered. Default is `banner`.
 
-How positions work ~
-Under the hood, the plugin uses `nvim_buf_add_highlight()` to color text.
-However, this function uses `byte` as index and NOT `letters`.
+- {style} `string or nil`
 
-This is a simplified explanation of how it's done.
+  Changes the styling of the component. Possible values are `list`, `list_path`.
+  The default is `list`.
 
-Terminals use something called `ANSI escape codes` to color text among various
-other things.
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    -- change it to "list_path" to see the diffeeence
+	    style = "list"
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
 
-`╭` Terminal `──────────────────────────────────────────────────────────────────╮`
-`│` `╭╴` ~/.config/nvim/lua                                        at 8:16:16 PM `│`
-`│` `╰╴` echo "\x1b[38;2;255,255,255m\x1b[48;2;255;255;255mHello"                `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Terminal `──────────────────────────────────────────────────────────────────╮`
-`│` `╭╴` ~/.config/nvim/lua                                        at 8:16:16 PM `│`
-`│` `╰╴` echo "\x1b[38;2;255,255,255m\x1b[48;2;255;255;255mHello\n"              `│`
-`│` █████                                                                      `│`
-`│`                                                                            `│`
-`│` `╭╴` ~/.config/nvim/lua                                        at 8:17:19 PM `│`
-`│` `╰╴`                                                                         `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
+- {entryCount} `number or nil`
 
-These codes are applied `before` some text to color them. TUI apps such as
-`Neovim` uses some type of library to handle this.
+  The number of entries to include. Default is 5.
 
-The problem is that `Lua` doesn't understand what a character is. If you try
-to find a length of a string that have special characters in it you will see
-that the length and thw number of characters are different.
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    entryCount = 10
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
 
-So, `nvim_buf_add_highlight()` also uses byte index. So, to color a character
-the plugin needs to find it's starting `coordinates` and ending `coordinates`.
+- {width} `number or nil`
 
-To solve the problem of needing to remember the `byte index` of a character the
-plugin allows users to only add the starting `characters index` and the ending
-`characters index.`
+  Allows you to change how wide the list will be. If the value is less than 1
+  then it will be considered a % value. So, for example, 0.5 will be 50% of
+  window width.
+  The default value is 0.8.
 
-This solves the big issue but also introduces a new issue. What happens when
-a character has multiple {secondaryColors} applied to it? This is what causes
-the highlight groups to sometimes be `incorrectly` applied.
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    -- the list will be 60% of the window size
+	    width = 0.6
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
 
-Enough technical details. Let's just give you an example usage.
+- {useIcons} `boolean or nil`
 
-`╭` Scratch `───────────────────────────────────────────────────────────────────╮`
-`│`  Word ─────→  W o r d ╌╌╌╌╌╌╌╌╌╌ How we see text                           `│`
-`│`              0 1 2 3 4 ╌╌╌╌╌╌╌╌╌ How `Neovim` sees the text                  `│`
-`│`						  0 1 2 3 ╌╌╌╌╌╌╌╌╌╌ How the plugin sees the text              `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
+  Used to show file icons in the list. Valid values are `true`, `false`.
+  The default is `false`.
+
+`┃` To use icons you need "nvim-web-devicons" & a `nerd font`.
+
+- {useAnchors} `boolean or nil`
+
+  Allows you to enable/disable the `file path preview`.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    entryCount = 3
+	    
+	    useAnchors = true
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ───────────────────────────────┯──────────────────────────────────────╮`
+`│`                    useAnchors = false `│`                    useAnchors = true `│`
+`│`                                       `│`                                      `│`
+`│`    Test                          1    `│`    Test                          1   `│`
+`│`    intro.txt                     2    `│`    intro.txt                     2   `│`
+`│` █  DOC.md                        3    `│` ░  DOC.md                        3   `│`
+`│`                                       `│`                                      `│`
+`│`                                       `│` ~/.config/nvim/DOC.md                `│`
+`╰───────────────────────────────────────┷──────────────────────────────────────╯`
+
+- {dir} `boolean or string or nil`
+
+  Used to either list files with a `specific pattern` or to only list filea in
+  the current directory.
+  When set to a `string` it is used to match file names. If set to `true`, it
+  will only list files in the current working directory. You can list all the
+  files by setting it to `false`.
+  The default value is `false`.
+
+`┃` This option uses `string.match()` so patterns can also be used as the value.
+
+
+- {gap} `string or nil`
+
+  The character(s) to use as spacing between the `file name` & the 
+  `item number`.
+  The default is " ".
+
+`┃` This option uses `string.match()` so patterns can also be used as the value.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    entryCount = 1
+	    
+	    gap = "•"
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`        test.lua•••••••••••••••••••••••••••••••••••••••••••••••••••••1        `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+`┃` The value of {gap} can also be multiple characters.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    entryCount = 1
+	    
+	    gap = "• "
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`        test.lua• • • • • • • • • • • • • • • • • • • • • • • • • • •1        `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+- {colors} `table or nil`
+
+  Used for setting colors for various parts of the lists. It has the following
+  options.
+   - {path} `string or table or nil`
+   - {name} `string or table or nil`
+   - {space} `string or table or nil`
+   - {number} `string or table or nil`
+
+   {path} is used for coloring the file paths(only available in "list_path").
+   {name} is used for the file name. {space} is used between {name} & {number}.
+   {number} is used for the item number.
+
+`┃ TIPS`
+`┃` All the options support horizontal & vertical gradients. So you can create
+`┃` shades in the list items
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    entryCount = 3,
+
+	    colors = {
+	      name = { "l1", "l2", "l3" }
+	    }
+	  }
+	},
+
+	globalHighlights = {
+	  l1 = { fg = "#cdd6f4" },
+	  l2 = { fg = "#9298b2" },
+	  l3 = { fg = "#585b70" }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {anchorStyle} `table or nil`
+
+  Allows the customisation of the `file path preview` of a component. It has
+  the following options.
+    - {corner} `string or nil`
+	- {textGroup} `string or nil`
+	- {cornerGroup} `string or nil`
+
+  Thw {corner} option allows you to change the character(s) used as the corner
+  of the preview. On the other hand, {textGroup} & {cornerGroup} allows you to
+  change the style of the file path & the corner respectively.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  {
+	    type = "recentFiles",
+	    entryCount = 1,
+
+		anchorStyle = {
+	      corner = "█▓▒",
+
+		  textStyle = "Normal",
+		  cornerStyle = "Normal"
+	    }
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│` █      test.lua                                                     1        `│`
+`│`                                                                              `│`
+`│` ~/.config/nvim/lua/test.lua█▓▒                                               `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+- {keymapPrefix} `string or nil`
+
+  Prefix of the keymap to quickly open a file in the list. You can use it by
+  adding the `number` after the prefix.
+  The default is "<leader>".
+
+`┃` To open the first file in a list you use the keymap "<leader>1". This
+`┃` allows quickly opening files from multiple `recentFiles` components by
+`┃` setting a different prefix for them.
+
+`╭──────────────────────────────────────────────────────` *intro.nvim-cm-keymaps* `─╮`
+`│` 🧰 Keymaps                                                                   `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+Sets some keymaps for the `Intro` buffer.
+
+This component has the following options.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  {
+	type = "keymaps",       -- Optional, determines the type of component a
+					        -- table is
+    style = "list",         -- Optional, changes how keymaps are shown
+
+    columnSeparator = " ",  -- Optional, characters added between columns
+    separatorHl = "",       -- Optional, color for the characters between
+	                        -- columns
+    maxcolumns = 4,         -- Optional, max number of columns per line
+
+    lineGaps = 0            -- Optional, number of gaps between each items
+  }
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {type} `string or nil`
+
+  Defines what component a table will be considered. Default is `banner`.
+
+- {style} `string or nil`
+
+  Changes the styling of the component. Possible values are `silent`, `list` &
+  `columns`.
+  The default is `list`.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
   require("intro").setup({
     components = {
-			{
-				lines = {
-					"Some text"
-				},
-				secondaryColors = {
-					{ -- Everything in this list is applied to the 1st line
-						{
-							from = 0, to = 5,
-							groupName = "FILL"
-						}
-					}
-				}
-			},
+      {
+        type = "keymaps",
+
+        style = "columns",
+
+        -- Optional
+        columnSeparator = " ║ ",
+        separatorHl = "Comment",
+
+        keymaps = {
+          {
+            text = { "  ", "M", "inimap" },
+            colors = { "sky", "sky_1", "sky" },
+
+            keyCombination = "M",
+            keyAction = ":lua require('mini.map').toggle()<CR>",
+          },
+          {
+            text = { "  ", "T", "elescope" },
+            colors = { "comp", "comp_1", "comp" },
+
+            keyCombination = "T",
+            keyAction = ":Telescope<CR>",
+          }
+        }
+      }
     },
 
-		globalHighlights = {
-			FILL = { bg = "#FFFFFF", fg = "#FFFFFF" },
-		}
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`│`                                  █████text                                 `│`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-The {groupName} can also be a `list`. In this case it will be considered a
-gradient.
-
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-				lines = {
-					"Some text"
-				},
-				secondaryColors = {
-					{ -- Everything in this list is applied to the 1st line
-						{
-							from = 0, to = 4,
-							groupName = { "Normal", "FILL" }
-						}
-					}
-				}
-			},
-    },
-
-		globalHighlights = {
-			FILL = { bg = "#FFFFFF", fg = "#FFFFFF" },
-		}
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `─────────────────────────────┯──────────────────────────────────────╮`
-`│               gradientRepeat = true │               gradientRepeat = false │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│`              S█m█ text              `│`               S████text              `│`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`╰─────────────────────────────────────┷──────────────────────────────────────╯`
-
-Part specific ~
-Separate a line into smaller `pieces` and color them `individually`. You don't
-need to worry about any position and easily color parts of text.
-
-Gradients are supported.
-
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-				lines = {
-					{ "Solid", " Normal ", "Gradient" },
-				},
-				secondaryColors = {
-					{ "FILL", "", { "Normal", "FILL" } }
-				}
-			},
-    },
-
-		globalHighlights = {
-			FILL = { bg = "#FFFFFF", fg = "#FFFFFF" },
-		}
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `─────────────────────────────┯──────────────────────────────────────╮`
-`│               gradientRepeat = true │               gradientRepeat = false │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│`        █████ Normal G█a█i█n█        `│`         █████ Normal G███████        `│`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`╰─────────────────────────────────────┷──────────────────────────────────────╯`
-
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {gradientRepeat}                                   boolean or table or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-Controls whether `gradients` are repeated or not. You can also set the
-behaviour for {colors} & {secondaryColors} individually.
-
-You can set it in 3 ways,
-		1. To all the lines in a `component`.
-		2. To a specific line in a `component`.
-
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-				lines = {
-					"Placeholder text",
-					"Placeholder text",
-				},
-				colors = {
-					{ "FILL", "Normal" },
-				},
-				gradientRepeat = {
-					true,
-					{ colors = false }
-				}
-			},
-    },
-
-		globalHighlights = {
-			FILL = { bg = "#FFFFFF", fg = "#FFFFFF" },
-		}
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`│`                              █l█c█h█l█e█ █e█t                              `│`
-`│`                              █laceholder text                              `│`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {align}                                             string or table or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-Control the alignment of texts.
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-		components = {
-			{
-				lines = {
-					"A line"
-				},
-				align = "left" -- or "right" or "center"
-			}
-		}
-	})
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `──────────────┯──────────────────────────┯──────────────────────────╮`
-`│`         `align = left │`           `align = center │`            `align = right │`
-`│`                      `│`                          `│`                          `│`
-`│`A line                `│`         A line           `│`                    A line`│`
-`│`                      `│`                          `│`                          `│`
-`│`                      `│`                          `│`                          `│`
-`╰──────────────────────┷──────────────────────────┷──────────────────────────╯`
-
-It can also be a `list-like` table to specify the alignment of each line. If
-a line has no {align} value the last item in the list is used.
-
-By default, all the lines are "centered".
-
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {width}                                            integer or float or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-Specify a custom width for the texts in a line.
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-		components = {
-			{
-				lines = {
-					"A line"
-				},
-				width = 0.8
-			}
-		}
-	})
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`│`        A line                                                              `│`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-It can also be a `list-like` table for setting a width for a specific line.
-If a line has no {width} value the last item in the list is used.
-
-When the value is larger than 1 it is directly used as the width. However, if
-the value is smaller than 1 then it is used as % value. So, 0.8 means the
-width will be 80% of the window width.
-
-
-`╭──────────────────────────────────────────────────────` *intro.nvim-c-recents* `╮`
-`│` 🎴 Component: Recents                                                 `📃⏳ │`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-This component shows the most recently opened files in `Neovim`.
-
-This components has the following `sub options`,
-	{style}                `Changes the look of the component`
-	{width}                `Width of the list`
-	{useIcons}             `Controls the usage of file icons`
-	{useAnchors}           `Controls the usage of file path preview`
-	{colors}               `Coloring of various parts of the text`
-	{gradientRepeat}       `Gradient repeat related options`
-	{dir}                  `Path whose fils should be included`
-	{keymap}               `Keymap to open files`
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-			  type = "recents",
-				useIcons = false,
-				useAnchors = true,
-				entryCount = 5,
-				width = 0.8
-			}
+    globalHighlights = {
+      sky = { fg = "#89B4FA" },
+      sky_1 = { fg = "#89B4FA", underline = true },
+      comp = { fg = "#F9E2AF" },
+      comp_1 = { fg = "#F9E2AF", underline = true }
     }
-  })
+  });
 <
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│                                                                            │`
-`│                                                                            │`
-`│`        intro.lua                                                   1       `│`
-`│`        test.txt                                                    2       `│`
-`│`        .zshrc                                                      3       `│`
-`│`        init.lua                                                    4       `│`
-`│`        plugins.lua                                                 5       `│`
-`│                                                                            │`
-`│                                                                            │`
-`╰────────────────────────────────────────────────────────────────────────────╯`
+╰──────────────────────────────────────────────────────────────────────────────╯
 
-Properties ~
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {style}                                                      string or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
+- {columnSeparator} `string or nil`
 
-Changes the style of how the items are shown. You can either have a fixed
-width list or a centered list.
+  The character(s) to add between the `columns` in the `columns` style. The
+  default value is " ".
 
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
   require("intro").setup({
     components = {
-			{
-			  type = "recents",
-				style = "list",
-				useIcons = false,
-				useAnchors = true,
-				entryCount = 3,
-				width = 0.8
-			}
+      {
+        type = "keymaps",
+        style = "columns",
+
+		-- change this to something else & see the diffeeence
+        columnSeparator = " ║ ",
+        separatorHl = "Comment",
+
+        keymaps = {
+          {
+            text = "  Minimap",
+
+            keyCombination = "M",
+            keyAction = ":lua require('mini.map').toggle()<CR>",
+          },
+          {
+            text = "  Telescope",
+
+            keyCombination = "T",
+            keyAction = ":Telescope<CR>",
+          }
+        }
+      }
     }
-  })
+  });
 <
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `─────────────────────────────┯──────────────────────────────────────╮`
-`│                      style = "list" │                   style = "centered" │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│`    intro.lua                    1   `│`              intro.lua               `│`
-`│`    test.txt                     2   `│`               test.txt               `│`
-`│`    .zshrc                       3   `│`                .zshrc                `│`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`╰─────────────────────────────────────┷──────────────────────────────────────╯`
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                            MiniMap ║   Telescope                           `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
 
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {width}                                                      number or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
+- {separatorHl} `string or table or nil`
 
-Chnages the width of the list. It only works when the {style} is `list`. When
-the value is smaller than 1 it is considered a % value
+  Chnages the coloring of the {gap}. Also supports `horizontal` gradients.
 
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-		components = {
-			{
-			  type = "recents",
-				entryCount = 1,
-				width = 0.8
-			}
-		}
-	})
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`│`        file.txt                                                   1        `│`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-When the value is larger than 1 it is directly used as the width. However, if
-the value is smaller than 1 then it is used as % value. So, 0.8 means the
-width will be 80% of the window width.
-
-By default the width is set to 60% of window width.
-
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {useIcons}                                                  boolean or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-Enable/Disable the usage of `filetype` icons. This will also add colors to the
-icons. This requires `nvim-web-devicons` and a `nerd font` to work.
-
-By default, it is disabled.
-
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {useAnchors}                                                boolean or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-Controls the preview of `file` `paths`. When set to `true`, if the cursor is
-placed on an entry you will see the full path on the bottom left of the
-window.
-
-By default, it is enabled.
-
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {colors}                                            string or table or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-Changes the coloring of various parts of the entries. You can change the
-coloring of the file `names`, the entry `number` and the spaces between them
-if it is a list.
-
-If the vlue is a `string` it is applied to all the lines. If it's a `table` it
-is applied based on the `entries` index. If an entry has a no color for it
-the last value in the table is used.
-
-You can also add gradients too if you want.
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-		components = {
-			{
-			  type = "recents",
-				entryCount = 5,
-				width = 0.8,
-
-				colors = {
-					-- A string value
-					name = "hl_1",
-
-					-- A table value
-					number = {
-						"hl_1", "hl_2", "hl_3"
-					},
-
-					-- A gradient
-					whiteSpace = {
-						{ "hl_1", "hl_2", "hl_3" }
-					}
-				}
-			}
-		}
-	})
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│`////////////////////////////////////////////////////////////////////////////`│`
-`│`////////////////////////////////////////////////////////////////////////////`│`
-`│`////////////////////////////////////////////////////////////////////////////`│`
-`│`/////////////////////////// Preview Unavailable ////////////////////////////`│`
-`│`////////////////////////////////////////////////////////////////////////////`│`
-`│`////////////////////////////////////////////////////////////////////////////`│`
-`│`////////////////////////////////////////////////////////////////////////////`│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-
-The {colors} table has 3 options inside it. These are {name}, {number} and
-{whiteSpace}.
-
-{name} changes the color of file names, {number} changes the entry count's
-color and {whiteSpace} changes the color of the spaces between various parts.
-
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {gradientRepeat}                                   boolean or table or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-Controls whether `gradients` are repeated or not. This component uses
-`secondaryColors` under the hood so just setting it to `true`/`false` is
-enough.
-
-You can also set it differently for all the lines by using a table if you
-like. If an entry has no value for it the last item in the list is used.
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
   require("intro").setup({
     components = {
-			{
-				type = "recents",
-				entryCount = 2,
-				colors = {
-					name = { "FILL", "Normal" },
-				},
-				gradientRepeat = {
-					true,
-					false
-				}
-			},
+      {
+        type = "keymaps",
+        style = "columns",
+
+		-- change this to something else & see the diffeeence
+        columnSeparator = " ║ ",
+        separatorHl = { "Comment", "Function", "Conditional" },
+
+        keymaps = {
+          {
+            text = "  Minimap",
+
+            keyCombination = "M",
+            keyAction = ":lua require('mini.map').toggle()<CR>",
+          },
+          {
+            text = "  Telescope",
+
+            keyCombination = "T",
+            keyAction = ":Telescope<CR>",
+          }
+        }
+      }
+    }
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {maxColumns} `number or nil`
+
+  Maximum number of columns in a line for the `columns` style. Default value
+  is 4.
+
+- {lineGaps} `number or nil`
+
+  Number of lines between each keymaps in the `list` style. Default value is 0.
+
+`╭────────────────────────────────────────────────────────` *intro.nvim-cm-clock* `─╮`
+`│` ⏰ Clock                                                                     `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+A fancy way to show the time. Doesn't update in realtime(but can be made to	
+update in realtime).
+
+This component has the following options.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  {
+	type = "clock",           -- Optional, determines the type of component a
+					          -- table is
+    style = {
+      clockStyle = "basic",   -- Optional, style for the component
+      textStyle = "filled",   -- Optional, style for the texts in the component
+
+      clockParts = {          -- Optional, parts for the borders
+        "╭", "─", "╮",
+        "│", " ", "│",
+        "╰", "─", "╯"
+      },
+      colon = "•"             -- Optional, character used as : in the clock
+    }
+
+    colors = {
+      spaces = "",            -- Optional, color for the empty spaces
+      colon = "",             -- Optional, color for the colon
+      border = "",            -- Optional, color for the borders
+                              
+      hour = "",              -- Optional, color for the hour part
+      minute = "",            -- Optional, color for the minute part
+      second = "",            -- Optional, color for the second part
+      dayNight = "",          -- Optional, color for "am" or "pm" text
+                              
+      day = "",               -- Optional, color for the day of the week
+      date = "",              -- Optional, color for the date
+      month = "",             -- Optional, color for the month name
+      year = ""               -- Optional, color for the year
+    }
+  }
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {type} `string or nil`
+
+  Defines what component a table will be considered. Default is `banner`.
+
+- {style} `table or nil`
+
+  Changes the styling of the component. It has these options.
+    - {clockStyle} `string or nil`
+	- {textStyle} `string or nil`
+	- {clockParts} `table or nil`
+	- {colon} `string or nil`
+
+  {clockStyle} will change how the clock itself looks. On the other hand,
+  {textStyle} will chnage how the Numbers are shown.
+
+  The {clockParts} have various parts that will create the clock. It has
+  the following format,
+  
+    "border-topLeft",    "border-top",    "border-topRight",
+	"border-left",       "whitespace",    "border-right",
+	"border-bottomLeft", "border-bottom", "border-bottomRight"
+
+  And lastly, {colon} will be used between the `hour`, `minute` & `second` in
+  the `basic` {clockStyle}.
+
+  The available values for {clockStyle} are `basic`(default) & `compact`.
+  The available values for {textStyle} are `rounded`, `blocky`, `dotted` &
+  `filled`(default).
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+    components = {
+      {
+        type = "clock",
+
+        style = {
+		  clockStyle = "basic",
+		  textStyle = "dotted"
+        }
+      }
     },
-
-		globalHighlights = {
-			FILL = { bg = "#FFFFFF", fg = "#FFFFFF" },
-		}
-  })
+  });
 <
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`│`       █i█e█a█e█t█t                                                 1       `│`
-`│`       █ilename_2.txt                                               2       `│`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                  ╭───────────────────────────────────────────╮               `│`
+`│`                  │                                           │               `│`
+`│`                  │   ⣾⠛⣷ ⠛⠛⣷   ⣿ ⣿ ⠛⠛⣷   ⣾⠛⣷ ⣾⠛⠛   ⣾⠛⣷ ⣷⣀⣾   │               `│`
+`│`                  │   ⣿ ⣿ ⠶⠶⣿ • ⠙⠛⣿ ⠶⠶⣿ • ⣿ ⣿ ⠙⠶⣄   ⣿⠶⠟ ⣿⠉⣿   │               `│`
+`│`                  │   ⢿⣤⡿ ⣤⣤⡿     ⣿ ⣤⣤⡿   ⢿⣤⡿ ⣤⣤⡿   ⣿   ⣿ ⣿   │               `│`
+`│`                  │                                           │               `│`
+`│`                  ╰───────────────────────────────────────────╯               `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
 
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {dir}                                             boolean or string or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
+- {colors} `table or nil`
 
-Specify a path so that only files containing that `path` are shown.
+  Coloring for various parts of the component. It has thw following options.
+    - {spaces}
+	- {border}
+    - {hour}
+	- {minute}
+	- {dayNight}
 
-When set to true lists files that are in the `current working directoru`, when
-set to a `string` lists files that have that `string` in them.
+	Only available in the `basic` {clockStyle}
+	- {second}
 
-When set to `nil` or `false` lists all the files. Default value is `nil`.clear
+	Only available in the `compact` {clockStyle}
+	- {day}
+	- {date}
+	- {month}
+	- {year}
 
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-		components = {
-			{
-			  type = "recents",
-				entryCount = 3,
-				width = 0.8,
-				dir = "~/.config/nvim/"
-			}
-		}
-	})
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `─────────────────────────────┯──────────────────────────────────────╮`
-`│             dir = "~/.config/nvim/" │                          dir = false │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│`    init.lua                     1   `│`    .zshrc                        1   `│`
-`│`    plugins.lua                  2   `│`    termux.profile                2   `│`
-`│`    settings.lua                 3   `│`    glow.yml                      3   `│`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`╰─────────────────────────────────────┷──────────────────────────────────────╯`
+`┃` {dayNight} is used to color the AM/PM part.
 
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {keymap}                                                     string or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-Keymap to open the file under `curaor`.
-
-Default value is `<Space><Space>`. Only set for `normal` mode.
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-		components = {
-			{
-			  type = "recents",
-				entryCount = 3,
-				width = 0.8,
-				keymap = "oo"
-			}
-		}
-	})
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-`╭──────────────────────────────────────────────────────` *intro.nvim-c-keymaps* `╮`
-`│` 🎴 Component: Keymaps                                                   `⌨️ │`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-This component allows you to set up `keymaps` for the `start` `screen`.
-
-This components has the following `sub options`,
-	{style}                `Changes the look of the component`
-	{gaps}                 `Characters to use as seperators`
-	{itemLimit}            `Number of items to put in one line`
-	{width}                `Width of the list`
-	{gradientRepeat}       `Gradient repeat related options`
-	{keys}                 `Keymaps`
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-			  type = "keymaps",
-				keys = {
-					{
-						keyCombination = "<Space>t",
-						keyAction = ":lua print('Hello World');<CR>",
-						text = "[T]est"
-					}
-				}
-			}
-    }
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│                                                                            │`
-`│                                                                            │`
-`│`                                   [T]est                                   `│`
-`│                                                                            │`
-`│                                                                            │`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-Properties ~
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {style}                                                      string or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-Chnages how the `Keymaps` are shown. You can have them look like a list. Or
-you can also show them as columns in 1 or multiple lines.
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-			  type = "keymaps",
-				style = "list", -- or "compact"
-				keys = {
-					{
-						keyCombination = "<Space>t",
-						keyAction = ":lua print('Hello World');<CR>",
-						text = "[T]est"
-					},
-					{
-						keyCombination = "<Space>m",
-						keyAction = ":messages<CR>",
-						text = "[M]essages"
-					},
-					{
-						keyCombination = "<Space>?",
-						keyAction = ":h intro.nvim;<CR>",
-						text = "[H]elp"
-					}
-				}
-			}
-    }
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `─────────────────────────────┯──────────────────────────────────────╮`
-`│                      style = "list" │                    style = "compact" │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│`             [T]ext                  `│`                                      `│`
-`│`           [M]essages                `│`     [T]est   [M]essages   [H]elp     `│`
-`│`             [H]elp                  `│`                                      `│`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`│                                     │                                      │`
-`╰─────────────────────────────────────┷──────────────────────────────────────╯`
-
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {gaps}                                                       string or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-Separator to put between `columns`. It has no effect if {style} is set to
-`list`.
-
-Default value is 3 spaces("   ");
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-			  type = "keymaps",
-				style = "compact",
-				gaps = " ║ ",
-				keys = {
-					{
-						keyCombination = "<Space>t",
-						keyAction = ":lua print('Hello World');<CR>",
-						text = "[T]est"
-					},
-					{
-						keyCombination = "<Space>m",
-						keyAction = ":messages<CR>",
-						text = "[M]essages"
-					},
-					{
-						keyCombination = "<Space>?",
-						keyAction = ":h intro.nvim;<CR>",
-						text = "[H]elp"
-					}
-				}
-			}
-    }
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│                                                                            │`
-`│                                                                            │`
-`│`                        [T]est ║ [M]essages ║ [H]elp                        `│`
-`│                                                                            │`
-`│                                                                            │`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {itemLimit}                                                  number or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-Maximum number of item to show in a single line. It has no effect if {style}
-is set to `list`.
-
-Default is `3`.
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-			  type = "keymaps",
-				style = "compact",
-				gaps = " ║ ",
-				itemLimit = 2,
-				keys = {
-					{
-						keyCombination = "<Space>t",
-						keyAction = ":lua print('Hello World');<CR>",
-						text = "[T]est"
-					},
-					{
-						keyCombination = "<Space>m",
-						keyAction = ":messages<CR>",
-						text = "[M]essages"
-					},
-					{
-						keyCombination = "<Space>?",
-						keyAction = ":h intro.nvim;<CR>",
-						text = "[H]elp"
-					}
-				}
-			}
-    }
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│                                                                            │`
-`│                                                                            │`
-`│`                             [T]est ║ [M]essages                            `│`
-`│`                                  [H]elp                                    `│`
-`│                                                                            │`
-`│                                                                            │`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {width}                                                      number or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-The width of the list. It has no effect if {style} is set to `compact`.
-
-It has no `default` value.
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-		components = {
-			{
-			  type = "keymaps",
-				style = "list",
-				width = 0.8,
-				itemLimit = 2,
-				keys = {
-					{
-						keyCombination = "<Space>?",
-						keyAction = ":h intro.nvim;<CR>",
-						text = "[H]elp"
-					}
-				}
-			}
-		}
-	})
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`│`        [H]elp                                                              `│`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {gradientRepeat}                                   boolean or table or nil `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-Controls whether `gradients` are repeated or not. This component uses
-`secondaryColors` under the hood so just setting it to `true`/`false` is
-enough.
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-				type = "keymaps",
-				style = "list",
-				width = 0.8,
-				gradientRepeat = true,
-				keys = {
-					{
-						keyCombination = "<Space>m",
-						keyAction = ":messages<CR>",
-						text = { "[M]essages" },
-            color = { { "Fill", "Normal" } }
-					},
-				}
-			},
-    },
-
-		globalHighlights = {
-			FILL = { bg = "#FFFFFF", fg = "#FFFFFF" },
-		}
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`│`       █M█e█s█g█s                                                           `│`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
+`┃ TIP`
+`┃` If you want the clock to update automatically, you can set up a timer that
+`┃` will run the `:Refresh` command on a specific delay.
+`┃`
+`┃` This feature may be added in the future.
 
 
-`├────────────────────────────────────────────────────────────────────────────┐`
-`│` {keys}                                                               table `│`
-`├────────────────────────────────────────────────────────────────────────────┘`
-
-Define all your `keymaps` and what to show on the screen here.
-
-This component has the following `sub options`,
-	{keyCombination}        `Key combination for a keymap`
-	{keyAction}             `The command to run`
-	{keyOptions}            `Options for the keymap`
-	{text}                  `The text to show`
-	{color}                 `The color to use`
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-				type = "keymaps",
-				style = "list",
-				width = 0.8,
-				gradientRepeat = true,
-				keys = {
-					{
-						keyCombination = "<Space>m",
-						keyAction = ":messages<CR>",
-						text = { "[M]essages" },
-            color = { { "Fill", "Normal" } }
-					},
-				}
-			},
-    },
-
-		globalHighlights = {
-			FILL = { bg = "#FFFFFF", fg = "#FFFFFF" },
-		}
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-`├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶┐`
-`│` {keyCombination}                                                    string `│`
-`├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶┘`
-
-Key combination for a `keymap`. It is directly sent to `nvim_buf_set_keymap()`.
-
-`├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶┐`
-`│` {keyAction}                                                         string `│`
-`├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶┘`
-
-The command to run when the `keymap` is triggered. It is directly sent to
-`nvim_buf_set_keymap()`.
-
-`├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶┐`
-`│` {keyOptions}                                                  table or nil `│`
-`├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶┘`
-
-Keymap options. It is directly sent to `nvim_buf_set_keymap()`.
-
-The default value is `{ silent = true }`
-
-`├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶┐`
-`│` {text}                                              string or table or nil `│`
-`├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶┘`
-
-The text that will be shown in the buffer.
-
-Use a `string` value if you want to use a `single` color. Or a `table` value
-if you want to use a `gradient`.
-
-`├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶┐`
-`│` {color}                                             string or table or nil `│`
-`├╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶┘`
-
-The highlight group that will be used to color the text.
-
-`╭` NOTE `──────────────────────────────────────────────────────────────────────╮`
-`│` It is `color`, NOT `colors`.                                                   `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-Usage ~
-`╭` Lua `───────────────────────────────────────────────────────────────────────╮`
->
-  require("intro").setup({
-    components = {
-			{
-				type = "keymaps",
-				style = "list",
-				width = 0.8,
-				gradientRepeat = true,
-				keys = {
-					{
-						keyCombination = "<Space>e",
-						keyAction = ":messages clear<CR>",
-
-						-- If the text is a string.
-						-- The component expects it to be colored with a single
-						-- color
-						text = "[E]mpty messages",
-            color = "Normal"
-					},
-					{
-						keyCombination = "<Space>m",
-						keyAction = ":messages<CR>",
-
-						-- If the text is a table.
-						-- The component expects it to have both solid & gradient
-						-- colors in it.
-						-- The colors are set using `secondaryColors` so the 
-						-- usage is the same
-						--
-						-- Gradients are tables inside tables.
-						text = { "[M]essages" },
-            color = { { "Fill", "Normal" } }
-					},
-					{
-						keyCombination = "<Space>?",
-						keyAction = ":h intro.nvim<CR>",
-
-						-- This will color [H] with "FILL" & elp with "Normal"
-						text = { "[H]", "elp" },
-            color = { "Fill", "Normal" }
-					}
-				}
-			},
-    },
-
-		globalHighlights = {
-			FILL = { bg = "#FFFFFF", fg = "#FFFFFF" },
-		}
-  })
-<
-`╰────────────────────────────────────────────────────────────────────────────╯`
-`╭` Neovim `────────────────────────────────────────────────────────────────────╮`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`│`       [E]mpty messages                                                     `│`
-`│`       █M█e█s█g█s                                                           `│`
-`│`       ███elp                                                               `│`
-`│`                                                                            `│`
-`│`                                                                            `│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
-
-
-
-`─────────────────────────────────────────────────────────────────────────────┤`
-vim:tw=78:ts=2:noet:ft=help:norl:
+`───────────────────────────────────────────────────────────────────────────────╮`
+vim:tw=80:ts=2:noet:ft=help:norl:

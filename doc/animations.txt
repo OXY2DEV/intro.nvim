@@ -1,22 +1,473 @@
-╭───────────────────────────────────────────────────── *intro.nvim-animations* ╮
-│ 🎋 Animations                                               `Cause why not?` │
-╰────────────────────────────────────────────────────────────────────────────╯
+Created on: 18 May, 2024                             Last updated: 20 May, 2024
+`───────────────────────────────────────────────────────────────────────────────╯`
+===
+TOC doesn't work. Don't even try using it.
+===
+•••••••••••••••••••••••••••••••••••••••••
+===
+🚀 Animations
+===
+- 📹 How animations work
+===
+- 🌈 Creating color related animations
+===
+- 📃 Creating text related animations
 
-               ██████▒▒░░      ⠛⣿⠛ ⣿⣄  ⣿ ⠛⠛⣿⠛⠛ ⣾⠛⠛⣷ ⣾⠛⠛⣷
-               ██░░▒▒██▒▒░░     ⣿  ⣿ ⣿ ⣿   ⣿   ⣿⠶⠶⠟ ⣿  ⣿
-               ██░░▒▒████▒▒░░   ⣿  ⣿ ⣿ ⣿   ⣿   ⣿⠷   ⣿  ⣿
-               ██▒▒▒▒░░▒▒▒▒░░  ⣤⣿⣤ ⣿  ⠙⣿   ⣿   ⣿ ⢷  ⢿⣤⣤⡿.nvim
-               ██████▒▒▒▒░░    
-               ▒▒▒▒▒▒▒▒░░      `Yet another start screen plugin`
-
-`╭────────────────────────────────────────────────────────────────────────────╮`
-`│`////////////////////////////////////////////////////////////////////////////`│`
-`│`////////////////////////////////////////////////////////////////////////////`│`
-`│`/////////////////////////// Work in Progress ///////////////////////////////`│`
-`│`////////////////////////////////////////////////////////////////////////////`│`
-`│`////////////////////////////////////////////////////////////////////////////`│`
-`╰────────────────────────────────────────────────────────────────────────────╯`
+You shouldn't see this part.
 
 
-`─────────────────────────────────────────────────────────────────────────────┤`
-vim:tw=78:ts=2:noet:ft=help:norl:
+`╭╌─────────────────────────────────────────────────────` *intro.nvim-animations* `╌╮`
+`│` 🚀 Animations                                     `Animations are pretty cool │`
+`╰╌────────────────────────────────────────────────────────────────────────────╌╯`
+
+One of the `key features` is the ability to make simple `animations`.
+
+`┃` The whole animation system is quite `primitive` and there's a reason for
+`┃` that.
+`┃` Since the entire animation part is pretty simple & straightforward it can
+`┃` be(and will be) extended with `helper functions`. This also means debugging
+`┃` errors become a lot more easier.
+
+                                                                                
+                 `██╗███╗   ██╗████████╗██████╗  ██████╗      `                   
+                 `██║████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗     `                   
+                 `██║██╔██╗ ██║   ██║   ██████╔╝██║   ██║     `                   
+                 `██║██║╚██╗██║   ██║   ██╔══██╗██║   ██║     `                   
+                 `██║██║ ╚████║   ██║   ██║  ██║╚██████╔╝     `                   
+                 `╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝.nvim `                   
+                                                                                
+                                                                                
+────────────────────────────────────────────────────────────────────────────────
+
+`╭─────────────────────────────────────────────────────────┨` 🧾 Table of contents
+`│`
+`├──` 📹 How animations work                                    |intro.nvim-an-info|
+`├──` 🌈 Creating color related animations                        |intro.nvim-an-hl|
+`╰──` 📃 Creating text related animations                        |intro.nvim-an-txt|
+
+`╭─────────────────────────────────────────────────────────` *intro.nvim-an-info* `─╮`
+`│` 📹 How animations work                                                       `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+Terminals don't have any way to do `animations`. So most of the time it's just
+`clearing` the screen and `printing` stuff in it's place.
+
+This plugin does the exact same thing. It utilizes `vim.uv.new_timer()` to
+created a `timer` that handles the animations.
+
+However, this has a small issue. If the user has a ton of animations, it can
+lead to Neovim crashing(or significantly slowing down).
+
+To solve this issue, the plugin only uses a single animation loop to handle
+all the `animations`. This can be a little slow at times, but it is much
+better than being limited by the number of `animations` you can have at once.
+As I made the plugin on my `phone`, it is important that Neovim doesn't
+become too slow.
+
+This however comes at the cost of not being able to control the timing of the
+animations. But, you can easily `skip frames` which means you can control how
+fast/slow your animations happen.
+
+`┃ What are frames?`
+`┃` A single iteration of the `animation loop` is a `frame`.
+
+All the `animations` have a `__state` option attached to them. This tells the
+`animation loop` what to do with that animation on a specific frames.
+
+There are 4 different states for an animation. They are,
+  - play `A value from the animation will be used`
+  - start_delay `The animation hasn't begun yet, do nothing`
+  - frame_delay `Waiting to change into the next value, do nothing`
+  - loop_delay `Waiting to restart the animation, do nothing`
+
+When an animation finishes it's `__state` becomes "over".
+
+────────────────────────────────────────────────────────────────────────────────
+
+The {animations} table has these options inside it.
+  - {delay} `number or nil`
+  - {updateDelay} `number or nil`
+  - {highlightBased} `table or nil`
+  - {textBased} `table or nil`
+
+{delay} is the amount of time(in `miliseconds`) before the `animation loop`
+starts and {updateDelay} is the interval(also in `miliseconds`) between each
+frame/iteration of the loop.
+
+On the other hand, {highlightBased} & {textBased} are just normal `tables`
+containing color related & text related animations respectively.
+
+`┃ TIP`
+`┃` {delay} can be used when the animations starts/ends too soon.
+`┃` {updateDelay} can be used to smoothen the speed of animations.
+
+────────────────────────────────────────────────────────────────────────────────
+
+All the `animations` have the following structure
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  {
+    startDelay = 0,
+    frameDelay = 0,
+		loopDelay = 0,
+
+		loop = false
+  }
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {startDelay} `number or nil`
+
+  Sets the number of `frames` to wait before starting the animation.
+
+- {frameDelay} `number or nil`
+
+  Sets the number of `frames` to wait before switching to the next value in an
+  animation.
+
+- {loopDelay} `number or nil`
+
+  Sets the number of `frames` to wait before every loop starts.
+
+- {loop} `boolean or number or nil`
+
+  Sets the number of loops an animation will do. When set to `true`, the
+  animation will loop infinitely.
+
+  The default value is `false`.
+
+`╭───────────────────────────────────────────────────────────` *intro.nvim-an-hl* `─╮`
+`│` 🌈 Creating color related animations                                         `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+Color transition related animations are created with the help of `nvim_set_hl()`.
+
+Here's how they typically look like.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  {
+    groupName = "",
+    values = {},
+
+		-- Optional
+    startDelay = 0,
+    frameDelay = 0,
+		loopDelay = 0,
+
+		loop = false
+  }
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+{groupName} can be one of the regular `highlight groups` or the name of the
+custom `highlight groups` that you can set using the {globalHighlights}
+option in the setup function.
+
+`┃` If you are animating a custom highlight group you don't need to add
+`┃` "Intro_" in front of it's name.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+    components = {
+			{
+				lines = { "Hello, Neovim" },
+				colors = "col_1",
+			}
+		},
+
+		globalHighlights = { col_1 = { fg = "#A6E3A1" } },
+
+		animations = {
+			highlightBased = {
+				{
+					groupName = "col_1",
+					values = {
+						{ fg = "#a6e3a1" }, { fg = "#afd3b6" }, { fg = "#b8c4cc" },
+						{ fg = "#c1b5e1" }, { fg = "#cba6f7" }
+					}
+				}
+			}
+		}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+`╭──────────────────────────────────────────────────────────` *intro.nvim-an-txt* `─╮`
+`│` 📃 Creating text related animations                                          `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+Text related animations are a bit `complicated` compared to it's color
+counterpart.
+
+Here's how they typically look like.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  {
+    mode = "",
+
+    position = "fixed",
+    x = 0, y = 0,
+	align = "",
+
+	values = {},
+	functions = {},
+
+	colors = {},
+	secondaryColors = {},
+
+	gradientRepeat = false,
+	updateCache = false,
+
+	-- Optional
+    startDelay = 0,
+    frameDelay = 0,
+	loopDelay = 0,
+
+	loop = false
+  }
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {mode} `string or nil`
+
+  Changes how the texts are animated. Possible values are `lines`(default),
+  `virt_text`.
+
+  `virt_text` animations are temporary and will be removed on `WindowResize`
+  or by using the `:Refresh` command.
+
+  `lines` animations can do permanent changes and are used to change the
+  entire line.
+
+- {position} `string or nil`
+
+  Determines the line from where the {y} value is counted. Valid values are
+  `fixed`(default) & `relative`.
+  When `relative` is used, the value of {y} is counted from the line where the
+  components started.
+
+  When `fixed` is used, the line index is used. Changes made by animations
+  with `fixed` position will NOT be saved.
+
+- {x}, {y} `number or nil`
+
+  The index on the X & Y-axis. It is `0-based` and starts from the `top left`
+  corner of the buffer whose position is (0, 0). 
+
+- {align} `string or nil`
+
+  Used in animations with the `lines` mode. Changes the alignment of the
+  texts. Valid values are `left`, `right` & `center`(default).
+
+- {values} `table`
+
+  The texts that will be used by the animation. Texts can be `string` or
+  `table` depending on your use case.
+
+`┃ NOTE`
+`┃` The value should be a `table` if you plan on coloring a part of the text
+`┃` seperately. They should also be a `table` if you have parts of the text that
+`┃` need to be dynamically generated.
+
+- {functions} `table or nil`
+
+  Function declarations. These funxtions replaces their names when used ib a
+  line with a `table` value.
+
+`┃` The main reasob for having this is to prevent ugly & unreadable setup
+`┃` tables due to using functions in lines.
+
+- {colors} `string or table or nil`
+
+  Color(s) for the values. `Highlight group names` are used for coloring. When
+  set to a `string` usws that color for all the lines.
+
+`┃` This option also supports `gradients`. To use a horizontal gradient you can't
+`┃` directly pass it as a list in {colors}.
+`┃` Instead, you have to add the list as a value to thw {colors} table.
+
+- {secondaryColors} `table or nil`
+
+  A `table` containing `tables` that assign different colors to different
+  parts of the text. This only works when the line is a `table`.
+
+`┃` You can also set a part's value to be `nil`. This will not change the
+`┃` color of that part of the text.
+
+- {gradientRepeat} `boolean or nil`
+
+  Turns normal gradients into `repeating gradients`. Available values are
+  `true` & `false`. The default is `false`.
+
+`┃` By default, if the length of the gradient is less than the length of the
+`┃` line the characters will use the last value in the gradient as color
+`┃` after all the other values in the gradient have been used.
+`┃`
+`┃` By setting this option to `true`, you can make the gradient behave like
+`┃` it's a repeating gradient.
+
+- updateCache `boolean or nil`
+
+  If the {mode} is "lines" & the {position} is "relative" changes to the lines
+  in the buffer are preserved by setting this option to `true`. They will not
+  be reverted on `:Refresh` or on `WindowResize`.
+
+  The default is `false`.
+
+Examples ~
+Text moving from `top left` of the window to `bottom right` of the window.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+    components = {},
+
+	animations = {
+	  -- Optional, used for smoother animation
+      updateDelay = 50,
+
+	  textBased = {
+	    {
+          mode = "virt_text",
+          x = { 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1 },
+          y = { 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1 },
+
+          values = {
+            "Hello World", "Hello World", "Hello World", "Hello World",
+            "Hello World", "Hello World", "Hello World", "Hello World",
+            "Hello World", "Hello World", "Hello World"
+            },
+
+            -- Optional
+            loop = true
+		}
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+Text moving & changing colors.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+    components = {},
+
+    globalHighlights = {
+      a_1 = { fg = "#a6e3a1" },
+      a_2 = { fg = "#afd3b6" },
+      a_3 = { fg = "#b8c4cc" },
+	  a_4 = { fg = "#c1b5e1" },
+      a_5 = { fg = "#cba6f7" }
+    },
+
+	animations = {
+      updateDelay = 50,
+	  textBased = {
+	    {
+          mode = "virt_text",
+          x = { 1.1, 2, 3, 4, 5 },
+
+          values = {
+            "Hello World", "Hello World", "Hello World", "Hello World",
+            "Hello World"
+          },
+
+	      colors = {
+            "a_1", "a_2", "a_3", "a_4", "a_5"
+	      },
+
+          -- Optional
+          loop = true,
+          loopDelay = 5
+	    }
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+Simple `typing` animation
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+    components = {},
+
+	animations = {
+      updateDelay = 50,
+	  textBased = {
+		{
+		  mode = "virt_text",
+
+		  values = {
+			"H", "He", "Hel", "Hell", "Hello"
+		  },
+
+		  -- Optional
+		  loop = true,
+		  loopDelay = 5
+		}
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+Writing codes
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {},
+
+	animations = {
+    updateDelay = 100,
+	  textBased = {
+	    {
+		  mode = "line",
+		  position = "relative",
+		  y = 0,
+
+		  values = {
+			"p", "pr", "pri", "prin", "print", "print",
+			{ "print", "()" },
+			{ "print", "(", "''", ")" },
+			{ "print", "(", "'H'", ")" }, { "print", "(", "'Hi'", ")" }
+		  },
+
+		  colors = {
+			"Normal", "Normal", "Normal", "Normal", "Normal",
+			"@lsp.typemod.method.defaultLibrary"
+		  },
+		  secondaryColors = {
+			"skip", "skip", "skip", "skip", "skip", "skip",
+			{ nil, "@punctuation.bracket.lua" },
+			{
+			  nil,
+			  "@punctuation.bracket.lua",
+			  "String",
+			  "@punctuation.bracket.lua"
+			}
+		  },
+
+		  -- Optional
+		  loop = true,
+		  loopDelay = 5
+		}
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+`┃` As you can see doing it like this is very VERY tedious. So there will be
+`┃` helper functions for these in the future.
+
+`┃` Did you notice that the number of items in {colors} & {secondaryColors}
+`┃` are less than the number of items in {values}?
+`┃` If a value doesn't need to change than you can just add it once and it
+`┃` will be used in all the rest of the {values}.
+
+
+`───────────────────────────────────────────────────────────────────────────────╮`
+vim:tw=80:ts=2:noet:ft=help:norl:

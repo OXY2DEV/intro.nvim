@@ -13,6 +13,10 @@ H.setHL = function (hls)
 end
 
 H.checkHl = function(hl, line, clStart, clEnd)
+  if hl == nil or hl == "" then
+    return;
+  end
+
   if V.fn.hlexists(hl) == 1 then
     V.api.nvim_buf_add_highlight(0, 0, hl, line, clStart, clEnd);
   else
@@ -20,169 +24,128 @@ H.checkHl = function(hl, line, clStart, clEnd)
   end
 end
 
-H.applier = function (lineConfig, lineIndex)
-  local width = V.api.nvim_win_get_width(0);
+H.setDefaults = function (lineConfig)
+  lineConfig = V.tbl_deep_extend("keep", lineConfig, {
+    align = "left",
 
-  local align = lineConfig.align;
+    text = {},
+    functions = {},
 
-  local color = lineConfig.color;
-  local secondary = lineConfig.secondaryColors;
+    color = {},
+    secondaryColors = {},
+    gradientRepeat = false
+  })
 
-  local text = lineConfig.text;
-  local functions = lineConfig.functions;
+  return lineConfig;
+end
 
-  local gradientRepeat = lineConfig.gradientRepeat;
-
-  local partSizes = {};
-  local characterLength = 0;
-  local byteLength = 0;
-
-  local cachedText = "";
-
-  local whiteSpaces = data.whiteSpaces;
-  local spaces = 0;
-
-  -- Get the width of the text
-  if type(text) == "string" then
-    byteLength = #text;
-    characterLength = V.fn.strchars(text);
-
-    cachedText = text;
-  elseif type(text) == "table" then
-    local sizeStart = 0;
-
-    for _, part in ipairs(text) do
-      if functions ~= nil and functions[part] ~= nil then
-        local str = functions[part]();
-
-        byteLength = byteLength + #str;
-        characterLength = characterLength + V.fn.strchars(str);
-
-        table.insert(partSizes, { sizeStart, sizeStart + #str });
-        cachedText = cachedText .. str;
-
-        sizeStart = sizeStart + #str;
-      else
-        byteLength = byteLength + #part;
-        characterLength = characterLength + V.fn.strchars(part);
-
-        table.insert(partSizes, { sizeStart, sizeStart + #part });
-        cachedText = cachedText .. part;
-
-        sizeStart = sizeStart + #part;
-      end
-    end
-  end
-
-  local useStringSize = lineConfig.width ~= nil and lineConfig.width or characterLength;
-
-  -- Calculate the number of spaces before the text
-  if align == "center" then
-    if useStringSize < width then
-      spaces = math.floor((width - useStringSize) / 2);
-    else
-      spaces = 0;
-    end
-  elseif align == "right" then
-    if useStringSize < width then
-      spaces = width - useStringSize;
-    else
-      spaces = 0;
-    end
+H.gradientIndexHandler = function (gradientRepeat, colors, var)
+  if (var + 1) <= #colors then
+    return var + 1;
+  elseif (var + 1) > #colors and gradientRepeat == true then
+    return 1;
   else
-    spaces = 0;
-  end
-
-  -- Apply the main color
-  if type(color) == "string" then
-    H.checkHl(color, whiteSpaces + lineIndex, spaces, spaces + byteLength)
-  elseif type(color) == "table" then
-    local colorIndex = 1;
-
-    for c = 0, characterLength do
-      local characterStart = spaces + #string.sub(cachedText, 0, c);
-      local characterEnd = spaces + #string.sub(cachedText, 0, c + 1);
-
-      H.checkHl(color[colorIndex], whiteSpaces + lineIndex, characterStart, characterEnd);
-
-      if (colorIndex + 1) > #color then
-        if type(gradientRepeat) == "boolean" and gradientRepeat == true then
-          colorIndex = 1;
-        elseif type(gradientRepeat) == "table" and gradientRepeat.colors == true then
-          colorIndex = 1;
-        end
-      else
-        colorIndex = colorIndex + 1;
-      end
-    end
-  end
-
-  -- Up until here everything works
-  if secondary == nil then
-    return;
-  end
-
-  for index, seClr in ipairs(secondary) do
-    if type(seClr) == "string" and seClr ~= "" then
-      local Y1 = partSizes[index][1];
-      local Y2 = partSizes[index][2];
-
-      H.checkHl(seClr, whiteSpaces + lineIndex, spaces + Y1, spaces + Y2)
-    elseif type(seClr) == "table" and V.tbl_islist(seClr) == true then
-      local Y1 = partSizes[index][1];
-      local Y2 = partSizes[index][2] - #string.sub(cachedText, -1);
-
-      local colorIndex = 1;
-
-      for y = Y1, Y2 do
-        H.checkHl(seClr[colorIndex], whiteSpaces + lineIndex, spaces + y, spaces + y + 1);
-
-        if (colorIndex + 1) > #seClr then
-          if type(gradientRepeat) == "boolean" and gradientRepeat == true then
-            colorIndex = 1;
-          elseif type(gradientRepeat) == "table" and gradientRepeat.secondaryColors == true then
-            colorIndex = 1;
-          end
-        else
-          colorIndex = colorIndex + 1;
-        end
-      end
-    elseif type(seClr) == "table" and V.tbl_islist(seClr) == false then
-      if seClr.from == nil then
-        seClr.from = 0;
-      end
-
-      if seClr.to == nil then
-        seClr.to = 1;
-      end
-
-      if type(seClr.groupName) == "string" then
-        local from = #string.sub(cachedText, 0, seClr.from);
-        local to = #string.sub(cachedText, 0, seClr.to + 1);
-
-        H.checkHl(seClr.groupName, whiteSpaces + lineIndex, spaces + from, spaces + to);
-      elseif type(seClr.groupName) == "table" then
-        local colorIndex = 1;
-
-        for y = seClr.from, seClr.to do
-          local from = #string.sub(cachedText, 0, y);
-          local to = from + #string.sub(cachedText, y + 1, y + 1);
-
-          H.checkHl(seClr.groupName[colorIndex], whiteSpaces + lineIndex, spaces + from, spaces + to);
-
-          if (colorIndex + 1) > #seClr.groupName then
-            if type(gradientRepeat) == "boolean" and gradientRepeat == true then
-              colorIndex = 1;
-            elseif type(gradientRepeat) == "table" and gradientRepeat.secondaryColors == true then
-              colorIndex = 1;
-            end
-          else
-            colorIndex = colorIndex + 1;
-          end
-        end
-      end
-    end
+    return #colors;
   end
 end
+
+H.newHlApplier = function (lineConfig, lineIndex)
+  lineConfig = H.setDefaults(lineConfig);
+
+  local totalByteLength = 0;
+  local partPositions = {};
+  local cachedText = "";
+  local textWidth = lineConfig.width;
+
+  local padding = 0;
+
+  if lineConfig.width == "auto" or lineConfig.width == nil then
+    textWidth = nil;
+  elseif lineConfig.width < 1 then
+    textWidth = lineConfig.width * data.width;
+  else
+    textWidth = lineConfig.width;
+  end
+
+  if type(lineConfig.text) == "string" then
+    cachedText = lineConfig.text;
+  elseif type(lineConfig.text) == "table" then
+    local charsPassed = 0;
+
+    for _, part in ipairs(lineConfig.text) do
+      part = lineConfig.functions[part] ~= nil and lineConfig.functions[part]() or part;
+
+      table.insert(partPositions, { start = charsPassed, finish = charsPassed + V.fn.strchars(part) });
+
+      cachedText = cachedText .. part;
+      charsPassed = charsPassed + V.fn.strchars(part);
+    end
+  end
+
+  if textWidth == nil then
+    textWidth = V.fn.strchars(cachedText);
+    totalByteLength = #cachedText;
+  else
+    totalByteLength = #string.sub(cachedText, 0, width)
+  end
+
+  if lineConfig.align == "center" and textWidth < data.width then
+    padding = math.floor((data.width - textWidth) / 2);
+  elseif lineConfig.align == "right" and textWidth < data.width then
+    padding = data.width - textWidth;
+  end
+
+  if lineConfig.color == nil then
+    goto noMainColor;
+  end
+
+  if type(lineConfig.color) == "string" then
+    H.checkHl(lineConfig.color, data.whiteSpaces + lineIndex, padding, padding + totalByteLength)
+  elseif type(lineConfig.color) == "table" then
+    local colorIndex = 1;
+
+    for char = 0, textWidth do
+      local start = V.fn.strcharpart(cachedText, 0, char);
+      local finish = V.fn.strcharpart(cachedText, 0, char + 1);
+
+      H.checkHl(lineConfig.color[colorIndex], data.whiteSpaces + lineIndex, padding + #start, padding + #finish)
+      colorIndex = H.gradientIndexHandler(lineConfig.gradientRepeat, lineConfig.color, colorIndex);
+    end
+  end
+
+  ::noMainColor::
+
+  if lineConfig.secondaryColors == nil then
+    goto noSecondColor;
+  end
+
+  for secondIndex = 1, #partPositions do
+    local colors = lineConfig.secondaryColors[secondIndex];
+
+    if type(colors) == "string" then
+      local part = partPositions[secondIndex];
+
+      local start = V.fn.strcharpart(cachedText, 0, part.start);
+      local finish = V.fn.strcharpart(cachedText, 0, part.finish);
+
+      H.checkHl(colors, data.whiteSpaces + lineIndex, padding + #start, padding + #finish)
+    elseif type(colors) == "table" then
+      local part = partPositions[secondIndex];
+      local colorIndex = 1;
+
+      -- Bug fix: gradients bleeding out of their parts
+      for char = 0, (part.finish - part.start) - 1 do
+        local start = V.fn.strcharpart(cachedText, 0, part.start + char);
+        local finish = V.fn.strcharpart(cachedText, 0, part.start + char + 1);
+
+        H.checkHl(colors[colorIndex], data.whiteSpaces + lineIndex, padding + #start, padding + #finish)
+        colorIndex = H.gradientIndexHandler(lineConfig.gradientRepeat, colors, colorIndex);
+      end
+    end
+  end
+
+  ::noSecondColor::
+end
+
 
 return H;

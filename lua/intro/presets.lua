@@ -205,7 +205,7 @@ P.nvim = {
   }
 };
 
-P.nvim_alt_1 = {
+P.nvim_mini = {
   default = {
     shadaRefresh = true,
 
@@ -222,23 +222,14 @@ P.nvim_alt_1 = {
         gradientRepeat = true
       }
     },
-  },
-
-  dark = {
     anchors = {
-      action = "overwrite",
-      value = {
-        position = "bottom",
-        textStyle = { bg = "#a6e3a1", fg = "#384361" },
-        cornerStyle = { bg = "#a6e3a1", fg = "#1E1E2E" },
-        corner = " "
-      },
+      position = "bottom",
+      textStyle = { bg = "#a6e3a1", fg = "#384361" },
+      cornerStyle = { bg = "#a6e3a1", fg = "#1E1E2E" },
+      corner = ""
     },
     globalHighlights = {
-      action = "overwrite",
-      value = {
-        c_1 = { fg = "#89b5fa" }, c_2 = { fg = "#90c0e3" }, c_3 = { fg = "#97cccd" }, c_4 = { fg = "#9ed7b7" }, c_5 = { fg = "#a6e3a1" },
-      }
+      c_1 = { fg = "#89b5fa" }, c_2 = { fg = "#90c0e3" }, c_3 = { fg = "#97cccd" }, c_4 = { fg = "#9ed7b7" }, c_5 = { fg = "#a6e3a1" },
     }
   },
 
@@ -255,19 +246,19 @@ P.nvim_alt_1 = {
         position = "bottom",
         textStyle = { bg = "#6dd5fa", fg = "#384361" },
         cornerStyle = { bg = "#6dd5fa", fg = "#1E1E2E" },
-        corner = " "
+        corner = ""
       },
     },
   },
 
-  dark_animated = {
+  animated = {
     anchors = {
       action = "overwrite",
       value = {
         position = "bottom",
         textStyle = { bg = "#a6e3a1", fg = "#384361" },
         cornerStyle = { bg = "#a6e3a1", fg = "#1E1E2E" },
-        corner = " "
+        corner = ""
       },
     },
     globalHighlights = {
@@ -383,41 +374,6 @@ P.nvim_alt_1 = {
         }
       }
     }
-  },
-
-  recents = {
-    components = {
-      action = "append",
-      value = {
-        "",
-        {
-          type = "banner",
-          width = 0.8,
-          lines = { { " ▒▒ ", "Recently opened files:" } },
-          secondaryColors = { { "icon_bg", "Normal" } }
-        },
-        "",
-        {
-          type = "recents",
-          width = 0.8,
-          useIcons = true,
-          useAnchors = true,
-          entryCount = 5,
-
-          colors = {
-            name = { "name" },
-            number = { "number" }
-          },
-        },
-      }
-    },
-
-    globalHighlights = {
-      action = "append",
-      value = {
-        icon_bg = { fg = "#74C7EC", bg = "#1E1E2E" }
-      }
-    }
   }
 }
 
@@ -444,35 +400,27 @@ P.startify = {
           }
         }
       }
+    },
+    anchors = {
+      position = "bottom",
+      textStyle = { bg = "#89b4fa", fg = "#384361" },
+      cornerStyle = { bg = "#89b4fa", fg = "#1E1E2E" },
+      corner = ""
+    },
+    globalHighlights = {
+      col_1 = { fg = "#89b4fa" }, col_2 = { fg = "#89b4fa" }, col_3 = { fg = "#89b4fa" }, col_4 = { fg = "#89b4fa" }, col_5 = { fg = "#89b4fa" }, col_6 = { fg = "#89b4fa" }, col_7 = { fg = "#89b4fa" }, col_8 = { fg = "#89b4fa" }, col_9 = { fg = "#89b4fa" }, col_10 = { fg = "#89b4fa" }, col_11 = { fg = "#89b4fa" }, col_12 = { fg = "#89b4fa" }, col_13 = { fg = "#89b4fa" },
+      label_1 = { fg = "#89b4fa" }
     }
   },
 
-  blue = {
-    anchors = {
-      action = "overwrite",
-      value = {
-        position = "bottom",
-        textStyle = { bg = "#89b4fa", fg = "#384361" },
-        cornerStyle = { bg = "#89b4fa", fg = "#1E1E2E" },
-        corner = " "
-      },
-    },
-    globalHighlights = {
-      action = "overwrite",
-      value = {
-        col_1 = { fg = "#89b4fa" }, col_2 = { fg = "#89b4fa" }, col_3 = { fg = "#89b4fa" }, col_4 = { fg = "#89b4fa" }, col_5 = { fg = "#89b4fa" }, col_6 = { fg = "#89b4fa" }, col_7 = { fg = "#89b4fa" }, col_8 = { fg = "#89b4fa" }, col_9 = { fg = "#89b4fa" }, col_10 = { fg = "#89b4fa" }, col_11 = { fg = "#89b4fa" }, col_12 = { fg = "#89b4fa" }, col_13 = { fg = "#89b4fa" },
-        label_1 = { fg = "#89b4fa" }
-      }
-    }
-  },
   green = {
     anchors = {
       action = "overwrite",
       value = {
         position = "bottom",
         textStyle = { bg = "#a6e3a1", fg = "#384361" },
-        cornerStyle = { bg = "#a6e3a1", fg = "#1E1E2E" },
-        corner = " "
+        cornerStyle = { fg = "#a6e3a1", bg = "#1E1E2E" },
+        corner = ""
       },
     },
     globalHighlights = {
@@ -489,8 +437,8 @@ P.startify = {
       value = {
         position = "bottom",
         textStyle = { bg = "#f38ba8", fg = "#384361" },
-        cornerStyle = { bg = "#f38ba8", fg = "#1E1E2E" },
-        corner = " "
+        cornerStyle = { fg = "#f38ba8", bg = "#1E1E2E" },
+        corner = ""
       },
     },
     globalHighlights = {
@@ -507,8 +455,8 @@ P.startify = {
       value = {
         position = "bottom",
         textStyle = { bg = "#f5c2e7", fg = "#384361" },
-        cornerStyle = { bg = "#f5c2e7", fg = "#1E1E2E" },
-        corner = " "
+        cornerStyle = { fg = "#f5c2e7", bg = "#1E1E2E" },
+        corner = ""
       },
     },
     globalHighlights = {
@@ -525,8 +473,8 @@ P.startify = {
       value = {
         position = "bottom",
         textStyle = { bg = "#f2cdcd", fg = "#384361" },
-        cornerStyle = { bg = "#f2cdcd", fg = "#1E1E2E" },
-        corner = " "
+        cornerStyle = { fg = "#f2cdcd", bg = "#1E1E2E" },
+        corner = ""
       },
     },
     globalHighlights = {
@@ -542,8 +490,9 @@ P.startify = {
     anchors = {
       action = "overwrite",
       value = {
+        corner = "",
         textStyle = { bg = "#89b5fa", fg = "#1E1E2E" },
-        cornerStyle = { bg = "#89b5fa", fg = "#1E1E2E" }
+        cornerStyle = { fg = "#89b5fa", bg = "#1E1E2E" }
       }
     },
     globalHighlights = {
@@ -559,8 +508,9 @@ P.startify = {
     anchors = {
       action = "overwrite",
       value = {
+        corner = "",
         textStyle = { bg = "#43cea2", fg = "#1E1E2E" },
-        cornerStyle = { bg = "#43cea2", fg = "#1E1E2E" }
+        cornerStyle = { fg = "#43cea2", bg = "#1E1E2E" }
       }
     },
     globalHighlights = {
@@ -576,8 +526,9 @@ P.startify = {
     anchors = {
       action = "overwrite",
       value = {
+        corner = "",
         textStyle = { bg = "#83a4d4", fg = "#1E1E2E" },
-        cornerStyle = { bg = "#83a4d4", fg = "#1E1E2E" }
+        cornerStyle = { fg = "#83a4d4", bg = "#1E1E2E" }
       }
     },
     globalHighlights = {
@@ -589,7 +540,7 @@ P.startify = {
     }
   },
 
-  recents = {
+  recent_files = {
     components = {
       action = "append",
       value = {
@@ -598,12 +549,12 @@ P.startify = {
         {
           type = "banner",
           width = 0.8,
-          lines = { { " ▒▒ ", "Recently opened files:" } },
+          lines = { { " ", "Recently opened files:" } },
           secondaryColors = { { "label_1", "" } }
         },
         "",
         {
-          type = "recents",
+          type = "recentFiles",
           width = 0.8,
           useIcons = true,
           useAnchors = true,
@@ -618,7 +569,7 @@ P.startify = {
     },
   },
 
-  recents_in_current_dir = {
+  recent_files_in_current_dir = {
     components = {
       action = "append",
       value = {
@@ -627,7 +578,7 @@ P.startify = {
         {
           type = "banner",
           width = 0.8,
-          lines = { { " ▒▒ ", "Recently opened files in ", "current", " directory:" } },
+          lines = { { " ", "Recently opened files in ", "current", " directory:" } },
           secondaryColors = { { "label_1", "", "Special", "" } }
         },
         {
@@ -642,7 +593,7 @@ P.startify = {
         },
         "",
         {
-          type = "recents",
+          type = "recentFiles",
           width = 0.8,
           dir = true,
           useIcons = true,
@@ -674,9 +625,9 @@ P.cats = {
       {
         width = 12,
         lines = A.cat,
-        colors = "cat_1"
+        colors = { "cat_1" }
       }
-    }
+    },
   },
 
   c1x2 = {
@@ -1015,6 +966,258 @@ P.cats = {
       }
     }
   },
+}
+
+P.hydra = {
+  default = {
+    components = {
+      {
+        lines = A.hydra
+      },
+    },
+  },
+
+  animated = {
+    components = {
+      action = "overwrite",
+      value = {
+        {
+          lines = { "", "", "", "", "", "", "", "", "", "", "" }
+        }
+      }
+    },
+
+    animations = {
+      action = "append",
+      value = {
+        updateDelay = 25,
+
+        textBased = {
+          {
+            mode = "line",
+            position = "relative",
+            y = 10,
+
+            startDelay = 0,
+            updateCache = true,
+            colors = "Comment",
+
+            values = {
+              "                ⣿                ",
+              "               ⣿⣿⣿               ",
+              "             ⣾⣿⣿⣿⣿⣿⣿             ",
+              "           ⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿           ",
+              "         ⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀         ",
+              "       ⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤       ",
+              "      ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿     ",
+              "      ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃    ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 9,
+
+            startDelay = 1,
+            updateCache = true,
+            colors = "Comment",
+
+            values = {
+              "                ⣿                ",
+              "              ⣿⣿⣿⣷⣿              ",
+              "            ⠈⠻⣿⣿⣿⣷⣿⣿⣿            ",
+              "            ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿          ",
+              "        ⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟         ",
+              "      ⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿      ",
+              "     ⢻⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿⣿⡆    ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 8,
+
+            startDelay = 2,
+            updateCache = true,
+            colors = "Comment",
+
+            values = {
+              "                ⡇                ",
+              "               ⣌⡇⠻⣿              ",
+              "             ⣿⣦⣌⡇⠻⣿⣿⣷            ",
+              "           ⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿          ",
+              "          ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿         ",
+              "     ⣼ ⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿      ",
+              "     ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇     ",
+              "     ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇ ⠛⠻  ",
+              "⠙⠃   ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇ ⠛⠻⢷⣄",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 7,
+
+            startDelay = 3,
+            updateCache = true,
+            colors = "Comment",
+
+            values = {
+              "                ⢿                ",
+              "               ⢸⢿⣿⣿              ",
+              "             ⡀ ⢸⢿⣿⣿⣄             ",
+              "           ⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿          ",
+              "         ⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇        ",
+              "       ⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿      ",
+              "     ⢀⣿⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿⡿⠿    ",
+              "   ⠛ ⢀⣿⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿⡿⠿⣿⣷  ",
+              "⣠⣿⠿⠛ ⢀⣿⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿⡿⠿⣿⣷⡄ ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 6,
+
+            startDelay = 4,
+            updateCache = true,
+            colors = "Comment",
+
+            values = {
+              "                ⣿                ",
+              "               ⢊⣿⣿⡏              ",
+              "           ⣷   ⢊⣿⣿⡏              ",
+              "         ⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿          ",
+              "       ⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇        ",
+              "     ⠻⣿⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇ ⢀⣠     ",
+              "   ⣿⠛⠻⣿⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇ ⢀⣠⣄    ",
+              " ⣰⣿⣿⠛⠻⣿⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇ ⢀⣠⣄⣾⠄  ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 5,
+
+            startDelay = 5,
+            updateCache = true,
+            colors = "Comment",
+
+            values = {
+              "                ⣴                ",
+              "               ⢀⣴⣿⣿              ",
+              "            ⠘  ⢀⣴⣿⣿⡿⠛            ",
+              "          ⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿          ",
+              "         ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈        ",
+              "      ⡤⢄ ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿      ",
+              "    ⣶⣥⡤⢄ ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿⠟⠛    ",
+              "  ⢠⣧⣶⣥⡤⢄ ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿⠟⠛⠻⠿  ",
+              "  ⢠⣧⣶⣥⡤⢄ ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿⠟⠛⠻⠿⠄ ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 4,
+
+            startDelay = 6,
+            updateCache = true,
+            colors = "Comment",
+
+            values = {
+              "                                 ",
+              "                  ⣻              ",
+              "            ⣿⠈    ⣻⣿⣿            ",
+              "          ⣿⣿⣿⠈    ⣻⣿⣿⣿⣿          ",
+              "         ⢠⣿⣿⣿⠈    ⣻⣿⣿⣿⣿⣿⣿        ",
+              "         ⢠⣿⣿⣿⠈    ⣻⣿⣿⣿⣿⣿⣿⣿⣛      ",
+              "         ⢠⣿⣿⣿⠈    ⣻⣿⣿⣿⣿⣿⣿⣿⣛⣳⣤    ",
+              "         ⢠⣿⣿⣿⠈    ⣻⣿⣿⣿⣿⣿⣿⣿⣛⣳⣤⣀⣀  ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 3,
+
+            startDelay = 7,
+            updateCache = true,
+            colors = "Comment",
+
+            values = {
+              "                ⠻                ",
+              "               ⢻⠻⣿⣿              ",
+              "             ⢧ ⢻⠻⣿⣿⣷⣄            ",
+              "           ⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄          ",
+              "          ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀        ",
+              "          ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀⡀⠈      ",
+              "          ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀⡀⠈⠙⠿    ",
+              "          ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀⡀⠈⠙⠿⠄   ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 2,
+
+            startDelay = 8,
+            updateCache = true,
+            colors = "Comment",
+
+            values = {
+              "                ⣿                ",
+              "               ⣾⣿⣿⣷              ",
+              "            ⣟⠦ ⣾⣿⣿⣷              ",
+              "          ⢿⣿⣟⠦ ⣾⣿⣿⣷              ",
+              "         ⠈⢿⣿⣟⠦ ⣾⣿⣿⣷    ⠻⠿        ",
+              "         ⠈⢿⣿⣟⠦ ⣾⣿⣿⣷    ⠻⠿⢿⣿      ",
+              "         ⠈⢿⣿⣟⠦ ⣾⣿⣿⣷    ⠻⠿⢿⣿⣧⣄    ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 1,
+
+            startDelay = 9,
+            updateCache = true,
+            colors = "Comment",
+
+            values = {
+              "                ⣿                ",
+              "              ⡠⢾⣿⣿⡿              ",
+              "            ⠤⠄⡠⢾⣿⣿⡿⠋⠉            ",
+              "          ⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻          ",
+              "        ⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿        ",
+              "      ⣿⠿⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿⡛⣦      ",
+              "    ⠻⢿⣿⠿⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿⡛⣦      ",
+              "   ⠉⠻⢿⣿⠿⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿⡛⣦      ",
+            }
+          },
+          {
+            mode = "line",
+            position = "relative",
+            y = 0,
+
+            startDelay = 10,
+            updateCache = true,
+            colors = "Comment",
+
+            values = {
+              "                ⣈                ",
+              "                ⣈⣭⣿              ",
+              "                ⣈⣭⣿⣶⣿            ",
+              "         ⣤⠆     ⣈⣭⣿⣶⣿⣦⣼          ",
+              "       ⣤⣀⣤⠆     ⣈⣭⣿⣶⣿⣦⣼⣆         ",
+              "     ⡤⠦⣤⣀⣤⠆     ⣈⣭⣿⣶⣿⣦⣼⣆         ",
+              "   ⣶⣤⡤⠦⣤⣀⣤⠆     ⣈⣭⣿⣶⣿⣦⣼⣆         ",
+              "  ⣴⣶⣤⡤⠦⣤⣀⣤⠆     ⣈⣭⣿⣶⣿⣦⣼⣆         ",
+            }
+          }
+        },
+      }
+    }
+  }
 }
 
 return P;

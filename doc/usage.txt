@@ -1,0 +1,571 @@
+Created on: 17 May, 2024                             Last updated: 20 May, 2024
+`───────────────────────────────────────────────────────────────────────────────╯`
+===
+TOC doesn't work. Don't even try using it.
+===
+•••••••••••••••••••••••••••••••••••••••••
+===
+🌅 Intro.nvim usage
+===
+- 💻 Installation
+===
+- 📡 Setup options
+===
+- ✨ Presets
+
+You shouldn't see this part.
+
+
+`╭╌──────────────────────────────────────────────────────────` *intro.nvim-usage* `╌╮`
+`│` 🌅 Intro.nvim usage                                 `require("intro").setup() │`
+`╰╌────────────────────────────────────────────────────────────────────────────╌╯`
+
+`┃` If you are looking for a `walkthorugh` of the plugin. I suggest you check
+`┃` the `DOC.md` file first.
+
+                                                                                
+                 `██╗███╗   ██╗████████╗██████╗  ██████╗      `                   
+                 `██║████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗     `                   
+                 `██║██╔██╗ ██║   ██║   ██████╔╝██║   ██║     `                   
+                 `██║██║╚██╗██║   ██║   ██╔══██╗██║   ██║     `                   
+                 `██║██║ ╚████║   ██║   ██║  ██║╚██████╔╝     `                   
+                 `╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝.nvim `                   
+                                                                                
+The main focus of this plugin is `customisation`. So, there will be a lot of
+customisation options(and more will be added in the future).
+
+────────────────────────────────────────────────────────────────────────────────
+
+`╭─────────────────────────────────────────────────────────┨` 🧾 Table of contents
+`│`
+`├──` 💻 Installation                                        |intro.nvim-ue-install|
+`├──` 📡 Setup options                                         |intro.nvim-ue-setup|
+`╰──` ✨ Presets                                             |intro.nvim-ue-presets|
+
+`╭──────────────────────────────────────────────────────` *intro.nvim-ue-install* `─╮`
+`│` 💻 Installation                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+This plugin relies on the experimental `Lua API`. So, there are some minimal
+requirements for it.
+
+`╭──────────────────────────────────────────────────────────────────────────────╮`
+`│` ☄️ Minimum requirements                                                       `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+`Neovim version`    : 0.9.5(will be changed to 0.10.0 in a later update).
+`Font`			  : A nerd font(If you plan on using icons).
+`Dependency plugin` : "nvim-tree/nvim-web-devicons" for file icons & colors.
+
+────────────────────────────────────────────────────────────────────────────────
+
+Using `💤 Lazy.nvim`
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>
+  -- plugins.lua
+  {
+    "OXY2DEV/intro.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+
+    config = function()
+      require("intro").setup();
+    end
+  }
+
+  -- plugins/intro.lua
+  return {
+    "OXY2DEV/intro.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+
+    config = function()
+      require("intro").setup();
+    end
+  }
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+Using `Mini.deps`
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>
+  local add = MiniDeps.add;
+
+  add({
+    source = "OXY2DEV/intro.nvim",
+    depends = { "nvim-tree/nvim-web-devicons" }
+  })
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+It's almost the same for other `plugin managers`.
+
+`╭────────────────────────────────────────────────────────` *intro.nvim-ue-setup* `─╮`
+`│` 📡 Setup options                                                             `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+The plugin provides various options for customisation. This is what the setup
+function looks like after setting all the options.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	preset = {
+      name = "nvim",
+      opts = { "animated" }
+    },
+    merge = false,
+
+    showStatusline = false,
+    shadaValidate = false,
+
+    anchors = {
+      position = "bottom",
+      corner = "▒",
+
+      textStyle = { bg = "#BAC2DE", fg = "#181825" },
+      cornerStyle = { bg = "#BAC2DE", fg = "#181825" },
+    },
+    pathModifiers = {},
+    openFileUnderCursor = "<leader><leader>",
+
+    components = {},
+    globalHighlights = {},
+
+    animations = {
+      delay = 0,
+      updateDelay = 200,
+
+      highlightBased = {},
+      textBased = {}
+    }
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {preset} `string or nil`
+
+  Used for setting up a `preset` for your start screen. Presets are the built
+  in tables that allow you to quickly setup a start screen.
+
+  The default valeue is `{ name = "nvim", opts = { "animated } }`.
+
+  The {preset} property has 2 options. These are,
+	- name `string`
+	- opts `table or nil`
+
+  When the value of {preset} is a "string" it is used as the name of the
+  presets. You can also set it to a table, in this case the {name} option will
+  be used to set the preset and the optional {opts} value will be used to
+  add options to that preset.
+
+  `┃` Options are used to further customise a preset. They can add colors,
+  `┃` change the text art, add animation, add/change components etc.
+
+Example usage of this option.
+
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  -- with a string value
+  require("intro").setup({
+	preset = "nvim"
+  });
+
+  -- with a table value
+  require("intro").setup({
+	preset = {
+      name = "nvim",
+      opts = { "animated" }
+    }
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                              ,l;             c,                              `│`
+`│`                           .:ooool'           loo:.                           `│`
+`│`                         .,oooooooo:.         looooc,                         `│`
+`│`                        l:,loooooooool,       looooool                        `│`
+`│`                        llll,;ooooooooc.      looooooo                        `│`
+`│`                        lllllc,coooooooo;     looooooo                        `│`
+`│`                        lllllll;,loooooool'   looooooo                        `│`
+`│`                        lllllllc .:oooooooo:. looooooo                        `│`
+`│`                        lllllllc   'loooooool,:ooooooo                        `│`
+`│`                        lllllllc     ;ooooooooc,cooooo                        `│`
+`│`                        lllllllc      .coooooooo;;looo                        `│`
+`│`                        lllllllc        ,loooooool,:ol                        `│`
+`│`                         'cllllc         .:oooooooo;.                         `│`
+`│`                           .;llc           .loooo:.                           `│`
+`│`                              ,;             ;l;                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+- {merge} `boolean or nil`
+
+  Can be used to merge your own setup table with a preset's setup table. The
+  setup table of the preset is added first. Everything other then {preset} &
+  {merge} are merged together.
+
+  By default, it is set to `false`.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	preset = "cats",
+	merge = true,
+
+	components = {
+	  { lines = { "Hello Neovim" } }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                    ／l、                                     `│`
+`│`                                  （ﾟ､ ｡ ７                                   `│`
+`│`                                    l  ~ヽ                                    `│`
+`│`                                    じしf_,)ノ                                `│`
+`│`                                  Hello Neovim                                `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+- {showStatusline} `boolean or nil`
+
+  Shows/hides the `statusline`. Useful when statusline plugins don't do it
+  automatically.
+
+  The default value is `false`.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	showStatusline = true,
+
+	-- The plugin will not work if the components table is nil
+	components = {}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`[No Name]                                             0,0-1               All `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+- {shadaValidate} `boolean or nil`
+
+  Enable/disable the validation of `oldfiles`. If set to `true`, files that
+  don't exist in the file system will not be added when files are listed by
+  components.
+
+  `┃` This option only works when a `recentFiles` component is present in
+  `┃` {components}.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	shadavalidate = true,
+
+	-- a recentFiles component is needed for this option
+	components = {
+	  { type = "recentFiles" }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ───────────────────────────────┯──────────────────────────────────────╮`
+`│`                 shadaValidate = false `│`                 shadaValidate = true `│`
+`│`                                       `│`                                      `│`
+`│`    Test                          1    `│`     intro.txt                   1    `│`
+`│`    intro.txt                     2    `│`     DOC.md                      2    `│`
+`│`    DOC.md                        3    `│`     .luarc.json                 3    `│`
+`│`                                       `│`                                      `│`
+`│`                                       `│`                                      `│`
+`╰───────────────────────────────────────┷──────────────────────────────────────╯`
+
+- {anchors} `table or nil`
+
+  Changes how `file path previews` are shown. File path previews are shown
+  when the cursor is on top of a file name in the `recentFiles` component.
+
+  `┃` This option only works when a `recentFiles` component is present in
+  `┃` {components}.
+
+  The {anchors} property has 4 options. They are,
+	- {position} `string or nil`
+	- {corner} `string or nil`
+	- {textStyle} `table or nil`
+	- {cornerStyle} `table or nil`
+
+  The {position} option is used to set where to show the path. It can be
+  either `top` or `bottom` which will add the text to the top left or the
+  bottom left of the buffer. The default value is `bottom`.
+
+  The {corner} is a string that will act like a corner of the text and will
+  be added to the end of the text. The default value is "▒".
+
+  The {textStyle} & {cornerStyle} options are used to color the text(which
+  is a virtual text). Their values are used to set the `Intro_anchor_text` &
+  `Intro_anchor_corner` highlight groups. These 2 highlight groups will be
+  added to the file path and the corner respectively.
+
+  `┃` The options for {textStyle} & {cornerStyle} are the same as the {val}
+  `┃` in `nvim_set_hl()`. You can check them by running `:h nvim_set_hl()`.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	anchors = {
+	  position = "bottom",
+
+	  corner = "",
+	  textStyle = {},
+	  cornerStyle = {}
+	},
+
+	-- A recentFiles component is needed for this option
+	components = {
+	  { type = "recentFiles", entryCount = 1 }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│` █      test.lua                                                     1        `│`
+`│`                                                                              `│`
+`│` ~/.config/nvim/lua/test.lua                                                  `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+- {pathModifiers} `table or nil`
+
+  A list containing `tuples` with the structue of `{ pattern, replacement }`.
+  These values will be used to modify the file path in the `file path previews`.
+  They are directly sent into `string.gsub()`, so patterns are also supported.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	pathModifiers = {
+	  { "~/.config/nvim/", "Nvim/" }
+	},
+
+	-- A recentFiles component is needed for this option
+	components = {
+	  { type = "recentFiles", entryCount = 1 }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│` █      test.lua                                                     1        `│`
+`│`                                                                              `│`
+`│` Nvim/test.lua                                                                `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+  `┃` If in the {pathModifiers} table you have a directory and it's parent set
+  `┃` up, then the parent directory MUST be added after the child directory
+  `┃` as otherwise the child directory's path may not be replaced properly.
+
+Example of how to properly use {pathModifiers}.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	-- This is incorrect
+	pathModifiers = {
+	  { "~/.config/", "Config/" },
+	  { "~/.config/nvim/", "nvim/" }
+	},
+
+	-- This is correct
+	pathModifiers = {
+	  { "~/.config/nvim/", "nvim/" },
+	  { "~/.config/", "Config/" }
+	}
+
+	-- A recentFiles component is needed for this option
+	components = {
+	  { type = "recentFiles" }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {openFileUnderCursor} `string or nil`
+
+  Keymap for opening files that are under the cursor. The default value is
+  "<leader><leader>".
+
+  `┃` This option only works when a `recentFiles` component is present in
+  `┃` {components}.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	openFileUnderCursor = "oo",
+
+	-- A recentFiles component is needed for this option
+	components = {
+	  { type = "recentFiles" }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+Now, open neovim and get the `cursor` on top of one of the file name and hit
+`oo`. It should open that file.
+
+- {components} `table`
+
+  A table containing all the components that you want to use. There are
+  various types of `components` and everything related to `components` are
+  available in the |intro.nvim-components| section.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  "Hello Neovim"
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+`╭ Neovim ──────────────────────────────────────────────────────────────────────╮`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`│`Hello Neovim                                                                  `│`
+`│`                                                                              `│`
+`│`                                                                              `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+- {globalHighlights} `table or nil`
+
+  A table containing `highlight group` names and their values. You can use it
+  to change an already existing `highlight group` or create a new one that you
+  xan use in your start screen.
+
+  Highlight groups created by the plugin will have an `Intro_` prefix added to
+  them.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  -- This will first check if a highlight group named red exists or not
+
+	  -- If it doesn't it will add the "Intro_red" highlight group to the
+	  -- text
+	  { lines = { "Hello Neovim" }, colors = "red" }
+	},
+	
+	globalHighlights = {
+	  -- This will create a highlight group named "Intro_red"
+	  red = { fg = "#F38BA8" }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+- {animations} `table or nil`
+
+  Contains all the `animations` and their timing relaed options.
+
+  `┃` Depending on your `hardware`, too many animations playing at once may
+  `┃` cause `Neovim` to slow down.
+
+Example usage.
+╭ `Lua` ─────────────────────────────────────────────────────────────────────────╮
+>lua
+  require("intro").setup({
+	components = {
+	  -- Text used to show the animation
+	  { lines = { "Hello Neovim" }, colors = "red" }
+	},
+	
+	globalHighlights = {
+	  -- Custom highlight group setup
+	  red = { fg = "#F38BA8" }
+	},
+
+	animations = {
+	  -- Slightly changed settings for smoother animations		
+	  delay = 100, updateDelay = 50,
+
+	  -- Container for color related animations
+	  highlightBased = {
+	    {
+	  	  values = {
+	  	    { fg = "#f38ba8" }, { fg = "#e78fb1" }, { fg = "#db94ba" },
+	  	    { fg = "#cf98c3" }, { fg = "#c39dcc" }, { fg = "#b8a1d5" },
+	  	    { fg = "#aca6de" }, { fg = "#a0aae7" }, { fg = "#94aff0" },
+	  	    { fg = "#89b4fa" }, 
+	  	  }
+	    }
+	  }
+	}
+  });
+<
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+`╭──────────────────────────────────────────────────────` *intro.nvim-ue-presets* `─╮`
+`│` ✨ Presets                                                                   `│`
+`╰──────────────────────────────────────────────────────────────────────────────╯`
+
+Presets are an easy way to set up a `start screen`. They allow you to add
+complex animations, gradients, text arts etc. with minimum lines of code.
+
+Currently the plugin provides the following presets.
+  - nvim
+    { animated }
+  - nvim_mini
+    { dark_alt, animated, dark_alt_animated }
+  - startify
+    { 
+	  green, red, pink, flamingo,
+	  gradient_blue_green, gradient_endless_river, gradient_friday,
+	  recent_files, recent_files_in_current_dir,
+	  list_shade
+	}
+  - cats
+    {
+	  c1x2, c1x3, c1x4, c2x2, c3x3, c3x1,
+	  rosewater, mauve, green, blue, yellow,
+	  rosewater_alt, mauve_alt, green_alt, blue_alt, yellow_alt,
+	  all_the_colors, all_the_colors_alt
+	}
+  - hydra
+    { animated }
+
+`┃` The names inside {} are the {opta} values of that preset.
+`┃`
+`┃` When you add them to {opts} make sure that they are in the correct order
+`┃` so the values who come first will need to be added fisst in your {opts}.
+
+There are `screenshots` available in the `assets` branch of this plugin. So,
+you can check how all the presets look there.
+
+
+`───────────────────────────────────────────────────────────────────────────────╮`
+vim:tw=80:ts=4:noet:ft=help:norl:

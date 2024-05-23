@@ -1,7 +1,6 @@
 {
-  "diagnostics": {
-    "disable": [
-      "undefined-global"
-    ]
-  }
+  "diagnostics.disable": ["undefined-global"],
+  "diagnostics.globals": ["vim"],
+
+  "diagnostics.workspaceEvent": "OnSave"
 }
