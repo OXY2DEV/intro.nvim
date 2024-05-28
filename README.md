@@ -1,5 +1,5 @@
 >[!IMPORTANT]
-> This plugin wull **not** be updated(most likely). Making this plugin I have understood the limitations of myself and neovim.
+> This plugin will **not** be updated(most likely). Making this plugin, I have understood the limitations of myself and neovim.
 > The whole plugin was basically kept together with duct tape for the most part. Even though I tried my best, I couldn't make the plugin as good as I wanted.
 > The animation system is **very** primitive. The plugin isn't fast.
 > The plugin can randomly crash on update(when `lazy.nvim` is used). Plus the code is basically spaghetti.
