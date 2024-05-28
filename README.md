@@ -1,3 +1,13 @@
+>[!IMPORTANT]
+> This plugin wull **not** be updated(most likely). Making this plugin I have understood the limitations of myself and neovim.
+> The whole plugin was basically kept together with duct tape for the most part. Even though I tried my best, I couldn't make the plugin as good as I wanted.
+> The animation system is **very** primitive. The plugin isn't fast.
+> The plugin can randomly crash on update(when `lazy.nvim` is used). Plus the code is basically spaghetti.
+>
+> So, I will go learn new things, experiment a lot and hopefully make a better version in the future.
+
+---
+
 https://github.com/OXY2DEV/intro.nvim/assets/122956967/b2ffb4ca-d543-46f6-8d7c-c4dbd42caa56
 
 <h1 align="center">Intro.nvim</h1>
